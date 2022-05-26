@@ -1,27 +1,19 @@
 ###########################################################################################
 ###########################################################################################
-# Makefile - XenoShell WINDOWS
-############################################################################################
-###########################################################################################
-# USER DEFINE VARIABLES
-# DEVKITPPC = Path to \devkitPro\devkitPPC
-#
-#
-DEVKITPPC = 'C:\devkitPro\devkitPPC'
+# Makefile - XenoLauncher LINUX
 ###########################################################################################
 ###########################################################################################
 
-TARGET  = XenoShell
+TARGET  = XenoLauncher
 SOURCES = $(TARGET)/source
 DIR     = $(DEVKITPPC)/bin
 CC      = $(DIR)/powerpc-eabi-gcc
 OBJCOPY = $(DIR)/powerpc-eabi-objcopy
-FLAGS   = -nostdlib -fno-builtin -Wall -Os -pipe -Wl,-s,-x,--gc-sections -Wa,-mregnames -fno-exceptions\
-		  -mhard-float -Wl,-T,$(SOURCES)/first.lds -Wl,-Map=$(SOURCES)/$(TARGET).map
-REMOVE  = rm -f
+FLAGS   = -nostdlib -Wall -Os -pipe -Wl,-s,-x,--gc-sections -Wa,-mregnames -fno-exceptions\
+	-mhard-float -Wl,-T,$(SOURCES)/first.lds -Wl,-Map=$(SOURCES)/$(TARGET).map
 LINE    = echo --------------------------------------------
-BLD     = @echo;$(LINE);echo BUILDING: XENO SHELL;$(LINE)
-END		= @echo;$(LINE);echo BUILDING: XENO SHELL...DONE!!;$(LINE)
+BLD     = @echo;$(LINE);echo BUILDING: XENO LAUNCHER;$(LINE)
+END	= @echo;$(LINE);echo BUILDING: XENO LAUNCHER...DONE!!;$(LINE)
 MOVE	= mv $(SOURCES)/$(TARGET).bin $(TARGET)
 
 all: clean build move
@@ -36,7 +28,6 @@ move:
 	$(END)
 
 clean:
-	$(REMOVE) $(TARGET)/$(TARGET).bin
-	$(REMOVE) $(SOURCES)/$(TARGET).elf
-	$(REMOVE) $(SOURCES)/$(TARGET).map
-	
+	rm -f $(TARGET)/$(TARGET).bin
+	rm -f $(SOURCES)/$(TARGET).elf
+	rm -f $(SOURCES)/$(TARGET).map

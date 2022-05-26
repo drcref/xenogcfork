@@ -12,6 +12,8 @@
 MCU    = atmega8
 ###########################################################################################
 ###########################################################################################
+MNDIR  = 'C:\devkitPro\devkitPPC\mn10200\bin'
+
 TARGET  = XenoAT
 CC      = avr-gcc
 OBJCOPY = avr-objcopy
@@ -22,7 +24,7 @@ DIR     = .
 SOURCES = $(TARGET)/source
 SRC     = $(SOURCES)/$(TARGET).c 
 ASRC    = $(SOURCES)/qcode.S
-CFLAGS  = -mmcu=$(MCU) -I. -g -Os \
+CFLAGS  = -mmcu=$(MCU) -I. -g -O1 \
 	-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
 	-Wall -Wstrict-prototypes \
 	-Wa,-ahlms=$(<:.c=.lst)
@@ -86,11 +88,11 @@ extra: all
 	$(OBJCOPY) -O ihex -R .eeprom $< $(DIR)/$@
 
 
-$(SOURCES)/upload.bin: $(SOURCES)/upload.S
-	@as_mn10200 -L $(SOURCES)/upload.S -o $(SOURCES)/upload.o
-	@ld-mn10200 -Ttext 0x40d000 -O mn10200-elf $(SOURCES)/upload.o -o $(SOURCES)/upload.elf
-	@objcopy-all -O $(SOURCES)/binary $(SOURCES)/upload.elf $(SOURCES)/upload.bin
-$(SOURCES)/qcode.o: $(SOURCES)/upload.bin
+$(SOURCES)/uploader.bin: $(SOURCES)/uploader.S
+	@$(MNDIR)/as -L $(SOURCES)/uploader.S -o $(SOURCES)/uploader.o
+	@$(MNDIR)/ld -Ttext 0x40d000 -O mn10200-elf $(SOURCES)/uploader.o -o $(SOURCES)/uploader.elf
+	@$(MNDIR)/objcopy -O $(SOURCES)/binary $(SOURCES)/uploader.elf $(SOURCES)/uploader.bin
+$(SOURCES)/qcode.o: $(SOURCES)/uploader.bin
 
 ###########################################################################################
 # Target: clean project.

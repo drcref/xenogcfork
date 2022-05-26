@@ -15,26 +15,26 @@ windows-all: windows-shell windows-hex
 ###########################################################################################
 # LINUX
 linux-shell:
-	make -f XenoShell/Makefile-LINUX
+	make -f XenoLauncher/Makefile-LINUX
 
 linux-hex:
 	make -f XenoAT/Makefile-LINUX
 
 linux-extra:
-	make -f XenoShell/Makefile-LINUX
+	make -f XenoLauncher/Makefile-LINUX
 	make extra -f XenoAT/Makefile-LINUX
 
 ###########################################################################################
 ###########################################################################################
 # WINDOWS
 windows-shell:
-	$(MAKE) -f XenoShell/Makefile-WIN
-	cp XenoShell/XenoShell.bin XenoAT/source/XenoShell.bin
+	$(MAKE) -f XenoLauncher/Makefile-WIN
+	cp XenoLauncher/XenoLauncher.bin XenoAT/source/XenoLauncher.bin
 windows-hex:
 	$(MAKE) -f XenoAT/Makefile-WIN
 
 windows-extra:
-	$(MAKE) -f XenoShell/Makefile-WIN
+	$(MAKE) -f XenoLauncher/Makefile-WIN
 	$(MAKE) extra -f XenoAT/Makefile-WIN
 
 ###########################################################################################
@@ -42,7 +42,7 @@ windows-extra:
 # Clean WINDOWS / LINUX
 clean:
 	make clean -f XenoAT/Makefile-LINUX
-	make clean -f XenoShell/Makefile-LINUX
+	make clean -f XenoLauncher/Makefile-LINUX
 
 ###########################################################################################
 ###########################################################################################

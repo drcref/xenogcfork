@@ -1,21 +1,21 @@
 /*
-  ©Æ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Æ©
-  ©«                        QLiteIPL.asm                                     »©
-  ©«                                                                         »©
-  ©«                Copyright 2005 Anonymous Ghostwriter                     »©
-  ©«                                                                         »©
-  ©¥~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¥©
-  ©« [Description]....:  This code gets injected into the apploader to       »©
-  ©«                     do things like patching the region                  »©
-  ©«                                                                         »©
-  ©¥~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¥©
-  ©« [Notes......]....:  Runs via hooked Apploader EP. Then hooks ApplClose  »©
-  ©«                     to do its thing only when actually running a game.  »©
-  ©«                                                                         »©
-  ©¥~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¥©
-  ©« [History....]....:  [bc]-03.12.2004 file created                        »©
-  ©«                                                                         »©
-  ©Æ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Æ©
+  ï¿½ï¿½~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Æ©
+  ï¿½ï¿½                        QLiteIPL.asm                                     ï¿½ï¿½
+  ï¿½ï¿½                                                                         ï¿½ï¿½
+  ï¿½ï¿½                Copyright 2005 Anonymous Ghostwriter                     ï¿½ï¿½
+  ï¿½ï¿½                                                                         ï¿½ï¿½
+  ï¿½ï¿½~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ï¿½ï¿½
+  ï¿½ï¿½ [Description]....:  This code gets injected into the apploader to       ï¿½ï¿½
+  ï¿½ï¿½                     do things like patching the region                  ï¿½ï¿½
+  ï¿½ï¿½                                                                         ï¿½ï¿½
+  ï¿½ï¿½~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ï¿½ï¿½
+  ï¿½ï¿½ [Notes......]....:  Runs via hooked Apploader EP. Then hooks ApplClose  ï¿½ï¿½
+  ï¿½ï¿½                     to do its thing only when actually running a game.  ï¿½ï¿½
+  ï¿½ï¿½                                                                         ï¿½ï¿½
+  ï¿½ï¿½~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ï¿½ï¿½
+  ï¿½ï¿½ [History....]....:  [bc]-03.12.2004 file created                        ï¿½ï¿½
+  ï¿½ï¿½                                                                         ï¿½ï¿½
+  ï¿½ï¿½~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Æ©
 */
 
 .include "source/PPC.h"
@@ -28,22 +28,22 @@
 .text
 
 /*
- ³  MULTIBOOT TECHNICAL INFO                                                ³
- ³                                                                          ³
- ³  We'll release a command-line MultiBoot Disc maker next week if nobody   ³
- ³  releases a better one before we do :-) Here are the specs for Multiboot ³
- ³  discs. Note that every image should be aligned on a 32kb boundary.      ³
- ³  At offset 0x00: 43 4F 42 52-41 4D 42 31                                 ³
- ³            0x40: Position of the 1st image in bytes (Big endian)         ³
- ³            0x44: Position of the 2nd image in bytes (Big endian)         ³
- ³            ....: ...etc...                                               ³
- ³            ....: 00 00 00 00                                             ³
- ³                                                                          ³
- ³  The MultiBoot feature is stealth for the GC so it's 100% compatible     ³
- ³  with homebrew images. If you want to put several backups on one disc    ³
- ³  you'll have to remove the garbage at first.                             ³
- ³  The maximum size of a MultiBoot disc is 1459978240 bytes.               ³
- ³                                                                          ³
+ ï¿½  MULTIBOOT TECHNICAL INFO                                                ï¿½
+ ï¿½                                                                          ï¿½
+ ï¿½  We'll release a command-line MultiBoot Disc maker next week if nobody   ï¿½
+ ï¿½  releases a better one before we do :-) Here are the specs for Multiboot ï¿½
+ ï¿½  discs. Note that every image should be aligned on a 32kb boundary.      ï¿½
+ ï¿½  At offset 0x00: 43 4F 42 52-41 4D 42 31                                 ï¿½
+ ï¿½            0x40: Position of the 1st image in bytes (Big endian)         ï¿½
+ ï¿½            0x44: Position of the 2nd image in bytes (Big endian)         ï¿½
+ ï¿½            ....: ...etc...                                               ï¿½
+ ï¿½            ....: 00 00 00 00                                             ï¿½
+ ï¿½                                                                          ï¿½
+ ï¿½  The MultiBoot feature is stealth for the GC so it's 100% compatible     ï¿½
+ ï¿½  with homebrew images. If you want to put several backups on one disc    ï¿½
+ ï¿½  you'll have to remove the garbage at first.                             ï¿½
+ ï¿½  The maximum size of a MultiBoot disc is 1459978240 bytes.               ï¿½
+ ï¿½                                                                          ï¿½
  */
 
 /*	00000000 434F 4252 414D 4231 0000 0000 0000 0000 COBRAMB1........
@@ -311,7 +311,6 @@ PatchGameRegion:
 	andi. r0, r0, 2
 	stw r0, 0(r5)
    #=======================================================================================================
-	.if CREDITS == 1
 1:		andi. r5, r4, PAD_Z				# Z-Key pressed ?	-> boot memcard
 		bne XenoShellBootMC
 		
@@ -357,7 +356,6 @@ PatchGameRegion:
 		lwzu r0, 0x78(sp)				# pop lr
 		b exit
 	 noCredits:
-	.endif
 
 1:	bl SUB_PatchVideoMode				# switch videoMode
 
@@ -392,7 +390,6 @@ SendCmd_Loop:
 	bne		SendCmd_Loop	
 	blr	
 
-.if CREDITS == 1
 #=======================================================================
  SUB_DVDReadMemBlock:					# R0: DVD-Address
 #=======================================================================	
@@ -419,7 +416,6 @@ SendCmd_Loop:
 	bne ReadBlockLoop
 	mtlr    r31
 	blr
-.endif
 
 #=======================================================================
  SUB_DVDReset:

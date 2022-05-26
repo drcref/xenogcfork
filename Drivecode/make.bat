@@ -34,9 +34,9 @@
 @echo *************************
 @echo .
 @echo .
-@if %COMPILE_QCODE_LO% EQU 1	@as_mn10200 -L Source/qcode_lo.asm.c -o bin/qcode_lo.o
-@if %COMPILE_QCODE_HI% EQU 1	@as_mn10200 -L Source/qcode_hi.asm.c -o bin/qcode_hi.o
-@if %COMPILE_QCODE% EQU 1		@as_mn10200  --defsym QCODEImageBase=%QCODE_IMGBASE% -L "Source/QLite Main.asm.c" -o bin/qcode.o
+@if %COMPILE_QCODE_LO% EQU 1	@as_mn10200 -L source/qcode_lo.asm.c -o bin/qcode_lo.o
+@if %COMPILE_QCODE_HI% EQU 1	@as_mn10200 -L source/qcode_hi.asm.c -o bin/qcode_hi.o
+@if %COMPILE_QCODE% EQU 1		@as_mn10200  --defsym QCODEImageBase=%QCODE_IMGBASE% -L "source/QLite Main.asm.c" -o bin/qcode.o
 
 
 @echo .

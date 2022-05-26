@@ -1,66 +1,28 @@
 #include <avr/io.h>
-#include <avr/signal.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
-#include <math.h>
-#include <string.h>
-
-#include "qCode.h"
-
 
 typedef unsigned long  u32;
 typedef unsigned short u16;
 typedef unsigned char  u8;
 
-#define RELEASE
+#define DEBUG 0
+
 #define LOADER_ADDR 0x40D000
 
-#define VER2	// VER1 VER2
-
-
-
-/* NOTE: OUT,CLK,IN must be on the same port. */
-#ifdef VER1
-#define X_OUT 0x10
+#define X_OUT 0x10 // PB4
 #define X_OUT_PORT PORTB
 #define X_OUT_PIN PINB
 #define X_OUT_DDR DDRB
-#define X_CLK 0x08
+#define X_CLK 0x20 // PB5
 #define X_CLK_PORT PORTB
 #define X_CLK_PIN PINB
 #define X_CLK_DDR DDRB
-#define X_IN  0x20
+#define X_IN  0x08 // PB3
 #define X_IN_PORT  PORTB
 #define X_IN_PIN  PINB
 #define X_IN_DDR  DDRB
-#define X_STR 0x08
-#define X_STR_PORT PORTD
-#define X_STR_PIN PIND
-#define X_STR_DDR DDRD
-
-// green
-#define LED1_ON   PORTB &=~0x80
-#define LED1_OFF  PORTB |= 0x80
-// red
-#define LED2_ON   PORTC &=~0x01
-#define LED2_OFF  PORTC |= 0x01
-#define LED_INIT  DDRB = 0x80; DDRC = 1;
-
-
-#else
-#define X_OUT 0x10
-#define X_OUT_PORT PORTB
-#define X_OUT_PIN PINB
-#define X_OUT_DDR DDRB
-#define X_CLK 0x20
-#define X_CLK_PORT PORTB
-#define X_CLK_PIN PINB
-#define X_CLK_DDR DDRB
-#define X_IN  0x08
-#define X_IN_PORT  PORTB
-#define X_IN_PIN  PINB
-#define X_IN_DDR  DDRB
-#define X_STR 0x02
+#define X_STR 0x02 // PB1
 #define X_STR_PORT PORTB
 #define X_STR_PIN PINB
 #define X_STR_DDR DDRB
@@ -73,20 +35,55 @@ typedef unsigned char  u8;
 #define LED2_OFF  PORTD |= 0x08
 #define LED_INIT  DDRD = 0x0C;
 
-#endif
 
 extern const u8 qcode[];
 extern const u8* qcode_end;
-extern const u8 upload[];
-extern const u8* upload_end;
-extern const u8 credits[];
-extern const u8* credits_end;
-
-
+extern const u8 uploader[];
+extern const u8* uploader_end;
+extern const u8 launcher[];
+extern const u8* launcher_end;
 
 void reset(void);
 void ldelay(volatile int i);
 
+#if DEBUG
+// atmega328 specific UART registers
+// modify for atmega8 if needed, check datasheet
+void USART_Init( unsigned int baud )
+{
+	UCSR0A = 2;
+	/* Set baud rate */
+	UBRR0H = (unsigned char)(baud>>8);
+	UBRR0L = (unsigned char)baud;
+	/* Enable Receiver and Transmitter */
+	UCSR0B = /* (1<<RXEN0)| */ (1<<TXEN0);
+}
+
+
+void USART_Transmit( unsigned char data )
+{
+	if (data == '\n')
+		USART_Transmit('\r');
+	/* Wait for empty transmit buffer */
+	while ( !( UCSR0A & (1<<UDRE0)) );
+	/* Put data into buffer, sends the data */
+	UDR0 = data;
+}
+
+void putstring( char* data )
+{
+	while (*data) USART_Transmit(*data++);
+}
+
+// non-blocking single-char fast transmit
+inline void putchar(char c)
+{
+	UDR0 = c;
+}
+#else
+#define putstring(X)
+#define putchar(X)
+#endif // DEBUG
 
 inline void delay(void)
 {
@@ -94,65 +91,7 @@ inline void delay(void)
 	while (i--);
 }
 
-#ifndef RELEASE
-
-void USART_Init( unsigned int baud )
-{
-	UCSRA = 2;
-	/* Set baud rate */
-	UBRRH = (unsigned char)(baud>>8);
-	UBRRL = (unsigned char)baud;
-	/* Enable Receiver and Transmitter */
-	UCSRB = /* (1<<RXEN)| */ (1<<TXEN);
-	/* Set frame format: 8data, 1stop bit */
-	UCSRC = (0<<USBS)|(3<<UCSZ0)|(1<<URSEL);
-}
-
-void USART_Transmit( unsigned char data )
-{
-	if (data == '\n')
-		USART_Transmit('\r');
-	/* Wait for empty transmit buffer */
-	while ( !( UCSRA & (1<<UDRE)) );
-	/* Put data into buffer, sends the data */
-	UDR = data;
-}
-
-void sputs( char* data )
-{
-	while (*data) USART_Transmit(*data++);
-}
-
-#else
-#define sputs(x)
-#endif
-
-
-#ifndef RELEASE
-void sputhex16(short c)
-{
-	char i;
-	for (i=0; i<4; ++i)
-		USART_Transmit("0123456789ABCDEF"[(c>>(12-(i*4)))&0xF]);
-}
-
-void sputhex8(short c)
-{
-	char i;
-	for (i=0; i<2; ++i)
-		USART_Transmit("0123456789ABCDEF"[(c>>(4-(i*4)))&0xF]);
-	
-	USART_Transmit(' ');
-}
-#else
-#define sputhex16(x)		x;
-#define sputhex8(x)			x;
-#endif
-
-//// xxx stuff
-
 int ndelay = 0;
-
 
 int io(char i)
 {
@@ -163,35 +102,65 @@ int io(char i)
 	else
 		X_OUT_PORT &=~X_OUT;
 	
-	X_CLK_PORT &=~X_CLK; if (!ndelay) delay();
+	X_CLK_PORT &=~X_CLK;
+
+	if (!ndelay) delay();
+
 	res = X_IN_PIN & X_IN;
-	X_CLK_PORT |= X_CLK; if (!ndelay) delay();
+
+	X_CLK_PORT |= X_CLK;
+
+	if (!ndelay) delay();
 	
 	return !!res;
 }
+
+
+// stock MN102 drivecode data format
+// STR line is driven by MN102
+// When MN102 is sending data, the STR line is normally-HIGH and it ends each byte with a ~2.875 us LOW strobe
+// When MN102 is receiving data, the STR line is normally-LOW and it acknowledges each byte with a ~2.875 us HIGH strobe
+// least significant bit first
+// data is valid on CLK rising edge
+// clock is HIGH when inactive
 
 void send8(unsigned char c)
 {
 	int i = 0;
 	
-	while (X_STR_PIN & X_STR) if (i++ > 10000) reset();
+	while (X_STR_PIN & X_STR) {
+		if (i++ > 10000) {
+			putchar('f');
+			reset();
+		}
+	}
 	for (i=0; i<8; ++i)
 	{
-		if (X_STR_PIN & X_STR)
+		if (X_STR_PIN & X_STR) {
+			putchar('r');
 			reset();
+		}
 		io(c & (1<<i));
 	}
 }
+
 
 unsigned char recv8(void)
 {
 	unsigned char x = 0;
 	int i=0;
-	while (!(X_STR_PIN & X_STR)) if (i++ > 10000) reset();
+	while (!(X_STR_PIN & X_STR)) {
+		if (i++ > 10000) {
+			putchar('w');
+			reset();
+		}
+	}
 	for (i=0; i<8; ++i)
 	{
-		if (!(X_STR_PIN & X_STR))
+		if (!(X_STR_PIN & X_STR)) {
+			putchar('s');
 			reset();
+		}
 		x |= io(0) << i;
 	}
 	return x;
@@ -206,39 +175,45 @@ unsigned char io8(unsigned char c)
 	return x;
 }
 
-/*
-unsigned char recv8_nowait(void)
-{
-	unsigned char x = 0;
-	int i;
-	for (i=0; i<8; ++i)
-		x |= io(0) << i;
-	return x;
-}
-*/
+// --------------------------------------------------------------
+// SERIAL_CMD_FF:
+// --------------------------------------------------------------
+// Read memory
+// MN102 first does a memcopy of the requested data
+// to 0x40EB54 (max 32 bytes) then transmits it over serial
+
+// R[0]	FF
+// R[1]	00
+// R[2]	source address middle byte
+// R[3]	source address least significant byte
+// R[4]	0
+// R[5]	source address most significant byte
+// R[6]	0
+// R[7]	0
+// R[8]	number of bytes to read
+// R[9]	0
 
 int read_mem(unsigned char *dst, long addr, int len)
 {
+	int err;
+
 	send8(0xff);
 	send8(0);
 	send8(addr >> 8);
 	send8(addr);
 	send8(0);
-	send8(addr >> 16); // high
+	send8(addr >> 16);
 	send8(0);
 	send8(0);
 	
 	send8(len);
 	send8(0);
 	
-	int err = recv8();
+	err = recv8();
 	err |= recv8() << 8;
 	
-	if (err)
-	{
-		sputs("error: ");
-		sputhex16(err);
-		sputs("\n");
+	if (err) {
+		putchar('m');
 		return err;
 	}
 	
@@ -246,24 +221,6 @@ int read_mem(unsigned char *dst, long addr, int len)
 		*dst++ = recv8();
 
 	return 0;
-}
-
-void write_word(long address, unsigned short data)
-{
-	send8(0xfe);
-	send8(0x00);
-	send8(address >> 8);
-	send8(address);
-	
-	send8(data);
-	send8(address >> 16);
-	send8(data >> 8);
-	send8(0);
-	
-	send8(2);
-	send8(0);
-	
-	recv8(); recv8(); recv8(); recv8();
 }
 
 void write_word_norecv(long address, unsigned short data)
@@ -282,9 +239,21 @@ void write_word_norecv(long address, unsigned short data)
 	send8(0);
 }
 
+// the firmware sends back 4 bytes when writing a word, discard them silently
+void write_word(long address, unsigned short data)
+{
+	write_word_norecv(address, data);
+	
+	recv8();
+	recv8();
+	recv8();
+	recv8();
+}
+
 void write_block(long address, unsigned char *source, int len)
 {
 	while (len >= 1) {
+		// the firmware writes words in little endian order, swap endianness
 		write_word(address, pgm_read_byte(source) | (pgm_read_byte(source+1) << 8));
 		address += 2;
 		len -= 2;
@@ -294,186 +263,154 @@ void write_block(long address, unsigned char *source, int len)
 
 void reset()
 {
-	sputs("RESET!\n");
-	WDTCR = 8;
+	// WDTCSR = 8; // atmega328p
+	WDTCR = 8; // atmega8
 	while (1);
 }
 
 void ldelay(volatile int i)
 {
-	while (i--) {
-//		if (X_STR_PIN & X_STR)
-//			reset();
-	}
+	while (i--);
 }
 
-
-/*
-void sleep(int nMs)
-{
-	while(--nMs != 0) {
-		ldelay(250);
-		if (X_STR_PIN & X_STR)
-			reset();
-	}
-}
-
-#define BLUE	0
-#define RED		1
-
-void sleepOrg(int nMs)
-{
-	while(--nMs != 0) {
-		ldelay(250);
-	}
-}
-
-void FlashLED(u8 bLed, int nTimes)
-{
-	while(nTimes-->0) {
-		if(bLed == 0)	LED1_ON;
-		else			LED2_ON;
-		sleep(10);
-		if(bLed == 0)	LED1_OFF;
-		else			LED2_OFF;
-		sleep(10);
-	}
-}
-*/
 
 int main(void)
 {
-	const unsigned int	qcodesize	= ((((const unsigned int) &qcode_end)	- ((const  unsigned int) &qcode))	& 0xFFFE) + 2;
-	const unsigned int	uploadsize	= ((((const unsigned int) &upload_end)	- ((const  unsigned int) &upload))	& 0xFFFE) + 2;
-//	const unsigned int	creditssize = ((((const unsigned int) &credits_end)	- ((const  unsigned int) &credits))	& 0xFFFC) + 4;
-	const unsigned int	creditssize = ((((const unsigned int) &credits_end)	- ((const  unsigned int) &credits))	& 0xFFFE) + 2;
+	const unsigned int	qcode_size	= ((((const unsigned int) &qcode_end)	- ((const  unsigned int) &qcode))	& 0xFFFE) + 2;
+	const unsigned int	uploader_size	= ((((const unsigned int) &uploader_end)	- ((const  unsigned int) &uploader))	& 0xFFFE) + 2;
+	const unsigned int	launcher_size = ((((const unsigned int) &launcher_end)	- ((const  unsigned int) &launcher))	& 0xFFFE) + 2;
 
-	unsigned short last_recv=0;
+	/*
+	// disable watchdog (for ATmega328P)
+	MCUSR &= ~(1<<WDRF);
+	WDTCSR |= (1<<WDCE) | (1<<WDE);
+	WDTCSR = 0x00;
+	*/
 
 	LED_INIT;
-#ifndef RELEASE	
-	USART_Init(103);
-#endif
-	
-	int i;
-	X_OUT_PORT &= ~(X_CLK|X_OUT|X_IN);
-	X_STR_PORT |= X_STR;
-	X_OUT_DDR = 2 | X_CLK | X_OUT | 0x80;
-	X_STR_DDR &= ~X_STR;
-	
-	// VCC/GND not present: no leds
-	// CLK missing: will be kept in first stage
-	// DIN missing: will be kept in second stage
-	// DOUT missing: will always reset
-	// 1 0
-	// 1 1
-	// 0 0
-	// 0 1
+
+	//USART_Init(3); // 250k baud
+
+	u16 i;
+
+	// X_CLK -> output
+	// X_OUT -> output
+	// X_STR -> input with internal pull-up
+	// X_IN -> input without internal pull-up
+
+	X_STR_PORT = X_STR;
+	X_OUT_DDR = X_CLK | X_OUT;
+
 	LED2_ON; LED1_OFF; 	// -> red
 
-	sputs("syncing..\n");
+	u16 last_recv = 0;
 	while (1) {
 		last_recv >>= 1;
 		last_recv |= io(1) ? 0x8000 : 0;
-//		sputhex16(last_recv); sputs("\n");
-		if (last_recv == 0xeeee)
-		  break;
+		if (last_recv == 0xeeee) {
+			break;
+		}
 	}
-	sputs("sync ok.\n");
+	
+	u16 launcher_flag = 0;
+	read_mem(&launcher_flag, 0x40D100, 2);
 
-	// stack-friendly loading :p
-	static const u8 PROGMEM pLoaderCode[] =	{	0x80, 0x00,					//  8000		MOV	$00,D0				
-												0xC4, 0xDA, 0xFC,			//  C4DAFC		MOVB	D0,($FCDA)	# disable breakpoints				
-												0xF4,0x74,0x74,0x0a,0x08,	//	F47474A708  MOV	$080a74,a0		# restore original 
-												0xF7,0x20,0x4C,0x80,		//	F7204C80    MOV	a0,($804c)		# inthandler
-												0xF4,0x74,					//	F47400D040  MOV	QCODEIMGBASE,a0	# jump to drivecode init
-												(LOADER_ADDR		& 0xFF),				
-												(LOADER_ADDR >> 8	& 0xFF),
-												(LOADER_ADDR >> 16	& 0xFF),		
-												0xF0,0x00					//	F000        JMP	(a0)
+	u8 request_launcher = (launcher_flag == 0x4444) ? 1 : 0;
+
+	write_block(LOADER_ADDR, uploader, uploader_size);
+
+
+	static const u8 PROGMEM stage1[] =	{
+		0x80, 0x00,					//  8000		MOV	$00,D0				
+		0xC4, 0xDA, 0xFC,			//  C4DAFC		MOVB	D0,($FCDA)	# disable breakpoints				
+		0xF4,0x74,0x74,0x0a,0x08,	//	F47474A708  MOV	$080a74,a0		# restore original 
+		0xF7,0x20,0x4C,0x80,		//	F7204C80    MOV	a0,($804c)		# inthandler
+		0xF4,0x74,					//	F47400D040  MOV	QCODEIMGBASE,a0	# jump to drivecode init
+		(LOADER_ADDR		& 0xFF),				
+		(LOADER_ADDR >> 8	& 0xFF),
+		(LOADER_ADDR >> 16	& 0xFF),		
+		0xF0,0x00					//	F000        JMP	(a0)
 	};
 
-	u8* pUpload = qcode;
-	u16 wUploadSize = qcodesize;
+	// we write the above stage 1 into the MN102 at address 0x008674
+	// then write the value 0x0086 at address 0x00804D
+	// this executes the stage 1 loader
+	// which in turn executes the stage 2 loader
 
-	u16 wTest = 0;
-	read_mem(&wTest, 0x40D100, 2);
-
-	if(wTest == 0x4444) {
-		pUpload = credits;
-		wUploadSize = creditssize;
-	}
-
-	write_block(LOADER_ADDR, upload, uploadsize);
-	write_block(0x8674, pLoaderCode, sizeof(pLoaderCode));
+	write_block(0x8674, stage1, sizeof(stage1));
 	write_word_norecv(0x804d, 0x0086);
 
+	putchar('4');
 
-	char u8Ret = io8(0x00);
-	ndelay = 1;
+	// now our stage 2 upload.bin is running on the drive chip
+	// and is receiving our data from here on
+
+	// now send either the drive code or the XenoLauncher binary
+
+	u8* binary;
+	u16 binary_size ;
+
+	if (request_launcher) {
+		binary = launcher;
+		binary_size = launcher_size;
+	} else {
+		binary = qcode;
+		binary_size = qcode_size;
+	}
+
+	io8(0x00);
+
+	ndelay = 1; // disable delay for faster upload, our 2nd stage can receive data fast
 	
 	ldelay(100);
-	u8Ret |= io8(0x00);
+	io8(0x00); // response to this should be Q (0x51)
 
 	ldelay(100);
-	io8((wUploadSize >> 9)&0xFF);
+	io8((binary_size >> 9)&0xFF);  // response to this should be C (0x43)
 	ldelay(100);
-	io8((wUploadSize >> 1)&0xFF);
+	io8((binary_size >> 1)&0xFF);  // response to this should be O (0x4F)
 	ldelay(100);
-	io8(0);
+	io8(0); // response to this should be D (0x44)
 	
 	LED2_OFF;
-	unsigned char r, e = (wUploadSize >> 1) & 0xFF, n, csum = 0;
 
-	for (i=0; i < wUploadSize; ++i)	{
+	putchar('5');
+
+	u8 r;
+	u8 n;
+	u8 e = (binary_size >> 1) & 0xFF; // first byte that comes back
+
+	for (i = 0; i < binary_size; i++) {
 		ldelay(100);
-		r = io8(n = pgm_read_byte(pUpload + i));
-		csum += n;
+
+		n = pgm_read_byte(binary + i);
+		r = io8(n);
 
 		if (r != e)	{
+			putchar('x');
 			reset();
 		}
 
 		e = n;
 	}
 
+	putchar('6');
+
 	ldelay(100);
-	pgm_read_byte(pUpload + i);
-
-//	if(bUploadAgain) {
-//		io8(0x99);
-//		goto uploadAgain;
-//	}
-//	else 
-	{
-		io8(0x21);
-	}
-
+	
+	io8(0x21); // send final confirmation byte (uploader will reset if this is != 0x21)
 	io8(0);
 	io8(0);
 
-/*	if(pUpload == credits) {
-		LED1_ON;
-		LED2_ON;
-		X_STR_PORT |= X_STR;
-		while(1);
-	}
-*/
-	// SUCCESS (BLUE)
 	LED1_ON;
-	X_STR_PORT |= X_STR;
 
-//	if(pUpload == credits) {
-//		LED1_ON;
-//		LED2_ON;
-//		sleepOrg(3000);
-//	}
+	while (!(X_STR_PIN & X_STR));
 
-	while (!(X_STR_PIN & X_STR)) {
-	}
+	putchar('7');
 
 	reset();
-	return 0;
+
+	return 0; // keep gcc happy
 }
 
 

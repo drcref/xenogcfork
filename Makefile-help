@@ -13,7 +13,7 @@ LIN      = echo '     linux           Linux operating system'
 WIN      = echo '     windows         Windows operating system'
 XALL     = echo '     -all            Make entire source'
 XTRA     = echo '     -extra          Make ALL plus Extra files'
-XSHELL   = echo '     -shell          Make XenoShell only'
+XSHELL   = echo '     -shell          Make XenoLauncher only'
 XHEX     = echo '     -hex            Make XenoAT Hex only'
 
 

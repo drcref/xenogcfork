@@ -1155,7 +1155,6 @@ loopCalibrate:
 	GetRelocAddr r5, dwRegionCode		
 	stw r0, 0(r5)
 
-	.if CREDITS == 1
 1:		andi. r5, r4, PAD_START			# L-Key pressed ?	-> disable audiofix
 		beq noCredits					# 
 		
@@ -1191,7 +1190,6 @@ loopCalibrate:
 #		blr		
 
 	 noCredits:
-	.endif
 
 1:	bl SUB_PatchVideoMode				# switch videoMode
 

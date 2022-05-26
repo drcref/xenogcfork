@@ -55,8 +55,8 @@ all: clean build
 build:
 	$(BLD)
 	$(CC) -c $(CFLAGS)=$(SRC).lst $(SRC).c -o $(SRC).o
-	$(MNAS) -L $(SOURCES)/upload.S -o $(SOURCES)/upload.o
-	$(MNLD) -Ttext 0x40d000 -O $(MNELF) $(SOURCES)/upload.o -o $(SOURCES)/upload.elf
+	$(MNAS) -L $(SOURCES)/uploader.S -o $(SOURCES)/uploader.o
+	$(MNLD) -Ttext 0x40d000 -O $(MNELF) $(SOURCES)/uploader.o -o $(SOURCES)/uploader.elf
 	$(CC) -c $(ASFLAGS)=$(ASRC).lst,-gstabs  $(ASRC).S -o $(ASRC).o
 	$(BLDELF)
 	$(CC) $(CFLAGS)=$(SRC).o $(SRC).o  $(ASRC).o  --output $(SRC).elf $(LDFLAGS)

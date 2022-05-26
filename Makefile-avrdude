@@ -14,10 +14,9 @@
 #
 AVR     =  m8
 TARGET  =  XenoAT
-AVRDUDE =  ./avrdude.exe
-DEVICE  =  usbtiny
-PORT    =  usb 
-FLAGS = -p $(AVR) -c $(DEVICE) -P $(PORT)
+AVRDUDE =  avrdude.exe
+DEVICE  =  usbasp
+FLAGS = -p $(AVR) -c $(DEVICE)
 ###########################################################################################
 ###########################################################################################
 
