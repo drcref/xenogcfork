@@ -15,10 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <zlib.h>
 #include <ogc/lwp_watchdog.h>
-
-#include "title_bmp.h"
 
 extern "C" {
 	#include "dvd.h"
@@ -55,8 +52,6 @@ int dvdstatus = 0;      //  << is this even needed ?? remove later
 #include "XenoAT_bin.h"
 
 /*** banner ***/
-extern const unsigned char title_Bitmap[];
-static unsigned char title_banner [TITLE_WIDTH * TITLE_HEIGHT * 2] ATTRIBUTE_ALIGN (32);
 
 
 void CheckDriveState(bool bWaitForXenoUnload = true);
@@ -295,37 +290,9 @@ bool FlashUpdate()
    return true;
 }
 
-/****************************************************************************
-* unpacks the title banner
-****************************************************************************/
-static void
-unpack_banner (void)
-{
-   unsigned long inbytes, outbytes;
-
-   inbytes = TITLE_COMPRESSED;
-   outbytes = TITLE_SIZE;
-
-   uncompress (title_banner, &outbytes, title_Bitmap, inbytes);
-}
-
 void DrawTitle()
 {
-   int y, x, j;
-   int offset;
-   int *bb = (int *) title_banner;
-
-   offset = (12 * 320); /*** start 10 lines from top ***/
-
    VIDEO_ClearFrameBuffer (vmode, xfb, COLOR_BLACK);
-
-   for (y = 0, j = 0; y < TITLE_HEIGHT; y++)
-   {
-      for (x = 0; x < (TITLE_WIDTH >> 1); x++)
-         xfb[offset + x] = bb[j++];
-
-         offset += 320;
-   }
 
    //set white color, console position
    printf("\x1b[37m\x1b[6;40f");
@@ -368,8 +335,8 @@ int main ()
    Initialise ();
 
    // show title
-   unpack_banner();
-   DrawTitle();
+   //unpack_banner();
+   //DrawTitle();
    printf("\n\nXenoGC flash v1.03a-v1\n");
 
 
