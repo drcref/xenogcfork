@@ -7,42 +7,25 @@
 include Makefile-help
 include Makefile-avrdude
 
-all: help
-linux-all: linux-shell linux-hex
-windows-all: windows-shell windows-hex
+all: shell hex
 
-###########################################################################################
-###########################################################################################
-# LINUX
-linux-shell:
-	make -f XenoLauncher/Makefile-LINUX
-
-linux-hex:
-	make -f XenoAT/Makefile-LINUX
-
-linux-extra:
-	make -f XenoLauncher/Makefile-LINUX
-	make extra -f XenoAT/Makefile-LINUX
-
-###########################################################################################
-###########################################################################################
-# WINDOWS
-windows-shell:
-	$(MAKE) -f XenoLauncher/Makefile-WIN
+shell:
+	$(MAKE) -f XenoLauncher/Makefile
 	cp XenoLauncher/XenoLauncher.bin XenoAT/source/XenoLauncher.bin
-windows-hex:
-	$(MAKE) -f XenoAT/Makefile-WIN
+hex:
+	$(MAKE) -f XenoAT/Makefile
 
-windows-extra:
-	$(MAKE) -f XenoLauncher/Makefile-WIN
-	$(MAKE) extra -f XenoAT/Makefile-WIN
+extra:
+	$(MAKE) -f XenoLauncher/Makefile
+	$(MAKE) extra -f XenoAT/Makefile
 
 ###########################################################################################
 ###########################################################################################
 # Clean WINDOWS / LINUX
 clean:
-	make clean -f XenoAT/Makefile-LINUX
-	make clean -f XenoLauncher/Makefile-LINUX
+	make clean -f XenoAT/Makefile
+	make clean -f XenoLauncher/Makefile
+	rm -f XenoAT/source/XenoLauncher.bin
 
 ###########################################################################################
 ###########################################################################################
@@ -55,8 +38,5 @@ readfuse:
 
 writefuse:
 	$(AVRDUDE) $(FLAGS) -v -U lfuse:w:0xC4:m -U hfuse:w:0xD9:m
-
-###########################################################################################
-###########################################################################################
-# HELP
-help:
+	
+help : .help
