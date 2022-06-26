@@ -1,0 +1,1127 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec2">
+2</a>&nbsp;&nbsp;Gamecube Hardware Introduction</h2>
+<br>
+The GameCube is a powerful piece of hardware. The whole system is
+based on the IBM PowerPC Gekko processor and the custom ATI Flipper
+video system. The PowerPC Gekko processor is really just a PowerPC
+750 with a few enhancements.
+     <div class="idx"><a href="index.html#idx2.1">index</a></div>
+<h3>
+<a name="sec2.1">
+2.1</a>&nbsp;&nbsp;enhanced PowerPC 750 Specification</h3>
+<br><ul>
+<li> 486 MHz internal processor clock
+</li>
+<li> 200 MHz 64-bit bus width to main memory (1.6 Gigabytes per second
+maximum)
+</li>
+<li> 32KB associative L1 Icache
+</li>
+<li> 32KB associative L1 Dcache with 16KB data scratchpad
+</li>
+<li> Super-scalar microprocessor with five different execution units:
+<ul>
+<li> 2 integer units, 1 FPU, and 1 loadstore unit and branch
+unit
+</li>
+</ul>
+</li>
+<li> DMA unit servicing 16KB data scratchpad.
+</li>
+<li> DMA request queue - 15-entry.
+</li>
+<li> Write-gather buffer for writing graphics command lists to the video
+system.
+</li>
+<li> Embedded 256KB 2-way set-associative L2 unified cache.
+</li>
+<li> 2 32-bit Integer Units (IU)
+</li>
+<li> 1 FPU, 32 and 64-bit bus width
+</li>
+<li> The FPU supports Floating Point Paired Singles (FP/PS)
+</li>
+<li> Branch Unit provides static AND dynamic branch prediction
+</li>
+<li> Features Out-Of-Order execution which means that when an instruction
+delays because of data access, subsequent opcodes can continue to
+be decoded and executed.
+</li>
+</ul>
+The enhanced PowerPC Gekko processor also contains many features for
+minimization of processor delays because of data accessing and for
+maximization of processing throughput:
+<ul>
+<li> Non-blocking caches
+</li>
+<li> Branch prediction through use of the Branch Unit (BU)
+</li>
+<li> 8-way set-associative caches
+</li>
+<li> 256KB L2 transfer cache
+</li>
+<li> Out-of-order execution capabilities
+</li>
+</ul>
+The instruction set of the PowerPC Gekko processor seems to be almost
+identical to the one of the PowerPC 750 processor.The only visible
+differences at the moment are that the PowerPC Gekko processor has
+a few AltiVecSIMD opcodes added to its final instruction
+set.
+     <div class="idx"><a href="index.html#idx2.2">index</a></div>
+<h3>
+<a name="sec2.2">
+2.2</a>&nbsp;&nbsp;Consumer Units</h3>
+<br><div class="idx"><a href="index.html#idx2.2.1">index</a></div>
+<h4>
+<a name="sec2.2.1">
+2.2.1</a>&nbsp;&nbsp;Nintendo </h4>
+<br><h5>2.2.1.1 <a name="sec2.2.1.1">
+    &nbsp;&nbsp;HW1</a>
+</h5>
+<br>
+HW1 was an initial, buggy version of the GameCube hardware that wasnt
+sold at retail.
+<h5>2.2.1.2 <a name="sec2.2.1.2">
+    &nbsp;&nbsp;HW2</a>
+</h5>
+<br>
+HW2 is the first hardware that was sold in stores to the public.
+<b>2.2.1.3<a name="sec2.2.1.3">
+    &nbsp;&nbsp;HW2 'second edition'</a>
+&nbsp;</b>
+The second edition models are missing the "Serial Port 2"
+that the first edition had. The plastic cover is still on the bottom
+of the cube, where the port used to be, but there's just a metal plate
+underneath it, and no connector.
+<b>2.2.1.4<a name="sec2.2.1.4">
+    &nbsp;&nbsp;HW2 'third edition'</a>
+&nbsp;</b>
+The third edition Gamecubes are missing both the "Serial
+Port 2", and the Digital A/V connector. 
+      <div class="idx"><a href="index.html#idx2.2.2">index</a></div>
+<h4>
+<a name="sec2.2.2">
+2.2.2</a>&nbsp;&nbsp;Panasonic Q</h4>
+<br>
+There is a Gamecube combined with dvd-player manufactured by Panasonic
+called 'Panasonic-Q'. It seems to be exactly the same as HW2 for
+the Gamecube part, except that the dvd drive is different.
+     <div class="idx"><a href="index.html#idx2.3">index</a></div>
+<h3>
+<a name="sec2.3">
+2.3</a>&nbsp;&nbsp;Development Units</h3>
+<br>
+Nintendo provides development hardware units to official, licensed
+GameCube developers. There are namely two different versions: the
+GDEV and the DDH hardware development kit units. These units are the
+same as retail GameCube HW2 units with some changes: They have PC
+communications features (either through SCSI or USB) and they have
+DVD emulation hardware instead of a proprietary mini-DVD drive. GameCube
+development units also seem to have slower processor speeds than retail
+GameCubes, this clock speed ranges from around 150MHz to 400MHz. Development
+GameCubes also seem to contain more RAM than retail ones, namely around
+40MB. SNSystems also provides their own development kit,authorized
+by Nintendo, called the TDEV. According to specifications directly
+from SNSystems, the TDEV development hardware contains twice as much
+memory as retail GameCubes for debugging and a direct PC&lt;-&gt;TDEV USB
+connection for fast uploading of code andor data.
+Finally, there is also another proprietary development kit called
+the NR-Reader. NR-Reader's contain less debugging capabilities than
+the other development kits and are mostly meant for developers to
+efficiently get their demosgames to beta testers or
+media. However, SNSystems reports that their ProDG development kit
+can be used with a special USB adapter of theirs for directly sending
+program (debug) code to NR-Reader GameCubes. Also, NR-Reader GameCubes
+contain different mini-DVD drives than retail GameCubes, but still
+use a proprietary writingreading format which is currently
+unknown. The DVD drives of NR-Readers can only read special DVDs that
+can only be written correctly with NR-Writer hardware (which is really
+just a PanasonicMatshita SW-9501 with modified firmware).
+Also, the official debug development kits possibly contain J-TAG support,
+which is a method for debugging hardware. If so, there is a possibility
+that J-TAG support still remains in retail GameCubes as well, but
+this is purely hypothesis. If, in fact, retail GameCubes contain J-TAG
+debugging support then it should be possible for (homebrew) code to
+be uploaded through a J-TAG cable) directly to a GameCube's RAM and
+executed.
+     <div class="idx"><a href="index.html#idx2.4">index</a></div>
+<h3>
+<a name="sec2.4">
+2.4</a>&nbsp;&nbsp;Hardware Parts List</h3>
+<br><ul>
+<li> "MBU" and "MBB" will be used to
+refer to parts on the top and bottom sides of the GameCube's mother-board
+respectively.
+</li>
+<li> "DVDB" will be used to refer to parts on the DVD
+controller board.
+</li>
+<li> "CB" will be used to refer to parts on the controller
+pad board.
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx2.4.1">index</a></div>
+<h4>
+<a name="sec2.4.1">
+2.4.1</a>&nbsp;&nbsp;Connectors</h4>
+<br>
+The are 10 different connectors on the GameCube's mother-board. The
+following table contains an ID key and a short functional description.<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>ID </b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P1</tt></td>
+<td nowrap>Motherboard Power Connector - MBB - Top Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P2</tt></td>
+<td nowrap>Digital Video Output Connector - MBU - Bottom Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P3</tt></td>
+<td nowrap>Controller Pad Board Connector - MBU - Middle Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P4</tt></td>
+<td nowrap>Memory Card Slot Connector A - MBU - Top Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P5</tt></td>
+<td nowrap>Memory Card Slot Connector B - MBU - Bottom Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P6</tt></td>
+<td nowrap>Serial Port Connector 1 - MBB - Top Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P7</tt></td>
+<td nowrap>Analog Video Output Connector - MBU - Middle Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P8</tt></td>
+<td nowrap>Serial Port Connector 2 - MBB - Top Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P9</tt></td>
+<td nowrap>Mini-DVD Drive Port Connector - MBU - Top Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>P10</tt></td>
+<td nowrap>Hi-Speed Parallel Port Connector - MBB - Bottom Left</td>
+</tr>
+</table>
+</td></tr></table>
+<br><b>2.4.1.1<a name="sec2.4.1.1">
+    &nbsp;&nbsp;Memory Card Slots (P4,P5)</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">pin</td>
+<td nowrap>Signal</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>EXTIN</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>GND</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>INT</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>DO</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>5V</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>DI</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>CS</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>Ground (Shield)</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>CLK</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>EXTOUT</td>
+</tr>
+</table>
+</td></tr></table>
+<br><b>2.4.1.2<a name="sec2.4.1.2">
+    &nbsp;&nbsp;High-speed Port (P8)</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">pin</td>
+<td nowrap>Signal</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>GND</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>INT</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>CLK</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>DO</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>DI</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>CS</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>Ground (Shield)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><b>2.4.1.3<a name="sec2.4.1.3">
+    &nbsp;&nbsp;SDRAM/Parallel Port (P10)</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">pin</td>
+<td nowrap>Signal</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>VCC</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>DQ0</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>DQ7</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>DQ1</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>DQ6</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>DQ2</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>DQ5</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>DQ3</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>DQ4</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>VCC</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">13</td>
+<td nowrap>write enable</td>
+</tr>
+<tr>
+<td nowrap align="center">14</td>
+<td nowrap>DQM</td>
+</tr>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap>CAS</td>
+</tr>
+<tr>
+<td nowrap align="center">16</td>
+<td nowrap>Clock</td>
+</tr>
+<tr>
+<td nowrap align="center">17</td>
+<td nowrap>RAS</td>
+</tr>
+<tr>
+<td nowrap align="center">18</td>
+<td nowrap>A12</td>
+</tr>
+<tr>
+<td nowrap align="center">19</td>
+<td nowrap>CS (Chip Select)</td>
+</tr>
+<tr>
+<td nowrap align="center">20</td>
+<td nowrap>A11</td>
+</tr>
+<tr>
+<td nowrap align="center">21</td>
+<td nowrap>BA0</td>
+</tr>
+<tr>
+<td nowrap align="center">22</td>
+<td nowrap>A9</td>
+</tr>
+<tr>
+<td nowrap align="center">23</td>
+<td nowrap>BA1</td>
+</tr>
+<tr>
+<td nowrap align="center">24</td>
+<td nowrap>A8</td>
+</tr>
+<tr>
+<td nowrap align="center">25</td>
+<td nowrap>A10</td>
+</tr>
+<tr>
+<td nowrap align="center">26</td>
+<td nowrap>A7</td>
+</tr>
+<tr>
+<td nowrap align="center">27</td>
+<td nowrap>A0</td>
+</tr>
+<tr>
+<td nowrap align="center">28</td>
+<td nowrap>A6</td>
+</tr>
+<tr>
+<td nowrap align="center">29</td>
+<td nowrap>A1</td>
+</tr>
+<tr>
+<td nowrap align="center">30</td>
+<td nowrap>A5</td>
+</tr>
+<tr>
+<td nowrap align="center">31</td>
+<td nowrap>A2</td>
+</tr>
+<tr>
+<td nowrap align="center">32</td>
+<td nowrap>A4</td>
+</tr>
+<tr>
+<td nowrap align="center">33</td>
+<td nowrap>A3</td>
+</tr>
+<tr>
+<td nowrap align="center">34</td>
+<td nowrap>INT</td>
+</tr>
+<tr>
+<td nowrap align="center">35</td>
+<td nowrap>VCC</td>
+</tr>
+<tr>
+<td nowrap align="center">36</td>
+<td nowrap>Ground</td>
+</tr>
+</table>
+</td></tr></table>
+<br><b>2.4.1.4<a name="sec2.4.1.4">
+    &nbsp;&nbsp;BBA/Modem Connector (P6)</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">pin</td>
+<td nowrap>Signal</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>EXTIN</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>Ground (Shield)</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>INT</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>CLK</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>12V</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>DO</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>DI</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>CS</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>Ground</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>2.4.1.5 <a name="sec2.4.1.5">
+    &nbsp;&nbsp;DVD Interface Connector (P9)</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">pin</td>
+<td nowrap>Signal</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>AISLR (audio bus)</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>5V</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>AISD (audio bus)</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>5V</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>AISCLK (audio bus)</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>5V</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>DIHSTRB</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>5V</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>DIERRB</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>DIBRK</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>DICOVER</td>
+</tr>
+<tr>
+<td nowrap align="center">13</td>
+<td nowrap>DIDSTBR</td>
+</tr>
+<tr>
+<td nowrap align="center">14</td>
+<td nowrap>DIRSTB</td>
+</tr>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap>DIDIR</td>
+</tr>
+<tr>
+<td nowrap align="center">16</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">17</td>
+<td nowrap>DID7</td>
+</tr>
+<tr>
+<td nowrap align="center">18</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">19</td>
+<td nowrap>DID6</td>
+</tr>
+<tr>
+<td nowrap align="center">20</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">21</td>
+<td nowrap>DID5</td>
+</tr>
+<tr>
+<td nowrap align="center">22</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">23</td>
+<td nowrap>DID4</td>
+</tr>
+<tr>
+<td nowrap align="center">24</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">25</td>
+<td nowrap>DID3</td>
+</tr>
+<tr>
+<td nowrap align="center">26</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">27</td>
+<td nowrap>DID2</td>
+</tr>
+<tr>
+<td nowrap align="center">28</td>
+<td nowrap>MONI</td>
+</tr>
+<tr>
+<td nowrap align="center">29</td>
+<td nowrap>DID1</td>
+</tr>
+<tr>
+<td nowrap align="center">30</td>
+<td nowrap>MONOUT</td>
+</tr>
+<tr>
+<td nowrap align="center">31</td>
+<td nowrap>DID0</td>
+</tr>
+<tr>
+<td nowrap align="center">32</td>
+<td nowrap>Ground</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>2.4.1.6 <a name="sec2.4.1.6">
+    &nbsp;&nbsp;Power Supply Connector (P1)</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">pin</td>
+<td nowrap>Signal</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>3.3V</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>1.8V</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>1.8V</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>1.8V</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>1.8V</td>
+</tr>
+<tr>
+<td nowrap align="center">13</td>
+<td nowrap>1.55V</td>
+</tr>
+<tr>
+<td nowrap align="center">14</td>
+<td nowrap>1.55V</td>
+</tr>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap>1.55V</td>
+</tr>
+<tr>
+<td nowrap align="center">16</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">17</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">18</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">19</td>
+<td nowrap>Thermo detect</td>
+</tr>
+<tr>
+<td nowrap align="center">20</td>
+<td nowrap>12V</td>
+</tr>
+<tr>
+<td nowrap align="center">21</td>
+<td nowrap>5V</td>
+</tr>
+<tr>
+<td nowrap align="center">22</td>
+<td nowrap>5V</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx2.4.2">index</a></div>
+<h4>
+<a name="sec2.4.2">
+2.4.2</a>&nbsp;&nbsp;Semi-Conductors</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>ID</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U1</tt></td>
+<td nowrap>Customized NEC Flipper Chip - MBU - Middle</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U2</tt></td>
+<td nowrap>Customized IBM PowerPC Gekko Chip - MBU - Bottom</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U3</tt></td>
+<td nowrap>MoSys (MS3M23B-5 A) 12MB 1-T SRAM - MBU - Top Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U4</tt></td>
+<td nowrap>MoSys (MS3M23B-5 A) 12MB 1-T SRAM - MBU - Top Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U5</tt></td>
+<td nowrap>NEC (D4891281G5 0125XU621) 16MB ARAM - MBU - Top Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U6</tt></td>
+<td nowrap>AV Encoder (AVE N -DOL RS5C5828) - MBB - Middle Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U7</tt></td>
+<td nowrap>Amplifier? (AMP - DOL 128 124) - MBB - Top Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U8</tt></td>
+<td nowrap>MX Clock Generator (Part Number?) - MBU - Bottom Left</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U9</tt></td>
+<td nowrap>MX Clock Generator (Part Number?) - MBU - Bottom Right</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>U10</tt></td>
+<td nowrap>MX RTC/IPL (8013108-M RTCN-DOL 1R6022A1)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>2.4.2.1 <a name="sec2.4.2.1">
+    &nbsp;&nbsp;IPL (U10)</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Pin</b></td>
+<td nowrap><b>Signal</b></td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>Clock</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>CS</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>serial in</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>Ground</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>serial out</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>osc - xtal2</td>
+</tr>
+<tr>
+<td nowrap align="center">13</td>
+<td nowrap>osc - xtal1</td>
+</tr>
+<tr>
+<td nowrap align="center">14</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx2.5">index</a></div>
+<h3>
+<a name="sec2.5">
+2.5</a>&nbsp;&nbsp;Details on the motherboard buses</h3>
+<br>
+The GameCube has three main external buses on its mother-board: the
+North-Bridge, the South-Bridge, and the East-Bridge. The fastest bus
+is the South-Bridge which connects the two 12MB 1T-SRAM chips to the
+Flipper. The South-Bridge bus has a bus-width of 64 bits, and data
+is exchanged through it at rates of about 324MHz. The North-Bridge
+bus connects the IBM PowerPC Gekko processor to the Flipper and is
+another 64 bit bus-width bus, however, it is only half as fast as
+the South-Bridge bus and is clocked at around 162MHz. Finally, the
+East-Bridge bus connects the 16MB Audio RAM chip to the Flipper chip.
+This bus only has a bus-width of 8 bits and is by far the slowest
+one, clocked at only 81MHz.
+     <div class="idx"><a href="index.html#idx2.6">index</a></div>
+<h3>
+<a name="sec2.6">
+2.6</a>&nbsp;&nbsp;Details on the Macronix (MX) Chips</h3>
+<br>
+An outer inspection of the two MX chips does not reveal anything of
+much interest. Both chips are TSOP packages containing 14 pins each.
+One of the chips has "CLK" inscripted on it, and
+the other "RTC". It can be easily inferred that
+the "CLK" chip functions as some sort of a clock
+controllergenerator and the "RTC"
+chip contains the GameCube's Real-Time Clock unit. Two of the RTC
+chip's pins are connected to an external crystal which regulates the
+RTC's timing rate. Another pin is connected to a battery located on
+the controller board. At least two pins are used for both VCC and
+GND. That leaves nine unknown pins. The RTC MX chip also contains
+the GameCube's BIOS. While 14 pins is not nearly enough for parallel
+Flash ROM, EEPROM, mask ROM, etc., it is quite adequate for a serial
+connection.
+     <div class="idx"><a href="index.html#idx2.7">index</a></div>
+<h3>
+<a name="sec2.7">
+2.7</a>&nbsp;&nbsp;DVD Protection</h3>
+<br>
+The DVD Protection is based on a custom data format on an otherwhise
+pretty standard dvd. 
+      <div class="idx"><a href="index.html#idx2.7.1">index</a></div>
+<h4>
+<a name="sec2.7.1">
+2.7.1</a>&nbsp;&nbsp;Filesystem</h4>
+<br>
+The custom Filesystem (which is described somewhere else in this Document)
+by itself is not related to the actual protection mechanism. However,
+since it is not standard, that alone would already make it hard to
+read (and create) in a regular (pc-) environment.
+      <div class="idx"><a href="index.html#idx2.7.2">index</a></div>
+<h4>
+<a name="sec2.7.2">
+2.7.2</a>&nbsp;&nbsp;Barcode</h4>
+<br>
+The Barcode is used to authenticate the Disc in the Drive.
+      <div class="idx"><a href="index.html#idx2.7.3">index</a></div>
+<h4>
+<a name="sec2.7.3">
+2.7.3</a>&nbsp;&nbsp;Encryption</h4>
+<br>
+The entire content of a Gamecube DVD is XORed with a constant cyphertext
+and it is transparently decrypted by the Disc-Controller when reading
+from the DVD.
+<h5>2.7.3.1 <a name="sec2.7.3.1">
+    &nbsp;&nbsp;Cyphertext algorithm</a>
+</h5>
+<br>
+todo
+     <div class="idx"><a href="index.html#idx2.8">index</a></div>
+<h3>
+<a name="sec2.8">
+2.8</a>&nbsp;&nbsp;IPL/BIOS Encryption</h3>
+<br>
+if you XOR an NTSC with a PAL bios (or any other two different ones),
+you will notice that because they have different sizes, there are
+some obviously zero encoded areas in one files, giving you plaintext
+in the other one which proves:
+<ul>
+<li> encryption is a simple XOR with a constant ciphertext.
+</li>
+<li> the key used to generate the cyphertext is the same for different
+bios's
+</li>
+</ul>
+so we do the math:<br><br>
+given Ci = ciphertext, Cl = cleartext, K = key<br><br>
+encoding data goes like:<br><br>
+Ci1 = Cl1 ^ K<br>
+Ci2 = Cl2 ^ K<br><br>
+If Cl1 or Cl2 is nothing but zero, the resultant Ci is just K<br><br>
+decoding it would be:<br><br>
+Cl = Ci ^ K<br><br>
+for the areas where Cl is nothing but zeroes in one bios, we know
+K <br><div class="idx"><a href="index.html#idx2.8.1">index</a></div>
+<h4>
+<a name="sec2.8.1">
+2.8.1</a>&nbsp;&nbsp;Flipper decryption logic bug</h4>
+<br>
+The hardware decryption logic has a really nasty bug which allows
+us to read almost the full Cleartext (and thus a large part of the
+cyphertext, by XORing it with encrypted data).<br><br>
+This, combined with the features of the XOR encryption makea the whole
+encryption useless (at least very insecure) and implementing a new
+bios is a straight-forward task (provided that "high speed"
+(30Mhz) programmable logic with enough memory attached to it is available.).
+The Bios chip, which also includes sram and rtc (but that won't matter
+here), is attached to the EXI0 bus. The Exi bus (nothing new here,
+just to refresh it is an SPI-like bus. SPI is nothing complicated,
+just four interesting lines: CS (used mainly for syncing, since you
+need a defined start point, and you can easily attach multiple devices
+(memory card, ...) to the same bus with seperate CS lines), SI (aka
+MOSI, master out, slave in - the CPU is always master, the IPL-chip
+is slave. so SI is gamecube -&gt; device), SO (device -&gt; gamecube, tristated
+when a device is not active), and CLK (generated by the master). a
+transfer is basically:<br><br>
+- lower CS (it's low active)<br>
+ for every bit do:<br>
+- set SI bit<br>
+- clock<br>
+- read SO bit<br>
+then:<br>
+- put CS high again.<br><br>
+(the exact timing (WHEN to sample SO, clock polarity) is different
+for different SPI modes, and the one descriped here is not necessarily
+the one used in the GC. anyway, it doesn't matter here)<br><br>
+so, based on that, we can transfer n-bit messages in BOTH DIRECTIONS.
+technically this is implemented with a 32bit shift register, with
+every clock cycle one bit is shifted out (to SI), and one bit is shifted
+in (to SO). so after n clock cycles, you have n new bits in the shift
+register and shifted n bits out. the used protocol on the Bus is in
+most cases very simple but device dependant. In the case of the IPL
+chip, it's the following:<br><br>
+GC -&gt; IPL<br>
+1 bit read/write (0 for read, 1 for write, the latter only valid for
+RTC/Sram of course)<br>
+1 unknown bit<br>
+1 bits selection (0 for ROM, 1 for RTC/Sram)<br>
+23 bits address<br>
+6 bits dummy<br>
+after that, the data transfer starts. the 6 dummy cycles are mainly
+to give the IPL time to read out the first byte.<br><br>
+So you send 32 bits of data (the "address"), and
+start receiving the ROM bytes. but hey - we said the SPI bus always
+transfers 2 bits per clock cycle (in marketing terms), since it's
+fullduplex (in technical terms). we transfer one bit TO the device,
+and one BACK. we HAVE to. there's no way to NOT send a bit - but it
+doesn't matter, since for example the bits send from the IPL to the
+GC in the first 32bits are just ignored - they would contain most
+probably only zeros, ones, or the bus might be tristate. it's simply
+not defined, so there's no data to be expected. the same goes for
+the transfer of the data. the IPL chip sets the correct data at the
+SO line, but the gamecube - well, sends dummy bits, too. normally
+you would send zeros, ones, or whatever. it's ignored by the IPL chip
+anyway (unless it's a write, that would turn the whole thing upside
+down) now since technically the SPI port is implemented by a shifting
+register of 32bit length. after transferring 32bits, we would have
+to read out the new value, store it into memory, and "start
+the next transfer". but what's about CLEARING the register
+before? yes, they didn't. in the next transfer, the last 32bit are
+shifted out as dummy bits. well, one might say, it's just the data
+just shifted in, so it's completely uninteresting. BUT: the decryption
+of the loader is done in hardware. it's a part between the SO line
+of the IPL and the DI port of the shift register. (the encryption
+is build into the flipper, so no way to intercept the content AFTER
+decryption).so because the (decrypted) data just shifted in (and stored
+into memory) is shifted out again - we can get the decrypted data.
+if you sniff the SI line to the IPL chip, you will get a log like
+this:<br><br><tt>00 00 40 00 (address written to the IPL, in this case: 0x100)</tt>&nbsp;<br><tt>FF FF FF FF (well just dummy data)</tt>&nbsp;<br><tt>xx xx xx xx (the data from the last 4 bytes, decrypted)</tt>&nbsp;<br><tt>...</tt>&nbsp;<br><tt>...</tt>&nbsp;<br><tt>xx xx xx xx (the data from the n-1 transfer, decrypted)</tt><br><br>
+so in the end you get every 32bit words except one. For every transfered
+block you miss 32bits of plaintext data, but you'll get the rest.
+This should be enough to decrypt huge parts of the bios, and thus
+recover a large part of K.
+      <div class="idx"><a href="index.html#idx2.8.2">index</a></div>
+<h4>
+<a name="sec2.8.2">
+2.8.2</a>&nbsp;&nbsp;Cyphertext algorithm</h4>
+<br>
+todo
+      <div class="idx"><a href="index.html#idx2.8.3">index</a></div>
+<h4>
+<a name="sec2.8.3">
+2.8.3</a>&nbsp;&nbsp;replacing the IPL</h4>
+<br>
+using the above gained knowledge it is possible to create a small
+bootrom replacement (using the, yet incomplete, cyphertext), and get
+more (most) of the IPL Cleartext.<br><br>
+The Gekko boots from 0x100, that's what you read in almost any ppc
+instruction manual - the reset vector. well, this isn't the complete
+truth - it boots from it's exception base + 0x100. And the exception
+base is normally zero, BUT, as the ppc manual states: there's a bit
+in a HID (i think) register, which turns the exception base to 0xFFF00000.
+and this bit is "set usually at boot time". So the
+processor starts to fetch instructions at 0xFFF000100. If you read
+a bit further, you'll notice that the CPU always reads 64bits at once
+for code. The memory at 0xFFF00000 is mapped inside the flipper to
+an automated exi transfer (with that shift register), with the decryption
+logic active. so the processor starts executing the decrypted instructions,
+reading 8 bytes at a time, of which we get 4 bytes in plain - not
+much, (although enough to make some funny experiments, but that's
+another topic). Luckily, the IPL itself (the cube menu) isn't executed
+this way since that wouldn't be possible thanks to the "dumb"
+decryption logic The first ~0x800 bytes start to read
+data out of the IPL chip and store it to memory (still using the hardware
+decryption logic), and jump there. they read 1024 bytes at once. Well
+- now we know 1020 bytes of each transfer, enough to have a complete
+block of code we can exchange (we have the ciphertext Cl^K
+= Ci on SO, and the plaintext (delayed by 32bits on SI), and can XOR
+them to get Cl^K^Ci = K. now we
+can encrypt our code with K). so now we can make a small code which
+just dumps the whole IPL - well, to the EXI bus or whereever you can
+receive it. Now we have all Cl, and thus we can compute all K, thus
+we can get the complete Plaintext of all available IPLs aswell as
+encode a larger custom IPL ourselves.<br><br>
+a small note on why you can not recover the plaintext of the original
+loader this way:<br><br>
+The decryption logic is, whatever it is, a PRNG. It generates a stream
+of ciphertext ("K"), which has random properties
+(non-repeating, at least not in the range of some MB), but is always
+the same. it is incremented with every EXI-transfer. the address is
+NOT used in the calculation. thus reading from 0xFFF00100 more than
+one time will give you each time another result. the first time you
+get Ci(0)^K(0) (the correct result), the second time
+you get Ci(0)^K(1) etc., i.e. wrong results. Since
+we never get the K(n) for odd n, i see no chance of recovering it
+this way, even if we can read at 0xFFF00000+x (and we can do this
+if we don't set a specific bit to disable the logic).
+ <div class="idx"><a href="index.html#idx3">index</a></div>
+</body></html>

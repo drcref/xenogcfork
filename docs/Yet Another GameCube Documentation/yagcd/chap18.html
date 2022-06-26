@@ -1,0 +1,1399 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec18">
+18</a>&nbsp;&nbsp;Appendix</h2>
+<br><div class="idx"><a href="index.html#idx18.1">index</a></div>
+<h3>
+<a name="sec18.1">
+18.1</a>&nbsp;&nbsp;GCC Quick How To</h3>
+<br><div class="idx"><a href="index.html#idx18.1.1">index</a></div>
+<h4>
+<a name="sec18.1.1">
+18.1.1</a>&nbsp;&nbsp;compile ASM to object:</h4>
+<br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-as -c </tt><br><tt>-I &lt;DEVKITCUBE&gt;/powerpc-eabi-elf/include -I &lt;additional includes&gt;
+</tt><br><tt>testasm.s -o testasm.o</tt><br><div class="idx"><a href="index.html#idx18.1.2">index</a></div>
+<h4>
+<a name="sec18.1.2">
+18.1.2</a>&nbsp;&nbsp;compile C to object:</h4>
+<br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-gcc -c </tt><br><tt>-I &lt;DEVKITCUBE&gt;/powerpc-eabi-elf/include -I &lt;additional includes&gt;
+</tt><br><tt>-nostdlib testc.c -o testc.o</tt><br><div class="idx"><a href="index.html#idx18.1.3">index</a></div>
+<h4>
+<a name="sec18.1.3">
+18.1.3</a>&nbsp;&nbsp;compile C++ to object:</h4>
+<br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-g++ -c </tt><br><tt>-I &lt;DEVKITCUBE&gt;/powerpc-eabi-elf/include -I &lt;additional includes&gt;
+</tt><br><tt>-nostdlib -fno-exceptions testcpp.cpp -o testcpp.o</tt><br><div class="idx"><a href="index.html#idx18.1.4">index</a></div>
+<h4>
+<a name="sec18.1.4">
+18.1.4</a>&nbsp;&nbsp;link objects</h4>
+<br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-ld -T ppc-ngcbin.x -o test.elf
+crt0.o </tt><br><tt>&lt;DEVKITCUBE&gt;/lib/gcc-lib/powerpc-eabi-elf/3.3/crtbegin.o </tt><br><tt>&lt;DEVKITCUBE&gt;/lib/gcc-lib/powerpc-eabi-elf/3.3/crtend.o </tt><br><tt>testasm.o testc.o testcpp.o -lg -lstdc++ -lm -lc -lnosys</tt>&nbsp;<br><tt></tt>&nbsp;<br>
+you only need to link against crtbegin.o/crtend.o if you are using
+c++, and you only need -lg,-lstdc++,-lc,-lm if you are actually using
+these libraries (of course:)). however if you do so, linking against
+-lnosys as well is essential.
+      <div class="idx"><a href="index.html#idx18.1.5">index</a></div>
+<h4>
+<a name="sec18.1.5">
+18.1.5</a>&nbsp;&nbsp;remove unneeded sections (debug info etc) from object</h4>
+<br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-strip -s test.elf</tt><br><div class="idx"><a href="index.html#idx18.1.6">index</a></div>
+<h4>
+<a name="sec18.1.6">
+18.1.6</a>&nbsp;&nbsp;convert object to plain binary</h4>
+<br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-objcopy -O binary test.elf
+test.bin</tt><br><div class="idx"><a href="index.html#idx18.1.7">index</a></div>
+<h4>
+<a name="sec18.1.7">
+18.1.7</a>&nbsp;&nbsp;convert absolute address into filename/line number/function</h4>
+<br>
+compile with "-g" flag, then use<br><br><tt>&lt;DEVKITCUBE&gt;/bin/powerpc-eabi-elf-addr2line -f -e test.elf
+0x80003100</tt><br><div class="idx"><a href="index.html#idx18.1.8">index</a></div>
+<h4>
+<a name="sec18.1.8">
+18.1.8</a>&nbsp;&nbsp;Building a Crosscompiler</h4>
+<br>
+configure options:<br><tt>--target=powerpc-eabi-elf</tt><br><tt>--with-cpu=750</tt><br><tt>--disable-threads</tt><br><tt>--enable-languages=c</tt><br><tt>--disable-shared</tt><br><tt>--disable-nls</tt><br><tt>--with-newlib</tt><br><div class="idx"><a href="index.html#idx18.1.9">index</a></div>
+<h4>
+<a name="sec18.1.9">
+18.1.9</a>&nbsp;&nbsp;Linker Script</h4>
+<br>
+to do
+      <div class="idx"><a href="index.html#idx18.1.10">index</a></div>
+<h4>
+<a name="sec18.1.10">
+18.1.10</a>&nbsp;&nbsp;Startup Code</h4>
+<br>
+to do
+     <div class="idx"><a href="index.html#idx18.2">index</a></div>
+<h3>
+<a name="sec18.2">
+18.2</a>&nbsp;&nbsp;Boot Process Details</h3>
+<br>
+The IPL (Initial Program Loader), or Bootrom, is located inside one
+Macronix chip (near Flipper, U10) and connected to the EXI bus. When
+the Gamecube is powered on, bit 25 (IP) in the Machine State Register
+is set, which means the system exception vector offset is <tt>0xfff00000</tt>.
+Then a small (about 0x0700 bytes) program called 'BS' will be mapped
+to <tt>0xfff00100</tt> (the hardware reset vector) and control will
+be returned to the Gamecube like after a normal reset, which means
+'BS' will be started.
+      <div class="idx"><a href="index.html#idx18.2.1">index</a></div>
+<h4>
+<a name="sec18.2.1">
+18.2.1</a>&nbsp;&nbsp;BS - Bootstrap 1</h4>
+<br><ul>
+<li> copies the Bootstrap 2 code (BS2) from Bootrom to <tt>0x81300000</tt><br>
+</li>
+<li> disables the IPL decryption logic by clearing bit 17 of <tt>0xcc006800</tt><br>
+</li>
+<li> sets IP of Machine State Register so exception vectors are pointing
+to lower memory
+</li>
+<li> jumps to BS2 code
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx18.2.2">index</a></div>
+<h4>
+<a name="sec18.2.2">
+18.2.2</a>&nbsp;&nbsp;BS2 - Bootstrap 2</h4>
+<br>
+BS2 is the Program that loads the game or shows the menus when the
+gamecube has been powered on without a game inserted. It was written
+in C, using official SDK libraries, probably earlier than 1.0. __start.c
+seems to be same as usual, except that there is no OSInit() call (old
+versions must call OSInit() in main, instead of __start). <br><br>
+note: this has been reversed from a PAL gamecube and looks different
+on a NTSC one.<br><h5>18.2.2.1 <a name="sec18.2.2.1">
+    &nbsp;&nbsp;short description of start() routine.</a>
+</h5>
+<br><tt>&nbsp;</tt><br><tt>// 81300000</tt><br><tt>__start:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__init_registers() // set stack pointer and static
+bases (r2, r13)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__init_hardware() // paired-singles and cache init</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__init_data() // clear bss ?</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;. // here goes Debug Monitor stuff</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;.</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;.</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;DBInit() // debug monitor init :)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__init_user() // cpp init</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;main() // that's actually, IPL (BS2) code</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;jmp exit() // halt CPU</tt><br><h5>18.2.2.2 <a name="sec18.2.2.2">
+    &nbsp;&nbsp;IPL main() reversing</a>
+</h5>
+<br><tt>&nbsp;</tt><br><tt>// 813006D4</tt><br><tt>main()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BS2Init();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSInit();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;AD16Init();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;AD16WriteReg(0x800);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;DVDInit();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;AD16WriteReg(0x900);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;CARDInit();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;AD16WriteReg(0xa00);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;0x81302104(); // SRAM, real-time clock (check ?)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__VIInit(0);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;VIInit();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;AD16WriteReg(0xb00);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;0x813004e4(); // setup performance. monitor</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;0x8130222c(); // update time-base by SRAM clock</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;0x813022c0(); // perform initial DVD actions and fall
+back into menu</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;PADSetSpec(5); // sed PAD type ('spec') to 'production'</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;PADInit();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;AD16WriteReg(0xc00);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BS2Menu(); // here goes intro and main menu... (BIG
+one!)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSPanic(__FILE__, __LINE__, "BS2
+ERROR &gt;&nbsp;&gt;&nbsp;&gt; SHOULD NEVER REAC<br>
+HERE");</tt><br><tt>}</tt><br><tt>float NaN;</tt><br><tt>// 8130045C</tt><br><tt>void BS2Init()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// clear LoMem and OSMem</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;memset(0x80000000, 0, 256);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;memset(0x80003000, 0, 256);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BATInit();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// set memory size to 24MB</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;*0x80000028 = 0x01800000;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// set console type to default retail 1</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;*0x8000002c = 1;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// upgrade retail</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;*0x8000002c += *0xcc00302c &gt;&nbsp;&gt;
+28;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;(u32)NaN = -1;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;FPUInit();</tt><br><tt>}</tt><br><tt>// 813003A0</tt><br><tt>void BATInit()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__asm</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isync</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;li r4, 0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr DBAT2L, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr DBAT2U, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr DBAT3L, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr DBAT3U, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr IBAT1L, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr IBAT1U, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr IBAT2L, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr IBAT2U, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr IBAT3L, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mtspr IBAT3U, r4</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isync</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>}</tt><br><tt>// 813003D8</tt><br><tt>void FPUInit()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// FPU already initialized in __start(),</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// so just invalidate all FPRs.</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__asm</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;lfs f0, NaN</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;fmr f1, f0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;fmr f2, f0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;fmr f3, f0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;. e</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;. t</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;. c</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;fmr f31, f0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>}</tt><br><tt>// maybe later</tt><br><tt>0x81302104()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSLockSram();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSCheckSram();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSGetRTC();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSTickToCalendarTime();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;memset();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSUnlockSram();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSSyncSram();</tt><br><tt>}</tt><br><tt>// maybe later</tt><br><tt>0x813004e4()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSDisableInterrupts();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSGetTick();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSGetTick();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSGetTick();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__div2i();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__div2i();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;PPCMtpmc1();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;PPCMtmmcr0();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSGetTick();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSGetTick();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;PPCMtmmcr0();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;PPCMfpmc1();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__div2i();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__div2i();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__div2i();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSRestoreInterrupts();</tt><br><tt>}</tt><br><tt>// maybe later</tt><br><tt>0x8130222c()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSLockSram();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSGetRTC();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSSetTime();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;__OSUnlockSram();</tt><br><tt>}</tt><br><tt>static int BS2State = 0;</tt><br><tt>// just layer..</tt><br><tt>0x813022c0()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BS2State = BS2Mach();</tt><br><tt>}</tt><br><tt>// 81300A70</tt><br><tt>// located in __FILE__ = "BS2Mach.c"</tt><br><tt>int BS2Mach()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;static int state = 0;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BOOL level = OSDisableInterrupts();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;switch(state)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 0:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r13 - 0x7dc8] = 0x800030d4;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state = 1;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__OSGetSystemTime();</tt><br><tt>... some checks</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(fail) break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state = 2;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Install DVD cover callback</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if([r13 - 0x7da8] == 0)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r3 = [r13 - 0x7dc8]</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r3] = 0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r13 - 0x7dc4] =
+0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r13 - 0x7dac] =
+1</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DVDLowSetResetCoverCallback(0);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DVDReset();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r13 - 0x7da8] =
+1</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s64)[r13 - 0x7d9c]
+= __OSGetSystemTime();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__OSGetSystemTime();</tt><br><br><br><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(fail) break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DVDLowSetResetCoverCallback(0x813007d8);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DVDReset();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state = 3;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Read Disk information (ID)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DVDReadDiskID(0x8145e620 + 64, 0x80000000,
+0x813007e4);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state = 4;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>.</tt><br><tt>.</tt><br><tt>.</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Leave immediately ?</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 16:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSPanic(__FILE__, __LINE__,
+"BS2 ERROR &gt;&nbsp;&gt; UNKNOWN STATE");</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSRestoreInterrupts(level);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;return (DVDLowGetCoverStatus() == 1) ? 19 : step;</tt><br><tt>}</tt><br><tt>// 81301154</tt><br><tt>void BS2Menu()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BS2InitAlloc();</tt><br><tt>}</tt><br><tt>static OSHeapHandler BS2Heap;</tt><br><tt>// 81307EA8</tt><br><tt>void BS2InitAlloc()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u8 *arenaLo;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u8 *arenaHi;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u8 *arenaNew;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;arenaLo = OSGetArenaLo();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;arenaLo = (void *)OSRoundUp32B(arenaLo);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;arenaHi = OSGetArenaHi();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;arenaHi = (void *)OSRoundDown32B(arenaHi);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;arenaNew = OSInitAlloc(0x80800000, arenaHi, 2);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSSetArenaLo(arenaHi);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BS2Heap = OSCreateHeap(arenaLo, arenaHi);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSSetCurrentHeap(BS2Heap);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSAddToHeap(BS2Heap, arenaNew, 0x81100000);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;BS2CheckAlloc();</tt><br><tt>}</tt><br><tt>// 81307F34</tt><br><tt>void BS2CheckAlloc()</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSCheckHeap(BS2Heap);</tt><br><tt>}</tt><br><tt>// 81307F58</tt><br><tt>void *OSAlloc(long size)</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;void *ptr;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;if((ptr = OSAlloc(size)) == 0)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSPanic(?);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;return ptr;</tt><br><tt>}</tt>&nbsp;<br><h5>18.2.2.3 <a name="sec18.2.2.3">
+    &nbsp;&nbsp;Map of IPL Library code</a>
+</h5>
+<br>
+&nbsp;<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Address</b></td>
+<td nowrap><b>Name</b></td>
+<td nowrap><b>Libray</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813014C8</tt></td>
+<td nowrap>DEMOInit (*)</td>
+<td nowrap>DEMO</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81307F58</tt></td>
+<td nowrap>OSAlloc (*)</td>
+<td nowrap>OS</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813327BC</tt></td>
+<td nowrap>PPCMtmmcr0</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813327C4</tt></td>
+<td nowrap>PPCMfpmc1</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813327CC</tt></td>
+<td nowrap>PPCMtpmc1</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81332814</tt></td>
+<td nowrap>OSInit</td>
+<td nowrap>OS</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81332EF0</tt></td>
+<td nowrap>OSInitAlarm</td>
+<td nowrap>OS</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81332F3C</tt></td>
+<td nowrap>OSCreateAlarm</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81333688</tt></td>
+<td nowrap>OSAllocFromHeap</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81333784</tt></td>
+<td nowrap>OSSetCurrentHeap</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81333794</tt></td>
+<td nowrap>OSInitAlloc</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81333804</tt></td>
+<td nowrap>OSCreateHeap</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81333870</tt></td>
+<td nowrap>OSAddToHeap</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813338D0</tt></td>
+<td nowrap>OSCheckHeap</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813344C0</tt></td>
+<td nowrap>OSGetStackPointer</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133491C</tt></td>
+<td nowrap>OSReport</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133499C</tt></td>
+<td nowrap>OSPanic</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81334AA4</tt></td>
+<td nowrap>PPCHalt</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81334D4C</tt></td>
+<td nowrap>EXIImm</td>
+<td nowrap>EXI</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81335134</tt></td>
+<td nowrap>EXISync</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813353C8</tt></td>
+<td nowrap>EXIProbeReset</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133570C</tt></td>
+<td nowrap>EXISelect</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81335838</tt></td>
+<td nowrap>EXIDeselect</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81335D6C</tt></td>
+<td nowrap>EXILock</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81335E60</tt></td>
+<td nowrap>EXIUnlock</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81335F54</tt></td>
+<td nowrap>AD16Init</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81336090</tt></td>
+<td nowrap>AD16WriteReg</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813361B0</tt></td>
+<td nowrap>OSDisableInterrupts</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813361C4</tt></td>
+<td nowrap>OSEnableInterrupts</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813361D8</tt></td>
+<td nowrap>OSRestoreInterrupts</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81336DD8</tt></td>
+<td nowrap>__OSGetRTC</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813372B0</tt></td>
+<td nowrap>__OSLockSram</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81337658</tt></td>
+<td nowrap>__OSUnlockSram</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813376A0</tt></td>
+<td nowrap>__OSSyncSram</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813376B0</tt></td>
+<td nowrap>__OSCheckSram</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81338504</tt></td>
+<td nowrap>OSInitThreadQueue</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133939C</tt></td>
+<td nowrap>OSGetTick</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813393B8</tt></td>
+<td nowrap>__OSSetTime</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133943C</tt></td>
+<td nowrap>__OSGetSystemTime</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133963C</tt></td>
+<td nowrap>OSTicksToCalendarTime</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133AC50</tt></td>
+<td nowrap>DVDLowGetCoverStatus</td>
+<td nowrap>DVD</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133AB18</tt></td>
+<td nowrap>DVDLowReset</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133ABD4</tt></td>
+<td nowrap>DVDLowSetResetCoverCallback</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133B5F0</tt></td>
+<td nowrap>DVDInit</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133CD18</tt></td>
+<td nowrap>DVDReadDiskID</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133D0EC</tt></td>
+<td nowrap>DVDReset</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133DBE0</tt></td>
+<td nowrap>__VIInit</td>
+<td nowrap>VI</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133DDC8</tt></td>
+<td nowrap>VIInit</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133E6C0</tt></td>
+<td nowrap>VIConfigure</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8133F0B4</tt></td>
+<td nowrap>VIGetTvFormat</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Address</b></td>
+<td nowrap><b>Name</b></td>
+<td nowrap><b>Libray</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8134052c</tt></td>
+<td nowrap>PADInit</td>
+<td nowrap>PAD</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8134092c</tt></td>
+<td nowrap>PADSetSpec</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81343114</tt></td>
+<td nowrap>CARDInit</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813480D4</tt></td>
+<td nowrap>GXInit</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81349148</tt></td>
+<td nowrap>GXInitFifoBase</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81349230</tt></td>
+<td nowrap>GXSetCPUFifo</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81349340</tt></td>
+<td nowrap>GXSetGPFifo</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x813494B8</tt></td>
+<td nowrap>__GXFifoInit</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8134B0AC</tt></td>
+<td nowrap>__GXPEInit</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8135A178</tt></td>
+<td nowrap>__div2i </td>
+<td nowrap>gcc</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8135A394</tt></td>
+<td nowrap>__mod2i</td>
+<td nowrap>gcc</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8135B494</tt></td>
+<td nowrap>vprintf</td>
+<td nowrap>stdlib</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+(*) these functions were slightly modified for the IPL.
+      <div class="idx"><a href="index.html#idx18.2.3">index</a></div>
+<h4>
+<a name="sec18.2.3">
+18.2.3</a>&nbsp;&nbsp;Apploader</h4>
+<br>
+The Apploader provides functions to the bootrom that load the game
+(using bootrom read DVD functions). The bootrom calls the Init function,
+then the Main function in a loop, then the Closing function. At first,
+the BIOS calls the Apploader entrypoint with r3, r4, and r5 pointing
+to a free space for a 32 bit value.<br><br><tt>// info based on Luigi Mansion appldr.bin file</tt><br><tt>// (built date is 17 Dec 2001).</tt><br><tt>// Apploader Entrypoint</tt><br><tt>// Input values :</tt><br><tt>// r3 = Address where to put the address of the Init function</tt><br><tt>// r4 = Address where to put the address of the Main Loading
+function</tt><br><tt>// r5 = Address where to put the address of the Closing function</tt><br><tt>// Return values :</tt><br><tt>// none</tt><br><tt>//</tt><br><tt>// file:[0010-0013] = 0x81200288 (apploader entrypoint)</tt><br><tt>void Entrypoint(r3, r4, r5)</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;[r3] = 0x81200290 // Init</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;[r4] = 0x81200580 // Main</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;[r5] = 0x81200D50 // Close</tt><br><tt>}</tt><br><tt>// Init function</tt><br><tt>// Input values :</tt><br><tt>// ?</tt><br><tt>// Return values :</tt><br><tt>// none</tt><br><tt>void Init(void (*OSReport)(char *fmt, ...))</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// clear some important memory areas</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;memset(OSAppLdr + 32, 0, 32);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;memset(&amp;OSAppLdr.DolImage, 0, sizeof(DolImage));</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;[+0x140] = 0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.pass = 0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;[+0x148] = 0</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.OSReport = OSReport // save report callback</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.OSReport("Apploader Initialized. $
+Revision: 28 $n");</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.OSReport("This Apploader built %s
+%sn", __DATE__, __TIME__);</tt><br><tt>}</tt><br><tt>// Main Loader function</tt><br><tt>//</tt><br><tt>// Input values :</tt><br><tt>// r3 = Address where to put the Memory destination of the
+disk read</tt><br><tt>// r4 = Address where to put the Size of the disk read</tt><br><tt>// r5 = Address where to put the Starting position of the
+disk read</tt><br><tt>//</tt><br><tt>// Return value:</tt><br><tt>// r3 = 0 if everything is already loaded</tt><br><tt>// = 1 (or !=0) if main function should be called again</tt><br><tt>//</tt><br><tt>// at 0x81200580</tt><br><tt>// helper functions (below)</tt><br><tt>u32 DOLSize(void);</tt><br><tt>// 0x812013E0 seems to be a big structure, like that :</tt><br><tt>struct OSAppLdr</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// untouched</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 SecondTimeForThePart;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u8 [28]</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u8 [32] // "BB2" structure ?</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;DolImage DolImage; // main DOL executable header</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// flags or something</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 +0x140</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 pass; // 0...12</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 +0x148</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// report routine itself is placed somewhere in bootrom</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;void (*OSReport)(char *fmt, ...);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// flags or something</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 +0x150</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 +0x154</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 +0x158</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 +0x15C</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u8 [32]</tt><br><tt>} OSAppLdr; // 0x174 total</tt><br><tt>int Main(r3, r4, r5)</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;int pass = OSAppLdr.pass;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;if(pass &lt;= 12)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch(pass)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// read "BB2" structure
+(DVD offset at 0x0420)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 0:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 1:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// "BB2"
+structure ?</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 0420-0424 offset of main
+executable DOL</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 0424-0427 offset of the
+FST</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 0428-042B size of FST</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 042C-042F maximum size
+of FST</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r3] = OSAppLdr + 32</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r4] = 32</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r5] = 0x420</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.pass = 2</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DCInvalidateRange([r3],
+[r4])</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// check "BB2" structure
+FST sizes</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 2:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FSTLength = [OSAppLdr +
+32 + 8]</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FSTMaxLength = [OSAppLdr
++ 32 + 12]</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(FSTLength &gt; FSTMaxLength)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.OSReport(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"APPLOADER
+ERROR &gt;&nbsp;&gt;&nbsp;&gt; FSTLength(%d) i<br>
+BB2 is greater </tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;than FSTMaxLength(%d)n",
+FSTLength, FSTMaxLength);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PPCHalt();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r3] = OSAppLdr + 0x160</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r4] = 32</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r5] = 0x440</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.pass = 3</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DCInvalidateRange([r3],
+[r4])</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 3:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0x800000E8] = [OSAppLdr
++ 0x160] // word</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 4:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// load main DOL header (256 bytes)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 5:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r3] = &amp;OSAppLdr.DolImage</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r4] = 256</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[r5] = [OSAppLdr + 32]
+// from BB2</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.pass = 6</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DCInvalidateRange([r3],
+[r4])</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 6:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;totalSize = DOLSize();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxSize = [[800000F4]
++ 0x28]; // PadSpec ?</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if((totalSize &gt; maxSize) &amp;&amp;
+maxSize)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.OSReport(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"APPLOADER
+ERROR &gt;&nbsp;&gt;&nbsp;&gt; Total size of text/dat<br>
+sections </tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of the dol file are
+too big (%d(0x%08x) bytes). Currently </tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the limit is set as
+%d(0x%08x) bytesn", totalSize, maxSize);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PPCHalt();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>.</tt><br><tt>.</tt><br><tt>.</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 7:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 8:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 9:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 10:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 11:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case 12:</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(SecondTimeForThePart ==
+TRUE)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OSAppLdr.OSReport(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Failed assertion
+SecondTimeForThePart == TRUE");</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PPCHalt();</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>.</tt><br><tt>.</tt><br><tt>.</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;else</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>}</tt><br><tt>// helper functions</tt><br><tt>// at 0x81200338</tt><br><tt>u32 DOLSize(void)</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;DolImage *dol = &amp;OSAppLdr.DolImage;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 totalBytes = 0;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;int i;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;for(i=0; i&lt;DOL_MAX_TEXT; i++)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(dol-&gt;textData[i])</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// aligned to 32 byte boundary</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;totalBytes += (dol-&gt;textLen[i] + 31) &amp;
+~31;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;for(i=0; i&lt;DOL_MAX_DATA; i++)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(dol-&gt;dataData[i])</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// aligned to 32 byte boundary</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;totalBytes += (dol-&gt;dataLen[i] +
+31) &amp; ~31;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;return totalBytes;</tt><br><tt>}</tt><br><tt>// Closing function</tt><br><tt>//</tt><br><tt>// Return value: r3 = entry point</tt><br><tt>//</tt><br><tt>// at 0x81200D50</tt><br><tt>u32 Close(void)</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// provide entrypoint of main DOL executable to IPL</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;return OSAppLdr.DolImage.entry;</tt><br><tt>}</tt><br><div class="idx"><a href="index.html#idx18.2.4">index</a></div>
+<h4>
+<a name="sec18.2.4">
+18.2.4</a>&nbsp;&nbsp;Main DOL executable</h4>
+<br><div class="idx"><a href="index.html#idx18.3">index</a></div>
+<h3>
+<a name="sec18.3">
+18.3</a>&nbsp;&nbsp;Game and Maker Codes</h3>
+<br><div class="idx"><a href="index.html#idx18.3.1">index</a></div>
+<h4>
+<a name="sec18.3.1">
+18.3.1</a>&nbsp;&nbsp;Gamecodes</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>offset</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">1</td>
+<td nowrap>System ID</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap align="center"><b>id</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x47</tt></td>
+<td nowrap align="center"><tt>G</tt></td>
+<td nowrap>Gamecube (standard value)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x44</tt></td>
+<td nowrap align="center"><tt>D</tt></td>
+<td nowrap>
+<table>
+<tr><td nowrap>used by Legend Of Zelda: Ocarina Of Time (Master Quest)</td></tr>
+<tr><td nowrap>Might be a indicator  for  emulated/ported/promotional titles.</td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x55</tt></td>
+<td nowrap align="center"><tt>U</tt></td>
+<td nowrap>used by GBA-Player Boot CD</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">2-3</td>
+<td nowrap align="center">2</td>
+<td nowrap>Game ID/serial Number</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">1</td>
+<td nowrap>Country/Region Code</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap align="center"><b>id</b></td>
+<td nowrap><b>Country</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x45</tt></td>
+<td nowrap align="center"><tt>E</tt></td>
+<td nowrap>USA/NTSC</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x50</tt></td>
+<td nowrap align="center"><tt>P</tt></td>
+<td nowrap>Europe/PAL</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x4a</tt></td>
+<td nowrap align="center"><tt>J</tt></td>
+<td nowrap>Japan/NTSC</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x55</tt></td>
+<td nowrap align="center"><tt>U</tt></td>
+<td nowrap>used by the European version of The Legend Of Zelda: Ocarina Of Time
+(Master Quest)</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx18.3.2">index</a></div>
+<h4>
+<a name="sec18.3.2">
+18.3.2</a>&nbsp;&nbsp;Game Serial ID</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Characters</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>System ID 'DOL'</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>Gamecode</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>Country ID</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap><b>ID</b></td>
+<td nowrap><b>Country</b></td>
+</tr>
+<tr>
+<td nowrap><tt>USA</tt></td>
+<td nowrap>guess what :)</td>
+</tr>
+<tr>
+<td nowrap><tt>NOE</tt></td>
+<td nowrap>Nintendo of Europe</td>
+</tr>
+<tr>
+<td nowrap><tt>NOA</tt></td>
+<td nowrap>Nintendo of America</td>
+</tr>
+<tr>
+<td nowrap><tt>JPN</tt></td>
+<td nowrap>Japan</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+for example
+<ul>
+<li> <tt>DOL-GZLE-USA</tt> (Zelda)
+</li>
+<li> <tt>DOL-GNHE-USA</tt> (NHL Hitz 20-20)
+</li>
+<li> <tt>DOL-GTEP-NOE</tt> (1080&deg; Avalanche)
+</li>
+<li> <tt>DL-DOL-GFZJ-JPN</tt> (F-Zero GX)
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx18.3.3">index</a></div>
+<h4>
+<a name="sec18.3.3">
+18.3.3</a>&nbsp;&nbsp;Makercodes</h4>
+<br>
+The ID (2 Bytes ASCII) belongs to the publisher, not the developer.
+Hence, even though Rare developed Star Fox Adventures, and Retro Studios
+developed Metroid Prime, they both have the Vendor ID of Nintendo
+(01).<br>
+It is unknown how vendor IDs are allocated; However, all IDs thus
+far seem to be alphanumeric. If this is accurate, then as a result
+the maximum number of unique vendors is 1,296. Vendor IDs seem to
+be region-independent.<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>ID</b></td>
+<td nowrap><b>Vendor</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>01</tt></td>
+<td nowrap>Nintendo</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>08</tt></td>
+<td nowrap>Capcom</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>41</tt></td>
+<td nowrap>Ubisoft</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>4F</tt></td>
+<td nowrap>Eidos</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>51</tt></td>
+<td nowrap>Acclaim</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>52</tt></td>
+<td nowrap>Activision</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>5D</tt></td>
+<td nowrap>Midway</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>5G</tt></td>
+<td nowrap>Hudson</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>64</tt></td>
+<td nowrap>Lucas Arts</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>69</tt></td>
+<td nowrap>Electronic Arts</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>6S</tt></td>
+<td nowrap>TDK Mediactive</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>8P</tt></td>
+<td nowrap>Sega</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>A4</tt></td>
+<td nowrap>Mirage Studios</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>AF</tt></td>
+<td nowrap>Namco</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>B2</tt></td>
+<td nowrap>Bandai</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>DA</tt></td>
+<td nowrap>Tomy</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>EM</tt></td>
+<td nowrap>Konami</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx18.4">index</a></div>
+<h3>
+<a name="sec18.4">
+18.4</a>&nbsp;&nbsp;Macronix Chip IDs</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><tt>MX ff t mm b p r s</tt></td>
+</tr>
+<tr>
+<td nowrap align="center">MX</td>
+<td nowrap>MX', vendor id</td>
+</tr>
+<tr>
+<td nowrap align="center">ff</td>
+<td nowrap>2 digits, device family</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap>17</td>
+<td nowrap>auto focus controller</td>
+</tr>
+<tr>
+<td nowrap>23</td>
+<td nowrap>mask rom</td>
+</tr>
+<tr>
+<td nowrap>25</td>
+<td nowrap>spi serial flash memory</td>
+</tr>
+<tr>
+<td nowrap>26</td>
+<td nowrap>mtp eeprom</td>
+</tr>
+<tr>
+<td nowrap>27</td>
+<td nowrap>eeprom</td>
+</tr>
+<tr>
+<td nowrap>28</td>
+<td nowrap>flash memory</td>
+</tr>
+<tr>
+<td nowrap>29</td>
+<td nowrap>flash memory (single voltage)</td>
+</tr>
+<tr>
+<td nowrap>53</td>
+<td nowrap>memory card (smc)</td>
+</tr>
+<tr>
+<td nowrap>67</td>
+<td nowrap>flash memory</td>
+</tr>
+<tr>
+<td nowrap>69</td>
+<td nowrap>flash memory + sram (stacked chip)</td>
+</tr>
+<tr>
+<td nowrap>88</td>
+<td nowrap>digital camera/flat panel display controller</td>
+</tr>
+<tr>
+<td nowrap>89</td>
+<td nowrap>flat panel display controller</td>
+</tr>
+<tr>
+<td nowrap>92</td>
+<td nowrap>sound generator</td>
+</tr>
+<tr>
+<td nowrap>93</td>
+<td nowrap>single chip answering machine/digital recorder controller</td>
+</tr>
+<tr>
+<td nowrap>97</td>
+<td nowrap>isdn controller</td>
+</tr>
+<tr>
+<td nowrap>98</td>
+<td nowrap>network</td>
+</tr>
+<tr>
+<td nowrap>99</td>
+<td nowrap>bluetooth</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">t</td>
+<td nowrap>1 character, device type</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">c</td>
+<td nowrap>cmos</td>
+</tr>
+<tr>
+<td nowrap align="center">f</td>
+<td nowrap>flash</td>
+</tr>
+<tr>
+<td nowrap align="center">l</td>
+<td nowrap>low-voltage</td>
+</tr>
+<tr>
+<td nowrap align="center">w</td>
+<td nowrap>srw</td>
+</tr>
+<tr>
+<td nowrap align="center">v</td>
+<td nowrap>2.2v</td>
+</tr>
+<tr>
+<td nowrap align="center">u</td>
+<td nowrap>1.8v</td>
+</tr>
+<tr>
+<td nowrap align="center">x</td>
+<td nowrap>1.5v</td>
+</tr>
+<tr>
+<td nowrap align="center">vw</td>
+<td nowrap>2.25v+srw</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">mm</td>
+<td nowrap>2 to 4 digits, mode/density</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">004</td>
+<td nowrap align="center">4M, x8 Boot Block</td>
+</tr>
+<tr>
+<td nowrap align="center">040</td>
+<td nowrap align="center">4M, x8 Equal Sector</td>
+</tr>
+<tr>
+<td nowrap align="center">400</td>
+<td nowrap align="center">4M, x8/x16 Boot Block</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">b</td>
+<td nowrap>1 character, bootblock type (rom only)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">t</td>
+<td nowrap>top</td>
+</tr>
+<tr>
+<td nowrap align="center">b</td>
+<td nowrap>bottom</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><tt>MX ff t mm b p r s</tt></td>
+</tr>
+<tr>
+<td nowrap align="center">p</td>
+<td nowrap>1 character, package type</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">p</td>
+<td nowrap align="center">plastic dip</td>
+</tr>
+<tr>
+<td nowrap align="center">m</td>
+<td nowrap align="center">plastic sop</td>
+</tr>
+<tr>
+<td nowrap align="center">q</td>
+<td nowrap align="center">plastic plcc</td>
+</tr>
+<tr>
+<td nowrap align="center">t</td>
+<td nowrap align="center">tsop normal</td>
+</tr>
+<tr>
+<td nowrap align="center">d</td>
+<td nowrap align="center">qeramic dip</td>
+</tr>
+<tr>
+<td nowrap align="center">x8</td>
+<td nowrap align="center">0.8mm ball pitch, bga, csp</td>
+</tr>
+<tr>
+<td nowrap align="center">x</td>
+<td nowrap align="center">csp</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">r</td>
+<td nowrap>1 character, temperature range</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">c</td>
+<td nowrap align="center">commercial</td>
+</tr>
+<tr>
+<td nowrap align="center">i</td>
+<td nowrap align="center">industrial</td>
+</tr>
+<tr>
+<td nowrap align="center">m</td>
+<td nowrap align="center">military</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">s</td>
+<td nowrap>1 character, speed</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">45</td>
+<td nowrap align="center">45ns</td>
+</tr>
+<tr>
+<td nowrap align="center">55</td>
+<td nowrap align="center">55ns</td>
+</tr>
+<tr>
+<td nowrap align="center">70</td>
+<td nowrap align="center">70ns</td>
+</tr>
+<tr>
+<td nowrap align="center">85</td>
+<td nowrap align="center">85ns</td>
+</tr>
+<tr>
+<td nowrap align="center">90</td>
+<td nowrap align="center">90ns</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap align="center">100ns</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap align="center">120ns</td>
+</tr>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap align="center">150ns</td>
+</tr>
+<tr>
+<td nowrap align="center">20</td>
+<td nowrap align="center">200ns</td>
+</tr>
+<tr>
+<td nowrap align="center">25</td>
+<td nowrap align="center">250ns</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx18.5">index</a></div>
+<h3>
+<a name="sec18.5">
+18.5</a>&nbsp;&nbsp;chip simelarities</h3>
+<br><ul>
+<li> mx25L4001 (serial flash rom in nintendo memory card 59)
+<ul>
+<li> datasheet was never available at Macronix&nbsp; but take a look at their
+3-volt SPI Flash ROMs (the MX25LXX02 series) for a general pinout
+without&nbsp;the Unknown pin 24.
+</li>
+</ul>
+</li>
+<li> mx25L4004 (serial flash rom in datel memory card)
+<ul>
+<li> mx25L4004 - 4Mbit, 4Mx1 serial flash rom (datasheet was, but is no
+longer available at Macronix :/)
+</li>
+</ul>
+</li>
+<li> mx98730ec (eth controller in bba)
+<ul>
+<li> mx98728ec - single chip 10/100 base generic MAC interface
+</li>
+<li> (mx98726, mx98728)
+</li>
+</ul>
+</li>
+<li> Gekko
+<ul>
+<li> ibm PowerPc750CXe
+</li>
+<li> (PowerPc740, PowerPc750, PowerPc750CX)
+</li>
+</ul>
+</li>
+<li> (inside flipper)
+<ul>
+<li> (big ???) mx92L832 - 32 poly phony sound generator
+</li>
+<li> (big ???) mx96037 - 16bit DSP Controller
+</li>
+<li> (mx93011a,...)
+</li>
+</ul>
+</li>
+<li> mx 8013108-M rtnc-dol 1r6022a1 (rtc/ipl)
+</li>
+<li> MoSys (MS3M23B-5 A) 12MB 1-T SRAM (main memory)
+</li>
+<li> NEC (D4891281G5 0125XU621) 16MB ARAM (auxiliary/dsp memory)
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx18.6">index</a></div>
+<h3>
+<a name="sec18.6">
+18.6</a>&nbsp;&nbsp;Easter Eggs</h3>
+<br><ul>
+<li> To hear a different sound when the console boots hold the Z button
+down once you turn the console on and as the square bounces down you
+will hear the noises of kids.
+</li>
+<li> Hold Z then about one second later hold A to hear another sound.
+</li>
+<li> If you have 4 controllers (and 5 hands) this one will work: Before
+you turn the Gamecube on hold down Z on each controller, then turn
+the system on (with your 5th hand of course). You will be greeted
+by a ninja yell.
+</li>
+<li> holding B on first controller, then powering on will let you switch
+a pal gamecube into 60Hz mode
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx18.7">index</a></div>
+<h3>
+<a name="sec18.7">
+18.7</a>&nbsp;&nbsp;Terms and Acronyms</h3>
+<br><ul>
+<li> AA
+Antialiasing. Rendering method, that makes polygon edges seem less
+sharpen, combining colors of nearby pixels.
+</li>
+<li> AD16
+Mysterious EXI device.
+</li>
+<li> AI
+Audio Interface. Hardware responsible for DMA playback of PCM buffer
+and DVD ADPCM streaming sound. AI hardware cannot mix sound channels
+or set channel volume for PCM DMA playback. These operations and more
+advanced sound effects are produced by DSP.
+</li>
+<li> Apploader
+Small program on DVD to load main DOL executable.
+</li>
+<li> AR, ARAM
+Auxiliary (Audio) Memory. 16 MB of slow (comapred to RAM) DRAM. Used
+for raw DSP sound data and as temporary space for textures. ARAM has
+DMA communication channel with main memory (RAM). Development boards
+has "ARAM Expansion" (additional 4, 16 or 32 MBs).
+</li>
+<li> BAT
+Block Address Translation, PPC MMU translation mechanism. There are
+DBAT and IBAT special-purpose registers for data and instruction address
+translation respectively.
+</li>
+<li> BBA
+Broad-Band Adapter, GC's 10BaseT Ethernet Adapter.
+</li>
+<li> BS
+Bootstrap Stage (from analogy with UNIX). Very first code, executed
+after GC hard reset.
+</li>
+<li> BS2
+Bootstrap Stage 2. Same as IPL.
+</li>
+<li> CR
+PPC Condition Register, stores result of integer comare operation,
+for conditional branch decision.
+</li>
+<li> CRT
+C Run Time. C/C++ program environment (libraries and startup calls).
+</li>
+<li> DOL
+Gamecube application (custom executable file format).
+</li>
+<li> Dolphin
+Early development work name of Gamecube.
+</li>
+<li> Dolphin OS
+Gamecube OS. Single user, single process, multithreaded. Linked together
+with any GC application ("hard-linked"), as library.
+</li>
+<li> DSP
+Digital Signal Processor. Used to produce advanced sound on GC. DSP
+is integrated with GP in Flipper chip and has its own ROM. Developed
+by Macronix.
+</li>
+<li> DI, DVD
+DVD hardware interface. GC DVD is actually microcontroller, based
+on MN-102 CPU with proprietary firmware ROM. DVD is protected by non-standard
+barcodes and data encryption, which is decrypted on-the-fly by DVD
+controller. GC DVD cannot be read on usual PC hardware. Whole GC DVD
+stuff is developed by Matsushita.
+</li>
+<li> EFB
+Embedded Framebuffer. 2MB of fast 1T-SRAM memory located inside Flipper.
+Used by GP's pixel engine to draw pixels. Later copied into XFB, for
+final TV-output.
+</li>
+<li> EXI
+Expansion Interface. Gamecube peripherial devices bus, sort of USB
+architecture. Developed by Macronix. Devices drived by EXI: memory
+cards, broad-band adapter, real-time clock, bootrom, SRAM.
+</li>
+<li> FIFO
+First-In-First-Out buffer to send GP commands and create GP command
+lists.
+</li>
+<li> Flipper
+Gamecube Northbridge+Peripheral Hardware+Graphics Processor+Audio
+DSP.
+</li>
+<li> FPR
+Floating Point Register. Gekko has 32 64-bit FPRs, named f0-f31.
+</li>
+<li> FPSCR
+Floating Point Status and Control Register.
+</li>
+<li> JTAG
+Hardware debug interface to CPU. You can connect some wires to CPU
+pins, to overwhelm it. Gekko has full support of IEEE 1149-1a-1993
+JTAG standard.
+</li>
+<li> GC, GCN, NGC
+Nintendo Gamecube.
+</li>
+<li> GCM
+Gamecube Master Data (official term). GC DVD Image files.
+</li>
+<li> Gekko
+Gamecube CPU, PowerPC 750-derivative processor with FPU extensions,
+called "Paired Single".
+</li>
+<li> GP, GX
+Graphics Processor, the major part of Flipper chip. GP is fixed point
+state-machine. Developed by ArtX team.
+</li>
+<li> GPR
+General Purpose Register. Gekko has 32 32-bit GPRs, named r0-r31.
+r1 often used as stack pointer (sp).
+</li>
+<li> GX
+Software library, developed by Nintendo and ArtX, to drive GP hardware.
+Has many crossways with OpenGL (but more advanced).
+</li>
+<li> HW2
+Common name of GC hardware. Number state for revision ("2"
+is production board).
+</li>
+<li> IPL
+Initial Program Loader. Graphics shell, used to load game from DVD.
+</li>
+<li> MC
+Memory Card, EXI device.
+</li>
+<li> MI
+Flipper memory interface, plays role of "Nothbridge".
+</li>
+<li> MMU
+PPC Memory Management Unit. Translates virtual address to physical.
+MMU has two translation mechanisms: block address translation and
+page table translation. Address translation for data access and instruction
+fetch is processed separately in DMMU and IMMU.
+</li>
+<li> MSR
+Machine State Register. CPU status and control register.
+</li>
+<li> MX
+Macronix Ltd. chips index. GC has many hardware parts, developed by
+Macronix, like DSP, EXI and bootrom chip.
+</li>
+<li> PC
+Program Counter. PowerPC architecture does not define such term, but
+everyone is using it anyway, instead "CIA" (Current
+Instruction Address).
+</li>
+<li> PCM
+Pulse Code Modulation, method commonly used in digital sound hardware.
+PCM sound parameters are: playback rate, bits per sample, sample format.
+GC AI can playback 32000/48000 Hz, 16-bit big-endian stereo samples
+via DMA.
+</li>
+<li> PI
+Peripheral Interface. Set of hardware registers to control interrupts
+and hardware reset. There also "PI FIFO": hardware-driven
+FIFO buffer in RAM.
+</li>
+<li> PM
+PowerPC Performance Monitor. Set of PPC special purpose registers
+used for speed profiling of applications.
+</li>
+<li> PPC
+IBM PowerPC Architecture.
+</li>
+<li> PTE
+Page Table Entry. Page table record, used to translate virtual address
+to physical.
+</li>
+<li> RAM
+Main memory. GC has 24 MB of fast 1T-SRAM. Development boards has
+RAM extended up to 48 MB. Developed by MoSys.
+</li>
+<li> ROM
+Read-only memory. GC has following ROMs: 2 MB encrypted bootrom, 128
+KB DVD firmware, 4 KB DSP DROM, 8 KB DSP IROM.
+</li>
+<li> RSW
+"Reset Switch", same as reset button. Seems early
+development GC models were equipped by switch, insted programmable
+reset button.
+</li>
+<li> RTC
+Real-time clock. EXI device, counting seconds since 00:00 AM 2000.
+</li>
+<li> SDK
+Software Development Kit. Full set of compilers, libraries and documentation
+for development on specified platform. Gamecube SDK contain development
+tools, like sound and texture convertors, and set of libraries for
+OS and hardware. Compiler is provided by Metrowerk's CodeWarrior.
+There also huge development board and paper documentation.
+</li>
+<li> SI
+Serial Interface. Hardware responsible for communication with serial
+devices, such as GC controller and keyboard via serial I/O buffer.
+</li>
+<li> SPR
+Special-purpose register. Set of registers, dedicated to operating
+system. Gekko has about 60 SPRs.
+</li>
+<li> SR
+Segment Registers, used by MMU for virtual address translation.
+</li>
+<li> SRAM
+Small amount of battery backuped memory for OS misc settings.
+</li>
+<li> TLB
+PPC MMU Translation Lookaside Buffer, used to keep recently used page
+address translations. Gekko has 128 two-way set associative TLB for
+each MMU (DMMU and IMMU).
+</li>
+<li> VI
+Video Interface. Hardware responsible for TV-out of framebuffer (XFB),
+and generating VBlank interrupt (actually can be configured to interrupt
+CPU at any beam location). Has support for light-gun, antialiasing
+of XFB by tap-filters and progressive video mode (480p).
+</li>
+<li> WBUF
+Gekko Write Gather Buffer. Small cache for burst memory transactions.
+Used together with graphics FIFO to send GP commands.
+</li>
+<li> XFB
+External Framebuffer, located in main memory. Used for final TV-out
+by VI.
+</li>
+</ul>
+<br><div class="idx"><a href="index.html#idx19">index</a></div>
+</body></html>

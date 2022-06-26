@@ -1,0 +1,526 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec14">
+14</a>&nbsp;&nbsp;general File Formats</h2>
+<br><div class="idx"><a href="index.html#idx14.1">index</a></div>
+<h3>
+<a name="sec14.1">
+14.1</a>&nbsp;&nbsp;BNR (Banner file format)</h3>
+<br>
+this is the format of the file 'opening.bnr' (file size: always
+6.496 bytes) found in the root directory of every Gamecube disc. This
+file is the little image that is displayed in the cube menu when inserting
+a disc into the gamecube, when in menu mode.<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x0003</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Magic Word "BNR1" (US/JP) or 'BNR2' (EU)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center"><tt>0x001f</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding zeroes</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap align="center"><tt>0x181f</tt></td>
+<td nowrap align="center"><tt>0x1800</tt></td>
+<td nowrap>Graphical Data (Pixel-format is RGB5A1)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1820</tt></td>
+<td nowrap align="center"><tt>0x183f</tt></td>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap>Gamename (*) </td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1840</tt></td>
+<td nowrap align="center"><tt>0x185f</tt></td>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap>Company/Developer (*)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1860</tt></td>
+<td nowrap align="center"><tt>0x189f</tt></td>
+<td nowrap align="center"><tt>0x0040</tt></td>
+<td nowrap>Full Game Title (*)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x18a0</tt></td>
+<td nowrap align="center"><tt>0x18df</tt></td>
+<td nowrap align="center"><tt>0x0040</tt></td>
+<td nowrap>Company/Developer Full name, or description (*)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x18e0</tt></td>
+<td nowrap align="center"><tt>0x195f</tt></td>
+<td nowrap align="center"><tt>0x0080</tt></td>
+<td nowrap>Game Description (*)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*) All Text is all stored in either SHIFT-JIS or ASCII, depending
+on the region of the Game.<br><br>
+note: In the filesystem of european Games with multi-lingual text
+there may be several .bnr files (opening.bnr, openingUS.bnr, openingEU.bnr,
+openingJP.bnr). The opening.bnr is a BNR2 file, it is just like a
+regular BNR file, except that the metadata at the end repeats several
+times in different languages. 0x1820 through 0x1960 are the first,
+and it continues in blocks of 0x0140.
+     <div class="idx"><a href="index.html#idx14.2">index</a></div>
+<h3>
+<a name="sec14.2">
+14.2</a>&nbsp;&nbsp;DOL (Gamecube Executable)</h3>
+<br>
+This is a custom GameCube program file format, which is directly booted
+by GameCubes' BIOS (to be exact, by the apploader on retail discs.
+a different apploader could well load a binary in whatever different
+format.).<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x001B</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Text[0..6] sections File Positions</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001C</tt></td>
+<td nowrap align="center"><tt>0x0047</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Data[0..10] sections File Positions</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0048</tt></td>
+<td nowrap align="center"><tt>0x0063</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Text[0..6] sections Mem Address</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0064</tt></td>
+<td nowrap align="center"><tt>0x008F</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Data[0..10] sections Mem Address</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0090</tt></td>
+<td nowrap align="center"><tt>0x00AB</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Text[0..6] sections Sizes</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00AC</tt></td>
+<td nowrap align="center"><tt>0x00D7</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Data[0..10] sections Sizes</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00D8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>BSS Mem address</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00DC</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>BSS Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00E0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>Entry Point</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00e4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x1c</tt></td>
+<td nowrap>unused</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0100</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Start of sections data (body)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx14.3">index</a></div>
+<h3>
+<a name="sec14.3">
+14.3</a>&nbsp;&nbsp;ELF (Executable and linkable Format)</h3>
+<br>
+The ELF format is a standard, known format for debugging target specific
+code, etc. GCC targeted for the PPC 750 processor or even for the
+specialized Gekko processor has a final output of ELF format files.
+The exact GameCube ELF file format details are currently unknown,
+but they should be similar to the standard specification.
+     <div class="idx"><a href="index.html#idx14.4">index</a></div>
+<h3>
+<a name="sec14.4">
+14.4</a>&nbsp;&nbsp;GCB (QOOB Flash Files)</h3>
+<br><tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>ID, indicates whats in the block</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap><tt>0x28432920</tt></td>
+<td nowrap>'<tt>(C)</tt> ' - qoob bios file</td>
+</tr>
+<tr>
+<td nowrap><tt>0x454c4600</tt></td>
+<td nowrap>'<tt>ELF0</tt>' - ELF File</td>
+</tr>
+<tr>
+<td nowrap><tt>0x42494e00</tt></td>
+<td nowrap>(not yet) '<tt>BIN0</tt>'</td>
+</tr>
+<tr>
+<td nowrap><tt>0x444f4c00</tt></td>
+<td nowrap>(not yet) '<tt>DOL0</tt>'</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0xf7</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>description, will be shown in boot menu (by the qoob bios)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xf8</tt></td>
+<td nowrap align="center"><tt>0xfb</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>reserved</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xfc</tt></td>
+<td nowrap align="center"><tt>0xff</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>size of block</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x100</tt></td>
+<td nowrap align="center"><tt>...</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>data</td>
+</tr>
+</table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><div class="idx"><a href="index.html#idx14.5">index</a></div>
+<h3>
+<a name="sec14.5">
+14.5</a>&nbsp;&nbsp;GCM (Gamecube Disc Image)</h3>
+<br>
+These files are always 1.4GB's exactly and each contains a complete
+binary image of a proprietary format GameCube DVD. This file format
+is used for the NR-Writer DVD writing software which writes special
+DVDs that can only be read by NR-Reader GameCubes. The GCM file format
+can probably be closely compared to the ISO file format for CDs in
+its purpose.
+     <div class="idx"><a href="index.html#idx14.6">index</a></div>
+<h3>
+<a name="sec14.6">
+14.6</a>&nbsp;&nbsp;GCI (Gamecube Game Save)</h3>
+<br>
+Used by the EMS Memory Adapter.<br><br>
+64 byte header (equal to FST entry on memcard), followed by the file
+data (as on memory card)
+     <div class="idx"><a href="index.html#idx14.7">index</a></div>
+<h3>
+<a name="sec14.7">
+14.7</a>&nbsp;&nbsp;GCP (Gamecube Memorycard Image)</h3>
+<br>
+Used by the EMS Memory Adapter.<br><br>
+this is a raw image of all blocks of a memory card.
+     <div class="idx"><a href="index.html#idx14.8">index</a></div>
+<h3>
+<a name="sec14.8">
+14.8</a>&nbsp;&nbsp;TGC</h3>
+<br>
+a proprietary image format found on demo discs and eg the zelda n64
+emu<br><br>
+note: there seem to be tgc files on european discs that follow a different
+layout (no header).
+      <div class="idx"><a href="index.html#idx14.8.1">index</a></div>
+<h4>
+<a name="sec14.8.1">
+14.8.1</a>&nbsp;&nbsp;Header</h4>
+<br><tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x0003</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>TGC-Magic (<tt>0xae0f38a2</tt>)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center"><tt>0x0007</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>? (=<tt>0x00000000</tt>)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center"><tt>0x000b</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>TGC-Header Size (=<tt>0x00008000</tt>)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000c</tt></td>
+<td nowrap align="center"><tt>0x000f</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>? (=<tt>0x00100000</tt>)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0010</tt></td>
+<td nowrap align="center"><tt>0x0013</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Offset to FST inside embedded GCM</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0014</tt></td>
+<td nowrap align="center"><tt>0x0017</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>FST Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0018</tt></td>
+<td nowrap align="center"><tt>0x001b</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>max FST Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001c</tt></td>
+<td nowrap align="center"><tt>0x001f</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Offset to Boot-DOL inside embedded GCM</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap align="center"><tt>0x0023</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Boot-DOL Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0024</tt></td>
+<td nowrap align="center"><tt>0x0027</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0028</tt></td>
+<td nowrap align="center"><tt>0x002b</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x002c</tt></td>
+<td nowrap align="center"><tt>0x002f</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Offset to Banner inside embedded GCM ?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0030</tt></td>
+<td nowrap align="center"><tt>0x0033</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Banner Size ?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0034</tt></td>
+<td nowrap align="center"><tt>0x0037</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>?</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx14.8.2">index</a></div>
+<h4>
+<a name="sec14.8.2">
+14.8.2</a>&nbsp;&nbsp;embedded GCM</h4>
+<br>
+usually starts at offset <tt>0x00008000</tt> (after the TGC Header)
+and follows exactly the same layout as a GCM file, with the following
+exceptions:
+<ul>
+<li> Boot-DOL offset, FST offset contain bogus data and must be substituted
+by the data found in the TGC header
+</li>
+<li> offsets within the embedded GCM file must be calculated relative to
+the start of the embedded GCM (obviously)
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx14.9">index</a></div>
+<h3>
+<a name="sec14.9">
+14.9</a>&nbsp;&nbsp;VGC (Viper Flash Files)</h3>
+<br><tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>Viper Magic ('VIPR')</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>Configuration Flags</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>GC_FLASH_ACCESS - allows access to the flashrom</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>COMMAND_MODE - enables modchip command mode (requires extended mode)</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>EXTENDED_MODE - allows reading of original IPL</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>COBRA_ENCRYPTION - enables additional encryption mode</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>DISABLE_CHIP - disables the modchip</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x05</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>Lid Sensor Status at Boot Time (*2)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>LID_OPEN</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>LID_CLOSED</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>LID_PASSTHROUGH</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x06</tt></td>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">10</td>
+<td nowrap>padding (zeros)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10</tt></td>
+<td nowrap align="center"><tt>0x1f</tt></td>
+<td nowrap align="center">16</td>
+<td nowrap>BIOS Name in Ascii</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x20</tt></td>
+<td nowrap align="center"><tt>...</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Encrypted (*1) BIOS, loaded to <tt>0x81300000</tt>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br>
+(*1) encrypted with the IPL XOR-Stream
+(*2) original docs state that the default value is <tt>0xff</tt>,
+however actually using this value seems to cause problems.
+ <div class="idx"><a href="index.html#idx15">index</a></div>
+</body></html>

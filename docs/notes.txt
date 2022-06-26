@@ -1,0 +1,621 @@
+It's all done in about 8K of code out of an ATmega8 microcontroller
+
+It's connected to the debug port of the DVD drive controller processor (MN102)
+
+It's a 4 wire protocol:
+  IN        (driven by MN102)
+  OUT       (driven by ATmega)
+  CS/STROBE (driven by MN102)
+  CLK       (driven by ATmega)
+  
+
+Wait for the MN102 to power up and send the 0xEE 0xEE "ready" sequence
+
+Read credits flag from MN102 address 0x40D100 to determine what to send as stage 3
+  At this point it's not set -> use qCode as stage3
+
+Write stage2 loader (upload.bin ~220 bytes) to MN102 RAM address 0x40D000
+
+Write stage1 stub to MN102 RAM address 0x008674
+
+Write value 0x0086 at address 0x00804D
+Stage 1 now executes (source: raw bytes embedded in XenoAT.c)
+  (stage 1 running in MN102)
+  Jumps to stage 2
+
+Stage 2 now executes (source: upload.S)
+  (stage 2 running in MN102)
+  Check 0x40D100 for credits flag
+    At this point it's not set, so we jump to uploadDrivecode function
+  Receive the stage 3 binary upload from the ATmega using a much faster protocol
+    The qcode binary is downloaded to address 0x40C600
+  Jump to qcode at address 0x40C600
+    
+qcode now executes (source: QLite Main.asm.c)
+  Patches the DVD drive firmware running on the MN102
+    I don't totally understand how, it seems to replace interrupt vectors and function addresses?
+    Anyways, the effect is that it overwrites the addresses to functions of the original firmware
+    with addresses to our custom ones, so the qcode is now "installed" in the MN102 until power off
+  Resets into the now-patched firmware of the MN102
+
+At this point the drive is patched and is running modified firmware
+  It will now bypass disc authentication, allow different regions etc.
+  
+When the cube loads a disc, qcode will replace the original apploader with a custom one
+  Basically when the cube tries to read the apploader from the disc, qcode will send the custom one
+  And this is how we get code execution on the main Gekko CPU
+  
+The GameCube IPL now loads the custom apploader and executes it
+  The apploader checks if we're holding down any buttons
+  If START button is pressed 
+    
+
+
+Binaries:
+  XenoAT.hex (ATmega)
+    qcode.bin (MN102)
+      iplboot.bin (PPC, apploader)
+    upload.bin (MN102)
+    XenoShell.bin (PPC)
+
+
+IMPORTANT VALUES IN qcode.bin
+
+Offset 7C6 -> 16bit CREDITS_SIZE value in bytes -> set this to something bigger than the size of XenoShell.bin !!
+Offset 73A -> 16bit DELAY value in milliseconds -> set this to 3500 + (size of XenoShell.bin in bytes divided by 3.5)
+
+==============================================
+MN102H60 Memory Map
+==============================================
+
+0x000000 -------------------------------------
+          External Memory
+          
+0x008000 -------------------------------------
+          Internal RAM (4 Kbytes)
+0x009000 -------------------------------------
+          
+          Reserved
+          
+0x00FC00 -------------------------------------
+          I/O Control Registers (1 Kbyte)
+0x010000 -------------------------------------
+          
+          External Memory
+          
+0x080000 -------------------------------------
+          Internal ROM (128 Kbytes)
+          
+0x0A0000 -------------------------------------
+          
+          Reserved
+          
+0x200000 -------------------------------------
+
+
+          External Memory
+
+
+0xFFFFFF -------------------------------------
+
+==============================================
+DVD-ROM Subsystem
+==============================================
+Matsushita MN103S13BGA Optical Disk Controller
+Matsushita MN102H60GFA MicroComputer
+
+Memory Map
+----------------------------------------------
+start	     	size	  description
+0x00008000	4kb	    internal (cpu) ram
+0x00080000	128kb	  firmware rom
+0x00400000	        internal (controller) ram
+
+
+==============================================
+GameCube Boot Sequence
+==============================================
+
+1. Run BS1 on IPLROM (0xFFF0_0000) (BS1 is Boot Sequence Level 1)
+   1-1. Initialize ARAM
+   1-2. Initialize CPU
+   1-3. Initialize memory
+   1-4. Load BS1 to I Cache
+   1-5. Load BS2 to memory by DMA and jump to it
+2. Run BS2 on RAM (0x8130_0000)
+   2-1. Initialize BootInfo part1
+        (BootInfo includes some information for boot)
+   2-2. Power on Drive
+        (Twice power on at 1.15sec interval to avoid drive bug)
+   2-3. Read DiskID from Disk and store it 0x8000_0000
+        (Read DiskID command is 1st command for drive
+         DiskID includes unique ID for every one title and some information)
+   2-4. If the game use HW Audio Streaming, informs it to drive
+        (The Audio Streaming flag is in DiskID)
+   2-5. Read Apploader header to take in Apploader size
+        (Apploader is application loader)
+   2-6. Read Apploader (0x8120_0000)
+        (From then on, often call Apploader and get next read point)
+       2-6-1. Read BB2 to get FST and dol file position on disk
+              (BB2 is Boot Block 2. BB1 is meaningless data now)
+       2-6-2. Read BI2 header to determine position of BI2 on memory
+              (BI2 is Boot Info 2)
+       2-6-3. Read BI2
+       2-6-4. Read dol file
+           2-6-4-1. Read dol header
+           2-6-4-2. Clear bss section
+           2-6-4-3. If flag is on, check dol size by "dolLimit"
+           2-6-4-4. If this is product version,
+                    check whether all section positions are under 7M
+           2-6-4-5. Read text/data section
+       2-6-5. Read FST
+          (But, if FST is more interior than dol, read FST before dol)
+       2-6-6. Initialize BootInfo part2
+   2-7. Check country code
+        (If country code from disc is differ from hardware code, display error message)
+   2-8. Read banner file
+        (Banner file is displayed on only IPL menu screen)
+   2-9. Jump to entry point
+3. Run game code
+
+
+
+
+=======================================
+DOCUMENTED XenoAT.c
+=======================================
+
+#include <avr/io.h>
+#include <avr/signal.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include <math.h>
+#include <string.h>
+
+typedef unsigned long  u32;
+typedef unsigned short u16;
+typedef unsigned char  u8;
+
+#define DEBUG 0
+
+#define LOADER_ADDR 0x40D000
+
+#define X_OUT 0x10 // PB4
+#define X_OUT_PORT PORTB
+#define X_OUT_PIN PINB
+#define X_OUT_DDR DDRB
+#define X_CLK 0x20 // PB5
+#define X_CLK_PORT PORTB
+#define X_CLK_PIN PINB
+#define X_CLK_DDR DDRB
+#define X_IN  0x08 // PB3
+#define X_IN_PORT  PORTB
+#define X_IN_PIN  PINB
+#define X_IN_DDR  DDRB
+#define X_STR 0x02 // PB1
+#define X_STR_PORT PORTB
+#define X_STR_PIN PINB
+#define X_STR_DDR DDRB
+
+// green
+#define LED1_ON   PORTD &=~0x04
+#define LED1_OFF  PORTD |= 0x04
+// red
+#define LED2_ON   PORTD &=~0x08
+#define LED2_OFF  PORTD |= 0x08
+#define LED_INIT  DDRD = 0x0C;
+
+
+extern const u8 qcode[];
+extern const u8* qcode_end;
+extern const u8 uploader[];
+extern const u8* uploader_end;
+extern const u8 launcher[];
+extern const u8* launcher_end;
+
+void reset(void);
+void ldelay(volatile int i);
+
+#if DEBUG
+void USART_Init( unsigned int baud )
+{
+	UCSR0A = 2;
+	/* Set baud rate */
+	UBRR0H = (unsigned char)(baud>>8);
+	UBRR0L = (unsigned char)baud;
+	/* Enable Receiver and Transmitter */
+	UCSR0B = /* (1<<RXEN0)| */ (1<<TXEN0);
+}
+
+
+void USART_Transmit( unsigned char data )
+{
+	if (data == '\n')
+		USART_Transmit('\r');
+	/* Wait for empty transmit buffer */
+	while ( !( UCSR0A & (1<<UDRE0)) );
+	/* Put data into buffer, sends the data */
+	UDR0 = data;
+}
+
+void putstring( char* data )
+{
+	while (*data) USART_Transmit(*data++);
+}
+
+// non-blocking single-char fast transmit
+inline void putchar(char c)
+{
+	UDR0 = c;
+}
+#else
+#define putstring(X)
+#define putchar(X)
+#endif // DEBUG
+
+
+inline void delay(void)
+{
+	int i = 200;
+	while (i--);
+}
+
+int ndelay = 0;
+
+int io(char i)
+{
+	char res = 0;
+
+	if (i)
+		X_OUT_PORT |= X_OUT;
+	else
+		X_OUT_PORT &=~X_OUT;
+	
+	X_CLK_PORT &=~X_CLK;
+
+	if (!ndelay) delay();
+
+	res = X_IN_PIN & X_IN;
+
+	X_CLK_PORT |= X_CLK;
+
+	if (!ndelay) delay();
+	
+	return !!res;
+}
+
+
+// stock MN102 drivecode data format
+// STR line is driven by MN102
+// When MN102 is sending data, the STR line is normally-HIGH and it ends each byte with a ~2.875 us LOW strobe
+// When MN102 is receiving data, the STR line is normally-LOW and it acknowledges each byte with a ~2.875 us HIGH strobe
+// least significant bit first
+// data is valid on CLK rising edge
+// clock is HIGH when inactive
+
+void send8(unsigned char c)
+{
+	int i = 0;
+	
+	while (X_STR_PIN & X_STR) {
+		if (i++ > 10000) {
+			putchar('f');
+			reset();
+		}
+	}
+	for (i=0; i<8; ++i)
+	{
+		if (X_STR_PIN & X_STR) {
+			putchar('r');
+			reset();
+		}
+		io(c & (1<<i));
+	}
+}
+
+
+unsigned char recv8(void)
+{
+	unsigned char x = 0;
+	int i=0;
+	while (!(X_STR_PIN & X_STR)) {
+		if (i++ > 10000) {
+			putchar('w');
+			reset();
+		}
+	}
+	for (i=0; i<8; ++i)
+	{
+		if (!(X_STR_PIN & X_STR)) {
+			putchar('s');
+			reset();
+		}
+		x |= io(0) << i;
+	}
+	return x;
+}
+
+unsigned char io8(unsigned char c)
+{
+	unsigned char x = 0;
+	int i;
+	for (i=0; i<8; ++i)
+		x |= io(c & (1<<i)) << i;
+	return x;
+}
+
+// --------------------------------------------------------------
+// SERIAL_CMD_FF:
+// --------------------------------------------------------------
+// Read memory
+// MN102 first does a memcopy of the requested data
+// to 0x40EB54 (max 32 bytes) then transmits it over serial
+
+// R[0]	FF
+// R[1]	00
+// R[2]	source address middle byte
+// R[3]	source address least significant byte
+// R[4]	0
+// R[5]	source address most significant byte
+// R[6]	0
+// R[7]	0
+// R[8]	number of bytes to read
+// R[9]	0
+
+int read_mem(unsigned char *dst, long addr, int len)
+{
+	int err;
+
+	send8(0xff);
+	send8(0);
+	send8(addr >> 8);
+	send8(addr);
+	send8(0);
+	send8(addr >> 16);
+	send8(0);
+	send8(0);
+	
+	send8(len);
+	send8(0);
+	
+	err = recv8();
+	err |= recv8() << 8;
+	
+	if (err) {
+		putchar('m');
+		return err;
+	}
+	
+	while (len--)
+		*dst++ = recv8();
+
+	return 0;
+}
+
+void write_word_norecv(long address, unsigned short data)
+{
+	send8(0xfe);
+	send8(0x00);
+	send8(address >> 8);
+	send8(address);
+	
+	send8(data);
+	send8(address >> 16);
+	send8(data >> 8);
+	send8(0);
+	
+	send8(2);
+	send8(0);
+}
+
+// the firmware sends back 4 bytes when writing a word, discard them silently
+void write_word(long address, unsigned short data)
+{
+	write_word_norecv(address, data);
+	
+	recv8();
+	recv8();
+	recv8();
+	recv8();
+}
+
+void write_block(long address, unsigned char *source, int len)
+{
+	while (len >= 1) {
+		// the firmware writes words in little endian order, swap endianness
+		write_word(address, pgm_read_byte(source) | (pgm_read_byte(source+1) << 8));
+		address += 2;
+		len -= 2;
+		source += 2;
+	}
+} 
+
+void reset()
+{
+	// WDTCSR = 8; // atmega328p
+	WDTCR = 8; // atmega8
+	while (1);
+}
+
+void ldelay(volatile int i)
+{
+	while (i--);
+}
+
+
+int main(void)
+{
+	const unsigned int	qcodesize	= ((((const unsigned int) &qcode_end)	- ((const  unsigned int) &qcode))	& 0xFFFE) + 2;
+	const unsigned int	uploadsize	= ((((const unsigned int) &upload_end)	- ((const  unsigned int) &upload))	& 0xFFFE) + 2;
+	const unsigned int	creditssize = ((((const unsigned int) &credits_end)	- ((const  unsigned int) &credits))	& 0xFFFE) + 2;
+
+	/*
+	// disable watchdog (for ATmega328P)
+	MCUSR &= ~(1<<WDRF);
+	WDTCSR |= (1<<WDCE) | (1<<WDE);
+	WDTCSR = 0x00;
+	*/
+
+	LED_INIT;
+
+	//USART_Init(3); // 250k baud
+
+	u16 i;
+
+
+	// X_CLK -> output
+	// X_OUT -> output
+	// X_STR -> input with internal pull-up
+	// X_IN -> input without internal pull-up
+
+	X_STR_PORT = X_STR;
+	X_OUT_DDR = X_CLK | X_OUT;
+
+	LED2_ON; LED1_OFF; 	// -> red
+
+	putstring("\n\nRESET\n");
+
+	putchar('0');
+
+	// wait for drive to power-on
+	// when drive is ready after power-on, it sends 0xEE 0xEE
+	// we are constantly reading bits and looking to match this pattern
+
+	u16 last_recv = 0;
+	while (1) {
+		last_recv >>= 1;
+		last_recv |= io(1) ? 0x8000 : 0;
+		if (last_recv == 0xeeee) {
+			break;
+		}
+	}
+	
+	putchar('1');
+
+	// now we read the value at memory address 0x40D100 of the MN102 drive controller
+	// this value will be 0x4444 if the MN102 is already running our qcode and is
+	// requesting the "credits" binary
+
+	// so this determines what we'll send as stage 3 (qcode.bin or XenoShell.bin)
+
+	// we read this here before anything else because we might overwrite this memory
+	// location with the stage 2 loader we will upload
+
+	// we use the debug READ command present in the stock MN102 firmware
+
+	u16 credits_flag = 0;
+	read_mem(&credits_flag, 0x40D100, 2);
+
+	u8 request_credits = (credits_flag == 0x4444) ? 1 : 0;
+
+	if (request_credits) putchar('c');
+	else putchar('q');
+
+	putchar('2');
+
+	// now we will use the standard debug WRITE command to upload our stage 2 loader
+	// "upload.bin" into the MN102 RAM at address 0x40D000
+
+	write_block(LOADER_ADDR, upload, uploadsize);
+
+	putchar('3');
+
+	// now that our stage 2 loader is in place at 0x40D000 in the MN102 RAM
+	// we want to make the MN102 jump to it and execute it
+	// the below pLoaderCode is a small stage 1 stub (21 bytes)
+	// which, when executed, will do just that
+
+	static const u8 PROGMEM pLoaderCode[] =	{
+		0x80, 0x00,					//  8000		MOV	$00,D0				
+		0xC4, 0xDA, 0xFC,			//  C4DAFC		MOVB	D0,($FCDA)	# disable breakpoints				
+		0xF4,0x74,0x74,0x0a,0x08,	//	F47474A708  MOV	$080a74,a0		# restore original 
+		0xF7,0x20,0x4C,0x80,		//	F7204C80    MOV	a0,($804c)		# inthandler
+		0xF4,0x74,					//	F47400D040  MOV	QCODEIMGBASE,a0	# jump to drivecode init
+		(LOADER_ADDR		& 0xFF),				
+		(LOADER_ADDR >> 8	& 0xFF),
+		(LOADER_ADDR >> 16	& 0xFF),		
+		0xF0,0x00					//	F000        JMP	(a0)
+	};
+
+	// we write the above stage 1 into the MN102 at address 0x008674
+	// then write the value 0x0086 at address 0x00804D
+	// this executes the stage 1 loader
+	// which in turn executes the stage 2 loader
+
+	write_block(0x8674, pLoaderCode, sizeof(pLoaderCode));
+	write_word_norecv(0x804d, 0x0086);
+
+	putchar('4');
+
+	// now our stage 2 upload.bin is running on the drive chip
+	// and is receiving our data from here on
+
+	// now send either the drive code or the "credits" binary
+
+	u8* binary;
+	u16 binary_size ;
+
+	if (request_credits) {
+		binary = credits;
+		binary_size = creditssize;
+	} else {
+		binary = qcode;
+		binary_size = qcodesize;
+	}
+
+	io8(0x00);
+
+	ndelay = 1; // disable delay for faster upload, our 2nd stage can receive data fast
+	
+	ldelay(100);
+	io8(0x00); // response to this should be Q (0x51)
+
+	ldelay(100);
+	io8((binary_size >> 9)&0xFF);  // response to this should be C (0x43)
+	ldelay(100);
+	io8((binary_size >> 1)&0xFF);  // response to this should be O (0x4F)
+	ldelay(100);
+	io8(0); // response to this should be D (0x44)
+	
+	LED2_OFF;
+
+	putchar('5');
+
+	u8 r;
+	u8 n;
+	u8 e = (binary_size >> 1) & 0xFF; // first byte that comes back
+
+	for (i = 0; i < binary_size; i++) {
+		ldelay(100);
+
+		n = pgm_read_byte(binary + i);
+		r = io8(n);
+
+		if (r != e)	{
+			putchar('x');
+			reset();
+		}
+
+		e = n;
+	}
+
+	putchar('6');
+
+	ldelay(100);
+	
+	io8(0x21); // send final confirmation byte (uploader will reset if this is != 0x21)
+	io8(0);
+	io8(0);
+
+	LED1_ON;
+
+	while (!(X_STR_PIN & X_STR));
+
+	putchar('7');
+
+	reset();
+
+	return 0; // keep gcc happy
+}
+
+

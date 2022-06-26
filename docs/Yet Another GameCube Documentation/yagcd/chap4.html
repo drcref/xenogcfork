@@ -1,0 +1,1122 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec4">
+4</a>&nbsp;&nbsp;Memory Map</h2>
+<br><div class="idx"><a href="index.html#idx4.1">index</a></div>
+<h3>
+<a name="sec4.1">
+4.1</a>&nbsp;&nbsp;Overview</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000000</tt></td>
+<td nowrap align="center"><tt>0x017fffff</tt></td>
+<td nowrap align="center">24MB</td>
+<td nowrap>Physical address of the RAM</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000000</tt></td>
+<td nowrap align="center"><tt>0x817fffff</tt></td>
+<td nowrap align="center">24MB</td>
+<td nowrap>Logical address of the RAM, cached</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xC0000000</tt></td>
+<td nowrap align="center"><tt>0xC17fffff</tt></td>
+<td nowrap align="center">24MB</td>
+<td nowrap>Logical address of the RAM, not cached</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xc8000000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2MB</td>
+<td nowrap>Embedded Framebuffer (EFB)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC000000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Hardware registers</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC000000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CP - Command Processor</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC001000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PE - Pixel Engine</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC002000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>VI - Video Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC003000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PI - Processor Interface (Interrupt Interface)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC004000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>MI - Memory Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC005000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>AI - Audio Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC006000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>DI - DVD Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC006400</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>SI - Serial Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC006800</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EXI - External Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC006C00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Streaming Interface</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xCC008000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>GX FIFO (Graphic display lists)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xe0000000</tt></td>
+<td nowrap align="center"><tt>0xe0003fff</tt></td>
+<td nowrap align="center">16k</td>
+<td nowrap>L2 Cache</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xfff00000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1MB</td>
+<td nowrap>IPL (mapped here at bootup)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx4.2">index</a></div>
+<h3>
+<a name="sec4.2">
+4.2</a>&nbsp;&nbsp;RAM usage</h3>
+<br>
+Variables that are marked as B are changed by bootrom or IPL. Variables
+marked as A are changed lately in apploader when a game is booting.
+Variables, which are marked as O are changed after an OSInit call.
+Remember that the IPL also has a hard-linked Dolphin OS inside, so
+those variables that are marked as O are also changed in the IPL.
+      <div class="idx"><a href="index.html#idx4.2.1">index</a></div>
+<h4>
+<a name="sec4.2.1">
+4.2.1</a>&nbsp;&nbsp;Dolphin-OS globals</h4>
+<br>
+In PowerPC architectures the lower 256 bytes of main memory are reserved
+for internal OS use. This map describes all known OS low memory variables.
+Dolphin OS accesses low memory as 0x80000000 + offset (cached).
+<h5>4.2.1.1 <a name="sec4.2.1.1">
+    &nbsp;&nbsp;Boot Info</a>
+</h5>
+<br><br>    &nbsp;&nbsp;&nbsp;<b><a name="sec4.2.1.1.1">
+    4.2.1.1.1&nbsp;&nbsp;DVD Disc ID</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000000</tt></td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>Gamecode</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000004</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>Company</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000006</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>Disk ID</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000007</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>Version</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000008</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>Streaming</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap colspan="1" align="center"> 
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>audio streaming off</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>audio streaming on</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000009</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>StreamBufSize</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000000a</tt></td>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding zeros</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>    &nbsp;&nbsp;&nbsp;<b><a name="sec4.2.1.1.2">
+    4.2.1.1.2&nbsp;&nbsp;system Info</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000001c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">A</td>
+<td nowrap>DVD magic word</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table><tr>
+<td nowrap align="center"><tt>0xc2339f3d</tt></td>
+<td nowrap align="center">Nintendo Game Disc</td>
+</tr></table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000020</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">A</td>
+<td nowrap>Magic word (how did the console boot?)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0D15EA5E</tt></td>
+<td nowrap>normal boot</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xE5207C22</tt></td>
+<td nowrap>booted from jtag</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000024</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">A</td>
+<td nowrap>Version (usually set to 1 by apploader)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000028</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>physical Memory Size</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table><tr>
+<td nowrap align="center"><tt>0x01800000</tt></td>
+<td nowrap align="center">24MB on retail console</td>
+</tr></table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000002C</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>Console type</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000001</tt></td>
+<td nowrap>Retail1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000002</tt></td>
+<td nowrap>HW2 production board</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000003</tt></td>
+<td nowrap>The latest production board</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000004</tt></td>
+<td nowrap>Reserved</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1XXXXXXX</tt></td>
+<td nowrap>Devkits</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000000</tt></td>
+<td nowrap>MAC emulator</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000001</tt></td>
+<td nowrap>PC Emulator</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000002</tt></td>
+<td nowrap>'Arthur'</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000003</tt></td>
+<td nowrap>'Minnow'</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000004</tt></td>
+<td nowrap>1st Devkit HW</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000005</tt></td>
+<td nowrap>2nd Devkit HW</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000006</tt></td>
+<td nowrap>latest Devkit HW</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10000007</tt></td>
+<td nowrap>Reserved</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x2XXXXXXX</tt></td>
+<td nowrap>TDEV-kits</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x20000005</tt></td>
+<td nowrap>HW2 TDEV system </td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x20000006</tt></td>
+<td nowrap>The latest TDEV system</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x20000007</tt></td>
+<td nowrap>Reserved</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000030</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>ArenaLo (==0x00000000)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000034</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>ArenaHi (==0x817fe8c0)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000038</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FST Location in ram (==0x817fe8c0)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000003C</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FST Max Length (==0x00000024)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><h5>4.2.1.2 <a name="sec4.2.1.2">
+    &nbsp;&nbsp;Debugger info</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000040</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">A</td>
+<td nowrap>flag for "debugger present" (used by __OSIsDebuggerPresent)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000044</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">A</td>
+<td nowrap>Debugger Exception mask Bitmap, set to 0 at sdk lib start</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000048</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">A</td>
+<td nowrap>Exception hook destination (physical address)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000004c</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">A</td>
+<td nowrap>Temp for LR, Return from exception address (to return from hook)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000050</tt></td>
+<td nowrap align="center"><tt>16</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding zeros</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>4.2.1.3 <a name="sec4.2.1.3">
+    &nbsp;&nbsp;Debugger Hook</a>
+</h5>
+<br><tt>.&gt;80000060&nbsp; 38 a0 00 40&nbsp; li r5,0x40</tt><table align="right" border="border"><tr><td nowrap align="right"><tt>r5=0x40</tt></td></tr></table>
+<tt>.&gt;80000064&nbsp; 7c 68 02 a6&nbsp; mflr r3</tt><table align="right" border="border"><tr><td nowrap align="right"><tt>r3=lr</tt></td></tr></table>
+<tt>.&gt;80000068&nbsp; 90 65 00 0c&nbsp; stw r3,0x0c(r5)</tt><br><tt>.&gt;8000006c&nbsp; 80 65 00 08&nbsp; lwz r3,0x08(r5)</tt><br><tt>.&gt;80000070&nbsp; 64 63 80 00&nbsp; oris r3,r3,0x8000</tt><br><tt>.&gt;80000074&nbsp; 7c 68 03 a6&nbsp; mtlr r3</tt><table align="right" border="border"><tr><td nowrap align="right"><tt>lr=r3</tt></td></tr></table>
+<tt>.&gt;80000078&nbsp; 38 60 00 30&nbsp; li r3,0x30</tt><br><tt>.&gt;8000007c&nbsp; 7c 60 01 24&nbsp; mtmsr r3</tt><table align="right" border="border"><tr><td nowrap align="right"><tt>msr=0x30</tt></td></tr></table>
+<tt>.&gt;80000080&nbsp; 4e 80 00 20&nbsp; blr</tt><table align="right" border="border"><tr><td nowrap align="right"><tt>jump (lr)</tt></td></tr></table>
+<tt></tt>&nbsp;<br><h5>4.2.1.4 <a name="sec4.2.1.4">
+    &nbsp;&nbsp;Dolphin OS Globals</a>
+</h5>
+<br>
+&nbsp;<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000084</tt></td>
+<td nowrap align="center"><tt>0x800000bf</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding zeros</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000c0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">O</td>
+<td nowrap>Current OS context (physical address)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000C4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>Previous OS interrupt mask</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000C8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>current OS interrupt mask</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000CC</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TV Mode</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>ntsc</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>pal</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>debug</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>debug pal</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>mpal</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>pal 60</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000d0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">B</td>
+<td nowrap>ARAM size (internal+expansion) in bytes. set by ARAM driver, usually
+16mb.</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000D4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>current OS Context (logical address)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000D8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>default OS thread (logical address)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000Dc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>active Thread queue, head thread (logical address)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000e0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>active Thread queue, tail thread (logical address)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000e4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>Current OS thread</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000e8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">A</td>
+<td nowrap>Debug monitor size (in bytes)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000ec</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">A</td>
+<td nowrap>Debug monitor location (usually at the top of main memory)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000F0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">A</td>
+<td nowrap>Console Simulated Memory Size, 0x01800000 (usually same as physical
+memory size)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000F4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">A</td>
+<td nowrap>DVD BI2 location in main memory (size of BI2 is 0x2000 bytes)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000F8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Bus Clock Speed, 162 MHz (=0x09a7ec80, 162000000)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800000FC</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CPU Clock Speed, 486 MHz (=0x1cf7c580, 486000000)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx4.2.2">index</a></div>
+<h4>
+<a name="sec4.2.2">
+4.2.2</a>&nbsp;&nbsp;Exception Handlers</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000100</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>System Reset Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000200</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Machine Check Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000300</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>DSI Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000400</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>ISI Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000500</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>External Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000600</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Alignment Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000700</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Program Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000800</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FP unavailable Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000900</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Decrementer Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000C00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>System Call Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000d00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Trace Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000f00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Performance Monitor Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80001300</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>IABR Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80001400</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>reserved</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80001700</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Thermal Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80001800</tt></td>
+<td nowrap align="center"><tt>0x80002fff</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused/reserved (*)</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+(*) note: psoload v2 uses this area to stay resident in memory,
+it is unused by Dolphin-OS
+      <div class="idx"><a href="index.html#idx4.2.3">index</a></div>
+<h4>
+<a name="sec4.2.3">
+4.2.3</a>&nbsp;&nbsp;Dolphin-OS globals</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80003000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>exception handler vectors (from sdk libs &amp; ipl)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000303c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding/unused</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80003040</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>external interrupt handler vectors (from sdk libs &amp; ipl)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030a4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding/unused</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030c0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030c4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030c8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>First Module Header Pointer in Module Queue</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030cc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Last Module Header Pointer in Module Queue</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030d0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Module String Table Pointer</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030d4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">A</td>
+<td nowrap>DOL size (total size of text/data sections), in bytes (*1)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030d8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">B</td>
+<td nowrap>OS system time (set, when console is powered up)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030dc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030E0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (6=production pads ?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030e4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030e6</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030e7</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030e8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>set by OsInit() (debugger stuff?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030e9</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>set by OsInit() (debugger stuff?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030ea</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030ec</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030F0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030F2</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Boot status</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap align="center"><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">first boot</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">already booted</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030F3</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030F4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030F8</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x800030Fc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*1) If FST on DVD is placed after DOL, then BB2 FSTLength is added
+to this value.
+      <div class="idx"><a href="index.html#idx4.2.4">index</a></div>
+<h4>
+<a name="sec4.2.4">
+4.2.4</a>&nbsp;&nbsp;User Memory</h4>
+<br><h5>4.2.4.1 <a name="sec4.2.4.1">
+    &nbsp;&nbsp;user program area</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80003100</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Start of code (usually)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80003140</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Entry point (early SDK v1.0 applications)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81200000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Load Address of the Apploader</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x81300000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Load Address of Bootrom/IPL</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+note: of course the entrypoint of an application can be anything,
+those listed here are just some typical examples. Retail game start
+dol-files are usually located below the apploader.
+<h5>4.2.4.2 <a name="sec4.2.4.2">
+    &nbsp;&nbsp;stack area</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt></tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Bottom of Stack</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Top of Stack</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>4.2.4.3 <a name="sec4.2.4.3">
+    &nbsp;&nbsp;heap area</a>
+</h5>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>? </tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>ArenaLo - Bottom of Heap</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x817fe8c0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">O</td>
+<td nowrap>ArenaHi - Top of Heap</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+note: the address of ArenaHi is not a constant, but should be set
+to the bottom of the FST which is read from the DVD so its size depends
+on the application. the value given here is just an example.
+<b>4.2.4.4<a name="sec4.2.4.4">
+    &nbsp;&nbsp;'high memory'</a>
+&nbsp;</b>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x817fe8c0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>24</tt></td>
+<td nowrap align="center">O</td>
+<td nowrap>FST (used by Dolphin-OS)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x817fffff</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Memory Top</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx5">index</a></div>
+</body></html>

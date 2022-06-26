@@ -1,0 +1,3068 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec10">
+10</a>&nbsp;&nbsp;EXI Devices</h2>
+<br><div class="idx"><a href="index.html#idx10.1">index</a></div>
+<h3>
+<a name="sec10.1">
+10.1</a>&nbsp;&nbsp;EXI Channel and Device List</h3>
+<br>
+The following table shows the GameCube devices which use the EXI bus
+and their channel and device numbers, the EXI frequency commonly used
+with them and their virtual offset in EXI mapping.<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>channel</b></td>
+<td nowrap align="center"><b>device</b></td>
+<td nowrap align="center"><b>freq</b></td>
+<td nowrap align="center"><b>offset</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Memory Card (Slot A)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap align="center"><tt>0x00000000</tt></td>
+<td nowrap>Mask ROM</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">3</td>
+<td nowrap align="center"><tt>0x20000000</tt></td>
+<td nowrap>Real-Time Clock (RTC)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap align="center"><tt>0x20000100</tt></td>
+<td nowrap>SRAM</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x20010000</tt></td>
+<td nowrap>UART</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Memory Card (Slot B)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>AD16 (trace step)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Serial Port 1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center"><tt>5</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Ethernet Adapter (SP1)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+Note: The Real-Time Clock (RTC), SRAM, and Mask ROM are actually one
+device mapped to different address offsets. The SRAM should only be
+accessed by the IPL and contains non-volatile system data. The Mask
+ROM contains the IPL itself (encrypted) and the system font data.
+     <div class="idx"><a href="index.html#idx10.2">index</a></div>
+<h3>
+<a name="sec10.2">
+10.2</a>&nbsp;&nbsp;Retrieving the ID of an EXI Device</h3>
+<br>
+To retrieve the ID of an EXI Device, an EXI IMM write operation must
+be used to send the ID command (0x0000) and an EXI IMM read operation
+should follow it to read the actual 4 byte ID.<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>ID</b></td>
+<td nowrap><b>Device</b></td>
+</tr>
+<tr>
+<td nowrap><tt>0x00000004</tt></td>
+<td nowrap>Memory Card 59</td>
+</tr>
+<tr>
+<td nowrap><tt>0x00000008</tt></td>
+<td nowrap>Memory Card 123</td>
+</tr>
+<tr>
+<td nowrap><tt>0x00000010</tt></td>
+<td nowrap>Memory Card 251</td>
+</tr>
+<tr>
+<td nowrap><tt>0x00000020</tt></td>
+<td nowrap>Memory Card 507</td>
+</tr>
+<tr>
+<td nowrap><tt>0x00000040</tt></td>
+<td nowrap>Memory Card 1019</td>
+</tr>
+<tr>
+<td nowrap><tt>0x00000080</tt></td>
+<td nowrap>Memory Card 2043</td>
+</tr>
+<tr>
+<td nowrap><tt>0x01010000</tt></td>
+<td nowrap>USB Adapter</td>
+</tr>
+<tr>
+<td nowrap><tt>0x01020000</tt></td>
+<td nowrap>NPDP GDEV</td>
+</tr>
+<tr>
+<td nowrap><tt>0x05070000</tt></td>
+<td nowrap>IS Viewer</td>
+</tr>
+<tr>
+<td nowrap><tt>0x04120000</tt></td>
+<td nowrap>AD16</td>
+</tr>
+<tr>
+<td nowrap><tt>0x03010000</tt></td>
+<td nowrap>Marlin (?)</td>
+</tr>
+<tr>
+<td nowrap><tt>0x02020000</tt></td>
+<td nowrap>Modem</td>
+</tr>
+<tr>
+<td nowrap><tt>0x04020200</tt></td>
+<td nowrap>Ethernet Adapter</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx10.3">index</a></div>
+<h3>
+<a name="sec10.3">
+10.3</a>&nbsp;&nbsp;Mask ROM</h3>
+<br>
+Mask ROM also referred as bootrom or IPL. Total size of bootrom is
+2 MB.
+      <div class="idx"><a href="index.html#idx10.3.1">index</a></div>
+<h4>
+<a name="sec10.3.1">
+10.3.1</a>&nbsp;&nbsp;Memory Map (Europe/PAL)</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Start</b></td>
+<td nowrap align="center"><b>End</b></td>
+<td nowrap align="center"><b>Size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000000</tt></td>
+<td nowrap align="center"><tt>0x000000ff</tt></td>
+<td nowrap align="center"><tt>0x00000100</tt></td>
+<td nowrap>Copyright message (*1)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000100</tt></td>
+<td nowrap align="center"><tt>0x001aeee8</tt></td>
+<td nowrap align="center"><tt>0x001aede8</tt></td>
+<td nowrap>BIOS data (*2)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001AFF00</tt></td>
+<td nowrap align="center"><tt>0x001FA0E0</tt></td>
+<td nowrap align="center"><tt>0x0004D000</tt></td>
+<td nowrap>'Yay0' - ROM Fonts #1 (SJIS)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>0x61 bytes of 0xFF, 0x62 , followed by zeros until 0x1FCF00</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001FCF00</tt></td>
+<td nowrap align="center"><tt>0x001FF474</tt></td>
+<td nowrap align="center"><tt>0x00003000</tt></td>
+<td nowrap>'Yay0' - ROM Fonts #2 (ANSI)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001FF474</tt></td>
+<td nowrap align="center"><tt>0x001FFEF0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>filled with 0x00</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001FFF00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x001FFFFF</tt></td>
+<td nowrap>filled with 0xff</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*1) "(C) 1999-2001 Nintendo. All rights reserved.(C) 1999
+ArtX Inc. All rights reserved.PAL Revision 1.0 " and zeros
+up to 0x100.<br>
+(*2) encrypted by an XOR cyphertext which is generated by a yet
+unknown algorithm (probably not a single LFSR)<br><div class="idx"><a href="index.html#idx10.3.2">index</a></div>
+<h4>
+<a name="sec10.3.2">
+10.3.2</a>&nbsp;&nbsp;Memory Map (USA/NTSC)</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Start</b></td>
+<td nowrap align="center"><b>End</b></td>
+<td nowrap align="center"><b>Size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000000</tt></td>
+<td nowrap align="center"><tt>0x0015ee40</tt></td>
+<td nowrap align="center"><tt>0x0015ee40</tt></td>
+<td nowrap>BIOS data (*1)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001AFF00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x0004D000</tt></td>
+<td nowrap>ROM Fonts #1 (SJIS)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001FCF00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x00003000</tt></td>
+<td nowrap>ROM Fonts #2 (ANSI)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001FFF00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x001FFFFF</tt></td>
+<td nowrap>filled with 0x00</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*1) encrypted by an XOR cyphertext which is generated by a yet
+unknown algorithm (probably not a single LFSR)<br><br>
+note: all unused space is filled with 0x00, no pieces with 0xFF.
+      <div class="idx"><a href="index.html#idx10.3.3">index</a></div>
+<h4>
+<a name="sec10.3.3">
+10.3.3</a>&nbsp;&nbsp;Memory Map (Japenese/NTSC)</h4>
+<br><div class="idx"><a href="index.html#idx10.3.4">index</a></div>
+<h4>
+<a name="sec10.3.4">
+10.3.4</a>&nbsp;&nbsp;Memory Map (Japenese/NTSC - Panasonic Q)</h4>
+<br><div class="idx"><a href="index.html#idx10.3.5">index</a></div>
+<h4>
+<a name="sec10.3.5">
+10.3.5</a>&nbsp;&nbsp;Font Encoding</h4>
+<br>
+The 'Yay0' data is compressed similar to the the Zelda 64 'Yaz0' compression.
+Besides the Raw Font data it also contains some information about
+the Font. 
+      <div class="idx"><a href="index.html#idx10.3.6">index</a></div>
+<h4>
+<a name="sec10.3.6">
+10.3.6</a>&nbsp;&nbsp;Font Layout</h4>
+<br><b>10.3.6.1<a name="sec10.3.6.1">
+    &nbsp;&nbsp;SJIS Font (ROM Font #1)</a>
+&nbsp;</b>
+<b>10.3.6.2<a name="sec10.3.6.2">
+    &nbsp;&nbsp;ANSI Font (ROM Font #2)</a>
+&nbsp;</b>
+The ANSI Font is a 512x512 Pixel Texture in I4 Format. It consists
+of 21 colums and 11 rows of characters which are in a 24x24 pixel
+grid.<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">!</td>
+<td nowrap align="center">'</td>
+<td nowrap align="center">#</td>
+<td nowrap align="center">$</td>
+<td nowrap align="center">%</td>
+<td nowrap align="center">&amp;</td>
+<td nowrap align="center">&acute;</td>
+<td nowrap align="center">(</td>
+<td nowrap align="center">)</td>
+<td nowrap align="center">*</td>
+<td nowrap align="center">+</td>
+<td nowrap align="center">,</td>
+<td nowrap align="center">-</td>
+<td nowrap align="center">.</td>
+<td nowrap align="center">/</td>
+<td nowrap align="center">0</td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">3</td>
+<td nowrap align="center">4</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">6</td>
+<td nowrap align="center">7</td>
+<td nowrap align="center">8</td>
+<td nowrap align="center">9</td>
+<td nowrap align="center">:</td>
+<td nowrap align="center">;</td>
+<td nowrap align="center">&lt;</td>
+<td nowrap align="center">=</td>
+<td nowrap align="center">&gt;</td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">@</td>
+<td nowrap align="center">A</td>
+<td nowrap align="center">B</td>
+<td nowrap align="center">C</td>
+<td nowrap align="center">D</td>
+<td nowrap align="center">E</td>
+<td nowrap align="center">F</td>
+<td nowrap align="center">G</td>
+<td nowrap align="center">H</td>
+<td nowrap align="center">I</td>
+</tr>
+<tr>
+<td nowrap align="center">J</td>
+<td nowrap align="center">K</td>
+<td nowrap align="center">L</td>
+<td nowrap align="center">M</td>
+<td nowrap align="center">N</td>
+<td nowrap align="center">O</td>
+<td nowrap align="center">P</td>
+<td nowrap align="center">Q</td>
+<td nowrap align="center">R</td>
+<td nowrap align="center">S</td>
+<td nowrap align="center">T</td>
+<td nowrap align="center">U</td>
+<td nowrap align="center">V</td>
+<td nowrap align="center">W</td>
+<td nowrap align="center">X</td>
+<td nowrap align="center">Y</td>
+<td nowrap align="center">Z</td>
+<td nowrap align="center">[</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">]</td>
+<td nowrap align="center">^</td>
+</tr>
+<tr>
+<td nowrap align="center">_</td>
+<td nowrap align="center">'</td>
+<td nowrap align="center">a</td>
+<td nowrap align="center">b</td>
+<td nowrap align="center">c</td>
+<td nowrap align="center">d</td>
+<td nowrap align="center">e</td>
+<td nowrap align="center">f</td>
+<td nowrap align="center">g</td>
+<td nowrap align="center">h</td>
+<td nowrap align="center">i</td>
+<td nowrap align="center">j</td>
+<td nowrap align="center">k</td>
+<td nowrap align="center">l</td>
+<td nowrap align="center">m</td>
+<td nowrap align="center">n</td>
+<td nowrap align="center">o</td>
+<td nowrap align="center">p</td>
+<td nowrap align="center">q</td>
+<td nowrap align="center">r</td>
+<td nowrap align="center">s</td>
+</tr>
+<tr>
+<td nowrap align="center">t</td>
+<td nowrap align="center">u</td>
+<td nowrap align="center">v</td>
+<td nowrap align="center">w</td>
+<td nowrap align="center">x</td>
+<td nowrap align="center">y</td>
+<td nowrap align="center">z</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx10.3.7">index</a></div>
+<h4>
+<a name="sec10.3.7">
+10.3.7</a>&nbsp;&nbsp;Operation</h4>
+<br><h5>10.3.7.1 <a name="sec10.3.7.1">
+    &nbsp;&nbsp;read</a>
+</h5>
+<br><ul>
+<li> IMM write 32 bit: (offset&lt;&nbsp;&lt;6)
+</li>
+<li> DMA read X bytes
+</li>
+</ul>
+max offset is 2*1024*1024, max block len is ?
+     <div class="idx"><a href="index.html#idx10.4">index</a></div>
+<h3>
+<a name="sec10.4">
+10.4</a>&nbsp;&nbsp;RTC (Real-Time Clock)</h3>
+<br>
+Real-Time Clock (RTC) is 32-bit value, counting time intervals in
+seconds. To get the real time (seconds since January 1st, 2000 12am)
+add the counter bias saved in SRAM.
+      <div class="idx"><a href="index.html#idx10.4.1">index</a></div>
+<h4>
+<a name="sec10.4.1">
+10.4.1</a>&nbsp;&nbsp;Operation</h4>
+<br><h5>10.4.1.1 <a name="sec10.4.1.1">
+    &nbsp;&nbsp;read </a>
+</h5>
+<br><ul>
+<li> IMM write 32 : <tt>0x20000000</tt> | (0&lt;&nbsp;&lt;6) (RTC
+offset)
+</li>
+<li> IMM read 32-bit RTC value
+</li>
+</ul>
+Since it is uncertain if the hardware prevents fragmented reads of
+the time interval (eg byte 1 from tick n and byte 2-4 from tick n+1)
+it is recommended to repeatedly retrieve the value until there is
+no difference between two consecutive reads.
+<h5>10.4.1.2 <a name="sec10.4.1.2">
+    &nbsp;&nbsp;write</a>
+</h5>
+<br><ul>
+<li> IMM write 32 : <tt>0xA0000000</tt> (== <tt>0x20000000</tt> | <tt>0x80000000</tt>
+(write flag)  -  (0&lt;&nbsp;&lt;6) (RTC offset)<br>
+</li>
+<li> IMM write 32-bit RTC value
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx10.5">index</a></div>
+<h3>
+<a name="sec10.5">
+10.5</a>&nbsp;&nbsp;SRAM</h3>
+<br>
+SRAM is battery backed memory, used for saving some non volatile settings.
+Size of SRAM is 64 bytes.
+      <div class="idx"><a href="index.html#idx10.5.1">index</a></div>
+<h4>
+<a name="sec10.5.1">
+10.5.1</a>&nbsp;&nbsp;Memory Map</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>offset</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Checksum 1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Checksum 2</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>ead 0</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>ead 1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>counter Bias (add to RTC value to get actual time)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>display offset H (signed value, -32...32)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x11</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>ntd</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x12</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>language</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>english</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>german</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>french</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>spanish</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>italian</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>dutch</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x13</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>flags</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=0)</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=0)</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=1)</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=0)</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=1)</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>0: mono 1: stereo</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=0)</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>? (=0)</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x14</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2*12</tt></td>
+<td nowrap>Flash ID</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x2c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>wireless Keyboard ID</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x30</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4*2</tt></td>
+<td nowrap>wireless PAD ID</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x38</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>last DVD Errorcode</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x39</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>padding/unused/reserved</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x3a</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2*2</tt></td>
+<td nowrap>Flash ID checksum</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x3e</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>padding/unused/reserved</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx10.5.2">index</a></div>
+<h4>
+<a name="sec10.5.2">
+10.5.2</a>&nbsp;&nbsp;Operation</h4>
+<br><h5>10.5.2.1 <a name="sec10.5.2.1">
+    &nbsp;&nbsp;read</a>
+</h5>
+<br><ul>
+<li> IMM write 32 : 0x20000100 (== 0x20000000  -  (8 &lt;&nbsp;&lt;
+6) (SRAM offset))
+</li>
+<li> DMA read 64 bytes.
+</li>
+</ul>
+<h5>10.5.2.2 <a name="sec10.5.2.2">
+    &nbsp;&nbsp;write</a>
+</h5>
+<br><ul>
+<li> IMM write 32 : 0xa0000100 (== 0x20000000  -  0x80000000 (write flag)
+- (8 &lt;&nbsp;&lt; 6) (SRAM offset)<br>
+</li>
+<li> use sequential IMM writes
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx10.5.3">index</a></div>
+<h4>
+<a name="sec10.5.3">
+10.5.3</a>&nbsp;&nbsp;Checksums</h4>
+<br>
+the SRAM data is protected against corruption by a simple additive
+checksum which is calculated like this:<br><br><tt>void checksums (unsigned short *buf, unsigned short *c1,
+unsigned short *c2)</tt>&nbsp;<br><tt>{</tt>&nbsp;<br><tt>int i;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;*c1 = 0; *c2 = 0;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0;i&lt;4;++i)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*c1 += buf[0x06 + i];</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*c2 += (buf[0x06 + i] ^
+0xFFFF);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>}</tt>&nbsp;<br><div class="idx"><a href="index.html#idx10.6">index</a></div>
+<h3>
+<a name="sec10.6">
+10.6</a>&nbsp;&nbsp;AD16</h3>
+<br>
+AD16 is on channel 2, as device 0. Probably its used for debugging
+purposes. AD16 is the 32-bit register, keeping bootrom "trace-step".
+      <div class="idx"><a href="index.html#idx10.6.1">index</a></div>
+<h4>
+<a name="sec10.6.1">
+10.6.1</a>&nbsp;&nbsp;Operation</h4>
+<br><h5>10.6.1.1 <a name="sec10.6.1.1">
+    &nbsp;&nbsp;init</a>
+</h5>
+<br><ul>
+<li> IMM write : <tt>0x0000</tt><br>
+</li>
+<li> IMM read 32 bit ID and check it for error (it should be <tt>0x04120000</tt>)
+</li>
+</ul>
+<h5>10.6.1.2 <a name="sec10.6.1.2">
+    &nbsp;&nbsp;write </a>
+</h5>
+<br><ul>
+<li> IMM write : <tt>0xa0</tt><br>
+</li>
+<li> IMM write 32-bit value (trace-step)
+</li>
+</ul>
+<h5>10.6.1.3 <a name="sec10.6.1.3">
+    &nbsp;&nbsp;read </a>
+</h5>
+<br><ul>
+<li> IMM write : <tt>0xa2</tt><br>
+</li>
+<li> IMM read 32-bit AD16 register value
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx10.6.2">index</a></div>
+<h4>
+<a name="sec10.6.2">
+10.6.2</a>&nbsp;&nbsp;Trace-Step Values</h4>
+<br><h5>10.6.2.1 <a name="sec10.6.2.1">
+    &nbsp;&nbsp;BS</a>
+</h5>
+<br><table>
+<tr>
+<td nowrap align="center">0x01000000</td>
+<td nowrap>AD16 Inited, cache lines 320, 340,360, 380, 3a0 prefetched</td>
+</tr>
+<tr>
+<td nowrap align="center">0x02000000</td>
+<td nowrap>cache line 0x3e0 prefetched</td>
+</tr>
+<tr>
+<td nowrap align="center">0x03000000</td>
+<td nowrap>rest of cachelines prefetched</td>
+</tr>
+<tr>
+<td nowrap align="center">0x04000000</td>
+<td nowrap>ramtest passed</td>
+</tr>
+<tr>
+<td nowrap align="center">0x05000000</td>
+<td nowrap>ramtest error</td>
+</tr>
+<tr>
+<td nowrap align="center">0x06000000</td>
+<td nowrap>ramtest error</td>
+</tr>
+</table>
+<br><h5>10.6.2.2 <a name="sec10.6.2.2">
+    &nbsp;&nbsp;BS2</a>
+</h5>
+<br><table>
+<tr>
+<td nowrap align="center">0x00000800</td>
+<td nowrap>System Init</td>
+</tr>
+<tr>
+<td nowrap align="center">0x00000900</td>
+<td nowrap>DVD Init</td>
+</tr>
+<tr>
+<td nowrap align="center">0x00000a00</td>
+<td nowrap>Card Init</td>
+</tr>
+<tr>
+<td nowrap align="center">0x00000b00</td>
+<td nowrap>video init</td>
+</tr>
+<tr>
+<td nowrap align="center">0x00000c00</td>
+<td nowrap>final before menu</td>
+</tr>
+</table>
+<br><div class="idx"><a href="index.html#idx10.7">index</a></div>
+<h3>
+<a name="sec10.7">
+10.7</a>&nbsp;&nbsp;Memory Cards</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="right"><b>Product</b></td>
+<td nowrap align="right"><b>Blocks</b></td>
+<td nowrap align="right"><b>Mega bits</b></td>
+<td nowrap align="right"><b>Mega bytes</b></td>
+<td nowrap align="right"><b>Vendor</b></td>
+<td nowrap align="right"><b>Chip</b></td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card 59</td>
+<td nowrap align="right">64</td>
+<td nowrap align="right">4</td>
+<td nowrap align="right">0.5</td>
+<td nowrap align="right">Nintendo</td>
+<td nowrap align="right">Macronix MX25L4001 Serial Flash ROM</td>
+</tr>
+<tr>
+<td nowrap align="right">Action Replay memory card</td>
+<td nowrap align="right">64</td>
+<td nowrap align="right">4</td>
+<td nowrap align="right">0.5</td>
+<td nowrap align="right">Datel </td>
+<td nowrap align="right">Macronix MX25L4004 4M-Bit(4Mx1) Serial Flash ROM</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card '4 Mega'</td>
+<td nowrap align="right">64</td>
+<td nowrap align="right">4</td>
+<td nowrap align="right">0.5</td>
+<td nowrap align="right">3rd Party</td>
+<td nowrap align="right">WINBOND 512K*8 CMOS flash memory (Winbond,W29C040P-90,215275901,216GJRA)</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card 123</td>
+<td nowrap align="right">128</td>
+<td nowrap align="right">8</td>
+<td nowrap align="right">1</td>
+<td nowrap align="right">Nintendo (*)</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card '8 Mega'</td>
+<td nowrap align="right">128</td>
+<td nowrap align="right">8</td>
+<td nowrap align="right">1</td>
+<td nowrap align="right">3rd Party</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card 251</td>
+<td nowrap align="right">256</td>
+<td nowrap align="right">16</td>
+<td nowrap align="right">2</td>
+<td nowrap align="right">Nintendo</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card 507</td>
+<td nowrap align="right">512</td>
+<td nowrap align="right">32</td>
+<td nowrap align="right">4</td>
+<td nowrap align="right">Nintendo (*)</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card 1019</td>
+<td nowrap align="right">1024</td>
+<td nowrap align="right">64</td>
+<td nowrap align="right">8</td>
+<td nowrap align="right">Nintendo</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card '64 Mega'</td>
+<td nowrap align="right">1024</td>
+<td nowrap align="right">64</td>
+<td nowrap align="right">8</td>
+<td nowrap align="right">3rd Party</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">USB Memory Adaptor 64M / 1019 blocks</td>
+<td nowrap align="right">1024</td>
+<td nowrap align="right">64</td>
+<td nowrap align="right">8</td>
+<td nowrap align="right">EMS</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="right">Memory Card 2043</td>
+<td nowrap align="right">2048</td>
+<td nowrap align="right">128</td>
+<td nowrap align="right">16</td>
+<td nowrap align="right">Nintendo (*)</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+(*) never seen those, appearently supported but never manufactured.<br><br>
+as you can see the products are named in reference to their <em>useable</em>
+capacity in blocks or total size in mega bits. The theoretical maximum
+size for a memory card is 128 mega bits (16 mega bytes, 2048 blocks).
+      <div class="idx"><a href="index.html#idx10.7.1">index</a></div>
+<h4>
+<a name="sec10.7.1">
+10.7.1</a>&nbsp;&nbsp;Commands</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Command</b></td>
+<td nowrap align="center"><b>len</b></td>
+<td nowrap align="center"><b>indata</b></td>
+<td nowrap align="center"><b>len</b></td>
+<td nowrap align="center"><b>outdata</b></td>
+<td nowrap align="center"><b>len</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>0x8500</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap align="center">ID</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>get ID</td>
+</tr>
+<tr>
+<td nowrap><tt>0x8300</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap align="center">Status</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>get Card Status</td>
+</tr>
+<tr>
+<td nowrap><tt>0x89</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap>clear Card Status</td>
+</tr>
+<tr>
+<td nowrap><tt>0x52</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">offset, 0x00000000</td>
+<td nowrap align="center"><tt>8</tt></td>
+<td nowrap align="center">Block Data</td>
+<td nowrap align="center"><tt>&lt;=0x200</tt></td>
+<td nowrap>read Block</td>
+</tr>
+<tr>
+<td nowrap><tt>0xf40000</tt></td>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap>erase Card</td>
+</tr>
+<tr>
+<td nowrap><tt>0xf1</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">Sector</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center">-</td>
+<td nowrap align="center"><tt>-</tt></td>
+<td nowrap>erase Sector</td>
+</tr>
+<tr>
+<td nowrap><tt>0xf2</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">Block offset</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">Block Data</td>
+<td nowrap align="center"><tt>&lt;=0x80</tt></td>
+<td nowrap>write Block</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><div class="idx"><a href="index.html#idx10.7.2">index</a></div>
+<h4>
+<a name="sec10.7.2">
+10.7.2</a>&nbsp;&nbsp;Operation</h4>
+<br><h5>10.7.2.1 <a name="sec10.7.2.1">
+    &nbsp;&nbsp;unlocking</a>
+</h5>
+<br>
+original memory cards (those manufactured by nintendo) need to be
+'unlocked' before they can be accessed. this is appearently done
+by a small dsp program.<br><br>
+to do
+<h5>10.7.2.2 <a name="sec10.7.2.2">
+    &nbsp;&nbsp;get ID</a>
+</h5>
+<br><ul>
+<li> IMM write 0x85,00
+</li>
+<li> IMM read 2 bytes ID
+</li>
+</ul>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec10.7.2.2.1">
+    10.7.2.2.1&nbsp;&nbsp;Card IDs</a>
+&nbsp;</b>
+<h5>10.7.2.3 <a name="sec10.7.2.3">
+    &nbsp;&nbsp;get Status</a>
+</h5>
+<br><ul>
+<li> IMM write 0x83,00
+</li>
+<li> IMM read 1 byte Status
+</li>
+</ul>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec10.7.2.3.1">
+    10.7.2.3.1&nbsp;&nbsp;Status Bits</a>
+&nbsp;</b>
+<tt></tt>
+<table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>x...</tt></td>
+<td nowrap align="right"><tt>...r</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>7</tt></td>
+<td nowrap align="center">x</td>
+<td nowrap>1: erase in Progress (?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center">r</td>
+<td nowrap>1: Card ready (?)</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><h5>10.7.2.4 <a name="sec10.7.2.4">
+    &nbsp;&nbsp;clear Status</a>
+</h5>
+<br><ul>
+<li> IMM write 0x89
+</li>
+</ul>
+<h5>10.7.2.5 <a name="sec10.7.2.5">
+    &nbsp;&nbsp;read Block</a>
+</h5>
+<br><ul>
+<li> select
+</li>
+<li> IMM write: 0x52
+</li>
+<li> IMM write: (offset &gt;&nbsp;&gt; 17), (offset &gt;&nbsp;<br>
+9), (offset &gt;&nbsp;&gt; 7) &amp; 3, offset &amp; 0x7F
+</li>
+<li> IMM write: 0x00, 0x00, 0x00, 0x00
+</li>
+<li> read 8 bit values
+</li>
+<li> deselect
+</li>
+</ul>
+max offset is 16*1024*1024, max block len is 512 bytes.<br><h5>10.7.2.6 <a name="sec10.7.2.6">
+    &nbsp;&nbsp;erase Card</a>
+</h5>
+<br><ul>
+<li> select
+</li>
+<li> IMM write 0xf4,0x00,0x00
+</li>
+<li> deselect
+</li>
+</ul>
+<h5>10.7.2.7 <a name="sec10.7.2.7">
+    &nbsp;&nbsp;erase Sector</a>
+</h5>
+<br><ul>
+<li> select
+</li>
+<li> IMM write 0xf1
+</li>
+<li> IMM write (sector &gt;&nbsp;&gt; 17) &amp; 0x7F, (sector &gt;&nbsp;<br>
+9) &amp; 0xFF
+</li>
+<li> deselect
+</li>
+<li> wait until bit 7 of card status is cleared
+</li>
+</ul>
+<h5>10.7.2.8 <a name="sec10.7.2.8">
+    &nbsp;&nbsp;write Block</a>
+</h5>
+<br><ul>
+<li> wait while bit 0 of card status is cleared (= card ready)
+</li>
+<li> select
+</li>
+<li> IMM write 0xf2
+</li>
+<li> IMM write (offset &gt;&nbsp;&gt; 17) &amp; 0x3F, (offset &gt;&nbsp;<br>
+9) &amp; 0xFF, (offset &gt;&nbsp;&gt; 7) &amp; 3, offset &amp; 0x7F
+</li>
+<li> write 0x80 bytes
+</li>
+<li> deselect
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx10.8">index</a></div>
+<h3>
+<a name="sec10.8">
+10.8</a>&nbsp;&nbsp;Ethernet Adapter</h3>
+<br>
+The Macronix chip found in the ethernet adapter (mx98730ec) seems
+to be a reenginered version of the mx98726 or mx98728 (or the ec type
+respectivly).
+      <div class="idx"><a href="index.html#idx10.8.1">index</a></div>
+<h4>
+<a name="sec10.8.1">
+10.8.1</a>&nbsp;&nbsp;registers</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Registerblock Base</b></td>
+<td nowrap align="center"><b>Size of Registerblock</b></td>
+<td nowrap align="center"><b>common access size</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x1000</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+These are the actual Chip Registers which match with the descriptions
+in MXs documents.<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">NCRA - Network Control Register A (0x08 ?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>????</tt></td>
+<td nowrap align="right"><tt>?ep?</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>INTCLK - must be 0 for normal operation.</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>INTMODE - Interrupt Mode: Set for the active high interrupt, reset
+for the active low interrupt case.</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LB1 - Loopback mode</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LB0</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>LB1</b></td>
+<td nowrap align="center"><b>LB0</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">0</td>
+<td nowrap>Mode0 - Normal mode</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">1</td>
+<td nowrap>Mode1 - internal FIFO Loopback</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">0</td>
+<td nowrap>Mode2 - internal NWAY Loopback</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">1</td>
+<td nowrap>Mode3 - internal PMD Loopback</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>SR - Start Receive : Enable the MAC to receive packets. Default is
+disabled.</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center">e</td>
+<td nowrap>ST1 - Start Transmit Command/Status</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">p</td>
+<td nowrap>ST0</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RESET - Software reset.</td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>bit 1 and bit 2 will get cleared after a packet has been sent</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">NCRB - Network Control Register (0x11, 0x12 ?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap>&nbsp;</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">6-7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RXINTC - Recieve Interrupt Counter</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>HBD - Heart Beat Check Disable</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>AB - "pass all broadcast frames"</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PB - "pass bad frames"</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PM - "pass all multicast"</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CA - capture effect mode</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PR - promiscuous mode</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">GMAC Test Register A : TRA</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>SB - Start/Stop Back-off counter</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FC - Forced Collision</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RWD - Receive Watchdog Disable</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RWR - Recieve Watchdog Release</td>
+</tr>
+<tr>
+<td nowrap align="center">1-3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TMODE - Test Moder Select bits</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TEST - Test mode enable</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">GMAC Test Register B : TRB</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BFSTATUS</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BFS1</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BKCNTLB</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BFS0</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>COLCNTCB</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RDNCNTSB</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RDNCNTCB</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FKD - Flaky Oscillator Disable</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">LTPS - Last Transmitted Packet Status (transmit error code ?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TERR - Transmit Error</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>OWC - Out of Window Collision</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>UF - TX FIFO Underflow</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CRSLOST - Carrier Sense Lost</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CC3 - Collision Count Bit 3</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CC2</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CC1</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CC0</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x05</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">LRPS - Last Recieved Packet Status</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RERR - Recieve Error</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RF - Runt Frame</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>MF - Multicast Frame address</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RW - Recieve Watchdog</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FO - FIFO Overrun</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FAE - Frame Alignment Error</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>CRC - CRC error</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BF - RX Packet Buffer Full Error</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x06</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">MPCL - Missed Packet Counter</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">0-7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>MISSCNT - Miss Packet Counter LSB</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">MPCL - Missed Packet Counter</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">0-7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>MISSCNT - Miss Packet Counter MSB</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">IMR - Interrupt Mask Register (IRQ Mask)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RBFIM - RX Buffer Full Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BUSEIM - Bus Error Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FIFOEIM - FIFO Error Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TEIM - Transmit Error Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>REIM - Receive Error Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TIM - Transmit Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RIM - Recieved Interrupt Mask</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FRAGIM - Fragment Counter Interrupt Mask</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x09</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">IR - Interrupt Register (irq status)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>???t</tt></td>
+<td nowrap align="right"><tt>esr?</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RBFI - RX Buffer Full Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BUSEI - Bus Error Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FIFOEI - FIFO Error Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">t</td>
+<td nowrap>TEI - Transmit Error Interrupt (1: transmit error)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap align="center">e</td>
+<td nowrap>REI - Recieve Error Interrupt (1: receive error ?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center">s</td>
+<td nowrap>TI - Transmit OK Interrupt (1: packet sent ?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap align="center">r</td>
+<td nowrap>RI - Receive OK Interrupt (1: packet received ?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FRAGI - Fragment Counter Interrupt</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0a</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">BP - Boundary Page Pointer Register (0x0100 ?)</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">TLBP - TX Low Boundary Page Pointer Register</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0e</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">TWP - Transmit Buffer Write Page Pointer Register</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x10</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">unused/reserved</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x12</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">TRP - Transmit Buffer Read Page Pointer Register</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x14</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">RXINTT - Receive Interrupt Timer</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x16</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">RWP - Receive Buffer Write Page Pointer Register</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x18</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">RRP - Receive Buffer Read Page Pointer Register</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x1a</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">RHBP - RX High Boundary Page Pointer Register (0x0f00 ?)</td>
+</tr></table>
+</td></tr></table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x1c</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">EEPROM Interface Register:</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">6-7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused/reserved</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EELD - </td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EESEL - </td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EEDO - Serial Data Output from external EEPROM clock device</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EEDI - Serial Data Input to external EEPROM clock device</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EECK - Serial Clock output to external EEPROM clock device (&lt; 1 MHz)</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>EECS - Chip Select output to external EEPROM clock device</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x1d</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">BICT - Bus Integrity Check Timer</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x1e</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/?</td>
+<td nowrap align="center">IORDP - IO Data Port Page Pointer Register</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x20</tt></td>
+<td nowrap align="center">6</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">PAR0-PAR5 Network Address Filtering Registers - Physical (MAC) Address</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x26</tt></td>
+<td nowrap align="center">8</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">MAR0-PAR7 Network Address Filtering Registers - Hash Table Register</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x2e</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">ANALOG - Transceiver Control Register</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">6-7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused/reserved (must be 0)</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RST100 - Reset for NORMAL mode</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RSQ - Reduced SQuelch Enable</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PWD100 - Reset for NORMAL mode</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PWD10B - Set for NORMAL mode</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>DS130 - Must be 1 for NORMAL mode with auto-compensation</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>DS120 - Must be 1 for NORMAL mode with auto-compensation</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x2f</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">DINTVAL - DMA Interval Timer</td>
+</tr></table>
+</td></tr></table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x30</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">NWAYC - NWAY Configuration Register</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LTE - Link Test Enable</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>NTTEST - reserved</td>
+</tr>
+<tr>
+<td nowrap align="center">3-5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>ANS - Autonegotiation Status</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>ANE - Autonegotiation Enable</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PS100/10 - Port Select 100/10 Mbit</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FD - Full Duplex Mode</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x31</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">NWAYS - NWAY Status Register</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>10TXH - NWAY 10 TX Half duplex Mode</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>10TXF - NWAY 10 TX Full duplex Mode</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>100TXH - NWAY 100 Half duplex Mode</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>100TXF - NWAY 100 TX Full duplex Mode</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>ANCLPT - Auto-negotiation Completion</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LPNWAY - Link Partner NWAY Status</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LS100 - Physical Link Status of 100Mbps TP</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LS10 - Physical Link Status of 10 Mbps TP</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x32</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">GCA - GMAC Configuration A Register (0x08 ?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused/reserved (must be 0)</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TXFIFOCNTEN</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>AUTOPUB - Auto Page Update option</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused/reserved</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>ARXERRB - Accept RX packet with error</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>SLOWSRAM</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PBW - Packet Buffer Data Width</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>BPSCRM - Bypass Scrambler</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x33</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">GCB - GMAC Configuration B Register</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">4-7</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused/reserved</td>
+</tr>
+<tr>
+<td nowrap align="center">2-3</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>RTHD - Recieve FIFO Threshold</td>
+</tr>
+<tr>
+<td nowrap align="center">0-1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>TTHD - Transmit FIFO Threshold</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x34</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">-/w</td>
+<td nowrap align="center">TWD - IO Mapped Data Port</td>
+</tr></table>
+</td></tr></table>
+<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x38</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">-/-</td>
+<td nowrap align="center">unused/reserved</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x3a</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">Host Interface Protocol Register (0x08 ?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap>&nbsp;</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>DREQB - DREQB-pin status bit</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>STIORD/RRDYB - (no data available ?)</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>WRDYB - Write Packet Memory Ready Bar Status Indication</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x3b</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">LPC - Link Partner Link Code Register</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x3c</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">TX/RX DMA Status Register</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x3d</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">MISC1 - MISC Control Register 1</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x3e</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">TXFIFOCNT - TX FIFO Byte Counter</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x40</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">RRD - RX Burst Read Data Port</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x44</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">ID1 - 'MX'</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x46</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">ID2 - '0001'</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x48</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">w</td>
+<td nowrap align="center">WRTXFIFOD - Write TX FIFO Data Port Register (output queue)</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x4c</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">IORD - IO Read Data Port Register</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x50</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">MISC2 - MISC Control Register 2 (0x80 ?)</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x51</tt></td>
+<td nowrap align="center">1</td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">(?)</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br>
+note: register <tt>0x51</tt> is not documented in mx98728 datasheet<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x52</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap align="center">r/-</td>
+<td nowrap align="center">HRPKTCNT - Host Recieve Packet Counter</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x54</tt></td>
+<td nowrap align="center">3</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">FRAGCNT - Host DMA Fragment Counter</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br>
+note: <tt>0x56</tt> is the last reg of a mx98726 and mx98728<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x5b</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">(?)</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x5c</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">(?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>0x36 = disconnect network</td></tr>
+</table>
+<tt></tt>&nbsp;<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x5e</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">(0x01 ?)</td>
+</tr></table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x60</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">(0x00 ?)</td>
+</tr></table>
+</td></tr></table>
+<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x100</tt></td>
+<td nowrap align="center">0xf00</td>
+<td nowrap align="center">?/w</td>
+<td nowrap align="center">input queue (?)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>- select for reading</td></tr>
+<tr><td nowrap>- IMM read block</td></tr>
+</table>
+<br><div class="idx"><a href="index.html#idx10.8.2">index</a></div>
+<h4>
+<a name="sec10.8.2">
+10.8.2</a>&nbsp;&nbsp;command-registers</h4>
+<br><tt></tt>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Registerblock Base</b></td>
+<td nowrap align="center"><b>Size of Registerblock</b></td>
+<td nowrap align="center"><b>common access size</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x10</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+These Registers are related to the EXI Interface on the Ethernet-Adapter,
+not to the actual Ethernet Chip.<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>?</tt></td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">EXI id</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>- select register for reading</td></tr>
+<tr><td nowrap>- IMM read 4 bytes (0x04,0x02,0x02,0x00)</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">irq mask</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">irq status</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>r??p</tt></td>
+<td nowrap align="right"><tt>h???</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>7</tt></td>
+<td nowrap align="center">r</td>
+<td nowrap>irq from MX chip</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>6</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap>'killing' irq (should not get this one)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>5</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap>command error</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap align="center">p</td>
+<td nowrap>challange/response request</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap align="center">h</td>
+<td nowrap>challange/response status</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">? (revid_eth)</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>- select register for writing</td></tr>
+<tr><td nowrap>- IMM write 0xd1,0x07 (16bit)</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x05</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">? (0x4e ?)</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x06</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center"><tt>?</tt></td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">Challenge</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>- select for reading</td></tr>
+<tr><td nowrap>- IMM read 4 bytes</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x09</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">Response</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>- select for writing</td></tr>
+<tr><td nowrap>- IMM write 4 bytes</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0a</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0b</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">Status</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>1: challenge/response ok</td></tr>
+<tr><td nowrap>2: challenge/response failed</td></tr>
+</table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0d</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0e</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">?</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br><table><tr><td nowrap>
+<tt></tt>
+<table><tr>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">?</td>
+<td nowrap align="center">?/?</td>
+<td nowrap align="center">? (0x00 ?)</td>
+</tr></table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><div class="idx"><a href="index.html#idx10.8.3">index</a></div>
+<h4>
+<a name="sec10.8.3">
+10.8.3</a>&nbsp;&nbsp;Operation</h4>
+<br><h5>10.8.3.1 <a name="sec10.8.3.1">
+    &nbsp;&nbsp;selecting a register for reading</a>
+</h5>
+<br><ul>
+<li> IMM write 0x80000000  -  (register&lt;&nbsp;&lt;8)
+</li>
+</ul>
+<h5>10.8.3.2 <a name="sec10.8.3.2">
+    &nbsp;&nbsp;selecting a register for writing</a>
+</h5>
+<br><ul>
+<li> IMM write 0xc0000000  -  (register&lt;&nbsp;&lt;8)
+</li>
+</ul>
+<b>10.8.3.3<a name="sec10.8.3.3">
+    &nbsp;&nbsp;selecting command-register for reading</a>
+&nbsp;</b>
+<ul>
+<li> IMM write (register&lt;&nbsp;&lt;8) (16 bits)
+</li>
+</ul>
+<b>10.8.3.4<a name="sec10.8.3.4">
+    &nbsp;&nbsp;selecting command-register for writing</a>
+&nbsp;</b>
+<ul>
+<li> IMM write 0x4000  -  (register&lt;&nbsp;&lt;8) (16 bits)
+</li>
+</ul>
+<h5>10.8.3.5 <a name="sec10.8.3.5">
+    &nbsp;&nbsp;init</a>
+</h5>
+<br><ul>
+<li> write reg - 1 byte to 0x60, 0x00
+</li>
+<li> read reg - 1 byte from 0x0f (?)
+</li>
+<li> delay
+</li>
+<li> write reg - 1 byte to 0x00, 0x01
+</li>
+<li> write reg - 1 byte to 0x00, 0x00 (not necessary ?)
+</li>
+<li> read reg - 1 byte from 0x01, 0x00
+</li>
+<li> read reg - 1 byte from 0x5b
+</li>
+<li> write reg - 1 byte to 0x5b, write back previously read value AND ~(1&lt;&nbsp;&lt;7<br>
+</li>
+<li> write reg - 1 byte to 0x5e, 0x01 (or same as 0x5b ?!)
+</li>
+<li> read reg - 1 byte from 0x5c
+</li>
+<li> write reg - 1 byte to 0x5c, write back previously read value OR 4
+</li>
+<li> write reg - 1 byte to 0x01, 0x11
+</li>
+<li> write reg - 1 byte to 0x50, 0x80 (?)
+</li>
+<li> write reg - 1 byte to 0x08, 0xff
+</li>
+<li> write reg - 1 byte to 0x09, 0xff
+</li>
+<li> write reg - 1 byte to 0x02, 0x00 (?)
+</li>
+<li> write reg - 1 byte to 0x00, 0x08
+</li>
+<li> delay
+</li>
+<li> write reg - 2 bytes to 0x16, 0x0100 (recv buffer write ptr)
+</li>
+<li> write reg - 2 bytes to 0x18, 0x0100 (recv buffer read ptr)
+</li>
+</ul>
+<b>10.8.3.6<a name="sec10.8.3.6">
+    &nbsp;&nbsp;challenge/response calculation</a>
+&nbsp;</b>
+<tt>&nbsp;</tt>&nbsp;<br><tt>&nbsp;</tt><br><tt>u32 ETHChallResp(u32 val,u32 revid_0,u32 revid_eth_0,u32
+revid_eth_1)</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;u32 c0,c1,c2,c3;</tt><br><tt>&nbsp;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;c0=(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( ((val&amp;0xff000000)&gt;&nbsp;&gt;24)
++ </tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((val&amp;0x00ff0000)&gt;&nbsp;&gt;16)
+* 0xc1 + 0x18 + revid_0 )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^ ( ((val&amp;0x000000ff) *
+((val&amp;0x0000ff00)&gt;&nbsp;&gt;8)) + 0x90 )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) &amp; 0xff;</tt><br>
+&nbsp;
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;c1=(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( ((val&amp;0x00ff0000)&gt;&nbsp;&gt;16)
++ ((val&amp;0x0000ff00)&gt;&nbsp;&gt;8) + 0x90 )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^ ( c0 + ((val&amp;0xff000000)&gt;&nbsp;&gt;24)
+- 0xc1 )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) &amp; 0xff;</tt><br>
+&nbsp;
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;c2=(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( ((val&amp;0x0000ff00)&gt;&nbsp;&gt;8)
++ 0xc8 )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^ ( c0 + ((revid_eth_0
++ revid_0 * 0x23) ^ 0x19) )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) &amp; 0xff;</tt><br>
+&nbsp;
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;c3=(</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( ((val&amp;0xff000000)&gt;&nbsp;&gt;24)
++ 0xc1 )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^ ( (val&amp;0x000000ff) + ((revid_eth_1
++ 0xc8) ^ 0x90) )</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) &amp; 0xff;</tt><br>
+&nbsp;
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;return ((c0 &lt;&nbsp;&lt; 24) | (c1 &lt;&nbsp;&lt;
+16)  -  (c2 &lt;&nbsp;&lt; 8)  -  (c3));</tt><br><tt>}</tt>&nbsp;<br><h5>10.8.3.7 <a name="sec10.8.3.7">
+    &nbsp;&nbsp;send packet (outside interrupt)</a>
+</h5>
+<br><ul>
+<li> write reg - X bytes to 0x48, &lt;senddata&gt; (X must be &gt;=0x3c!)
+</li>
+<li> read reg - 1 byte from 0x00, status ?
+</li>
+<li> write reg - 1 byte to 0x00, 0x00
+</li>
+<li> write reg - 1 byte to 0x00, previously read status OR 0x04 (set bit3,
+ACK error?)
+</li>
+<li> read reg - 1 byte from 0x00,status ;do while (status AND 0x06)!=0
+(wait until packet sent)
+</li>
+</ul>
+<h5>10.8.3.8 <a name="sec10.8.3.8">
+    &nbsp;&nbsp;poll received packets (outside interrupt)</a>
+</h5>
+<br><ul>
+<li> read reg - 2 bytes from 0x16, write_ptr
+</li>
+<li> read reg - 2 bytes from 0x18, read_ptr
+</li>
+<li> if write_ptr==read_ptr, no more packets are available
+</li>
+<li> write reg - 1 byte to 0x3a, 0x02
+</li>
+<li> read reg - 1 byte from 0x3a, if (value&amp;2)!=0, no more data is available
+</li>
+<li> read reg- 4 bytes from read_ptr, packet descriptor
+</li>
+<li> read reg - X bytes from 0x100+read_ptr, &lt;data&gt; (X must be &gt;=0x3c!
+; wrap around to 0x100 if read_ptr=0xf00)
+</li>
+<li> write reg - 2 bytes to 0x18, first byte of packet descriptor, 0x00
+(advance read pointer)
+</li>
+<li> write reg - 1 byte to 0x09, 0x02
+</li>
+<li> write cmd - 1 byte to 0x02, 0xf8 (ACK?)
+</li>
+</ul>
+<h5>10.8.3.9 <a name="sec10.8.3.9">
+    &nbsp;&nbsp;received packet format</a>
+</h5>
+<br>
+first 4 bytes of a received packet contains a descriptor about the
+packet that has been received<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>31</tt></td>
+<td nowrap align="right"><tt>24</tt></td>
+<td nowrap><tt>23</tt></td>
+<td nowrap align="right"><tt>16</tt></td>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>....</tt></td>
+<td nowrap align="right"><tt>....</tt></td>
+<td nowrap><tt>yyyy</tt></td>
+<td nowrap align="right"><tt>....</tt></td>
+<td nowrap><tt>xxxx</tt></td>
+<td nowrap align="right"><tt>xxxx</tt></td>
+<td nowrap><tt>....</tt></td>
+<td nowrap align="right"><tt>....</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">20-23</td>
+<td nowrap align="center">y</td>
+<td nowrap>length of received packet lo bits (shift 4 down)</td>
+</tr>
+<tr>
+<td nowrap align="center">8-15</td>
+<td nowrap align="center">x</td>
+<td nowrap>length of received packet hi bits (shift 4 up and OR with lo bits)</td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>length is inclusive the 4 byte descriptor!</td></tr>
+</table>
+<br><div class="idx"><a href="index.html#idx10.9">index</a></div>
+<h3>
+<a name="sec10.9">
+10.9</a>&nbsp;&nbsp;UART</h3>
+<br>
+(note: the existance of an UART is highly speculative and was never
+proved for a fact)
+to do
+     <div class="idx"><a href="index.html#idx10.10">index</a></div>
+<h3>
+<a name="sec10.10">
+10.10</a>&nbsp;&nbsp;SD Cards</h3>
+<br>
+SD cards support an SPI mode, which is essentially the same hardware
+protocol that official memory cards use. Notice the use of the word
+hardware, not software. SD cards uses the MMC command set for communication
+and data transfer, while Nintendo memory cards use a custom Macronix
+command set. This means that you should not waste your time trying
+to get standard GC programs to recognize the SD card as a normal memory
+card, because it will not work without specific code to access the
+SD card. Even if you make the raw sector data on the SD card the same
+as the Nintendo memory card, the low-level commands to access the
+sectors differ between the two. However, since the hardware bus and
+protocol are the same, an SD adapter can essentially be made with
+straight-through connections from the EXI bus to the SD card signals.
+to do
+     <div class="idx"><a href="index.html#idx10.11">index</a></div>
+<h3>
+<a name="sec10.11">
+10.11</a>&nbsp;&nbsp;Viper 'Modchip'</h3>
+<br>
+this is a 3rd-Party 'modchip' used to override the IPL with a custom
+program.
+todo
+     <div class="idx"><a href="index.html#idx10.12">index</a></div>
+<h3>
+<a name="sec10.12">
+10.12</a>&nbsp;&nbsp;Ripper III GC 'Modchip'</h3>
+<br>
+todo
+     <div class="idx"><a href="index.html#idx10.13">index</a></div>
+<h3>
+<a name="sec10.13">
+10.13</a>&nbsp;&nbsp;Qoob 'Modchip'</h3>
+<br>
+todo
+     <div class="idx"><a href="index.html#idx10.14">index</a></div>
+<h3>
+<a name="sec10.14">
+10.14</a>&nbsp;&nbsp;NinjaMOD 'Modchip'</h3>
+<br>
+todo
+     <div class="idx"><a href="index.html#idx10.15">index</a></div>
+<h3>
+<a name="sec10.15">
+10.15</a>&nbsp;&nbsp;Mario Party Microphone</h3>
+<br>
+todo
+ <div class="idx"><a href="index.html#idx11">index</a></div>
+</body></html>

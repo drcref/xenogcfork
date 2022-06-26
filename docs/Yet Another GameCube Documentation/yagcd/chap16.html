@@ -1,0 +1,280 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec16">
+16</a>&nbsp;&nbsp;Compression Formats</h2>
+<br><div class="idx"><a href="index.html#idx16.1">index</a></div>
+<h3>
+<a name="sec16.1">
+16.1</a>&nbsp;&nbsp;Yay0</h3>
+<br>
+This format is used to store the fonts in the BIOS/IPL. It is compressed
+similar to the the Zelda 64 'Yaz0' compression.<br><div class="idx"><a href="index.html#idx16.1.1">index</a></div>
+<h4>
+<a name="sec16.1.1">
+16.1.1</a>&nbsp;&nbsp;compression</h4>
+<br><table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>'Yay0' signature</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>size of decoded data in bytes</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>offset to link table</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>offset to non-linked chunks and count modifiers table</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0010</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>packed data (32 bit words)</td>
+</tr>
+</table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br>
+The packed data is a bitstream (padded to a multiple of 32bits), with
+each bit having the following meaning:<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>linked chunk, copy block from the link table (offset 0x0008)</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>non linked chunk, copy next byte from non-linked chunks and count
+modifiers table (offset at 0x000c)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+todo
+      <div class="idx"><a href="index.html#idx16.1.2">index</a></div>
+<h4>
+<a name="sec16.1.2">
+16.1.2</a>&nbsp;&nbsp;de-compression Code</h4>
+<br><tt>void Decode(void *s, void *d)</tt>&nbsp;<br><tt>{</tt>&nbsp;<br><tt>u32 i, j, k;</tt>&nbsp;<br><tt>u32 p, q;</tt>&nbsp;<br><tt>u32 cnt;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;i = r21 = *(u32 *)(s + 4); // size of decoded
+data</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;j = r29 = *(u32 *)(s + 8); // link table</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;k = r23 = *(u32 *)(s + 12); // byte chunks and
+count modifiers</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;q = r31 = 0; // current offset in dest buffer</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;cnt = r28 = 0; // mask bit counter</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;p = r24 = 16; // current offset in mask table</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;do</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// if all bits are done, get next mask</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(cnt == 0)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// read word from mask data block</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r22 = *(u32 *)(s + p);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p += 4;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cnt = 32; // bit counter</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// if next bit is set, chunk is non-linked</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(r22 &amp; 0x80000000)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// get next byte</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*(u8 *)(d + q) = *(u8 *)(s
++ k);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k++; q++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// do copy, otherwise</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// read 16-bit from link table</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r26 = *(u16 *)(s + j);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j += 2;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 'offset'</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r25 = q - (r26 &amp; 0xfff);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 'count'</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r30 = r26 &gt;&nbsp;&gt; 12;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(r30 == 0)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// get 'count' modifier</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r5 = *(u8 *)(s + k);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r30 = r5 + 18;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else r30 += 2;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// do block copy</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r5 = d + r25;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(i=0; i&lt;r30; i++)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*(u8 *)(d + q) = *(u8
+*)(r5 - 1);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;q++; r5++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// next bit in mask</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r22 &lt;&nbsp;&lt;= 1;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cnt--;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;} while(q &lt; i);</tt>&nbsp;<br><tt>}</tt>&nbsp;<br><tt></tt>&nbsp;<br><div class="idx"><a href="index.html#idx16.1.3">index</a></div>
+<h4>
+<a name="sec16.1.3">
+16.1.3</a>&nbsp;&nbsp;Font Data</h4>
+<br><table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Font Type</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0002</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>first Character in Font</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>last Character in Font</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0006</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Character to use for substituting invalid Characters</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>ascent Units</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000a</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>descent Units</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>width of widest Character</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000e</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>leading Space</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0010</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Cell width</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0012</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Cell Height</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0014</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>Texture Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0018</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Texture Format</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001a</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Texture Columns</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Texture Rows</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001e</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Texture Width</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Texture Height</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0022</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>offset to Character-width Table</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0024</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>offset to Tile-Data</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0028</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>Tile-Data Size</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx16.2">index</a></div>
+<h3>
+<a name="sec16.2">
+16.2</a>&nbsp;&nbsp;Yaz0</h3>
+<br>
+Yaz0 compression is reportedly used in quite a few Nintendo datafiles.
+I have seen it in SuperMario Sunshine's .szs files for example, and
+I heard that it is used in Windwaker and Majoras Mask as well.
+The first 16 bytes of a Yaz0-compressed data block are the data header.
+The first 4 bytes of the header are 'Y', 'a', 'z', '0', so you can
+easily see in your hex editor that there's a Yaz0 block waiting for
+you :-) The second 4 bytes are a single uint32 (big-endian of course)
+that tells you the size of the decompressed data, so you know how
+large your working buffer has to be. The next 8 bytes are always zero.
+Next comes the actual compressed data. Yaz0 is some kind of RLE compression.
+You decode it as follows: First you read a "code"
+byte that tells you for the next 8 "read operations"
+what you have to do. Each bit of the "code" byte
+represents one "read operation" (from left to right,
+that is, 0x80 first, 0x01 last). If the bit is 1, copy one byte from
+the input buffer to the output buffer. Easy. If the bit is 0, things
+are a little bit more complicated, RLE compressed data is ahead. You
+have to read the next two bytes to decide how long your run is and
+what you should write to your output buffer.
+<table>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap align="center">8</td>
+<td nowrap align="center">7</td>
+<td nowrap align="center">0</td>
+</tr>
+<tr>
+<td nowrap align="center">a</td>
+<td nowrap align="center">b</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+<br>
+The upper nibble of the first byte (a) contains the information you
+need to determine how many bytes you're going to write to your output
+buffer for this "read operation". if a == 0, then
+you have to read a third byte from your input buffer, and add 0x12
+to it. Otherwise, you simply add 2 to a. This is the number of bytes
+to write ("count") in this "read operation".
+byte2 and the lower nibble of byte1 (b) tell you from where to copy
+data to your output buffer: you move (dist = (b &lt;&nbsp;&amp;lt<br>
+8) - byte2 + 1) bytes back in your outputBuffer and copy "count"
+bytes from there to the end of the buffer. Note that count could be
+greater than dist which means that the copy source and copy destination
+might overlap. 
+      <div class="idx"><a href="index.html#idx16.2.1">index</a></div>
+<h4>
+<a name="sec16.2.1">
+16.2.1</a>&nbsp;&nbsp;de-compression Code</h4>
+<br><tt>//src points to the yaz0 source data (to the "real"
+source data, not at the header!)</tt>&nbsp;<br><tt>//dst points to a buffer uncompressedSize bytes large (you
+get uncompressedSize from</tt>&nbsp;<br><tt>//the second 4 bytes in the Yaz0 header).</tt>&nbsp;<br><tt></tt>&nbsp;<br><tt>void decode(u8* src, u8* dst, int uncompressedSize)</tt>&nbsp;<br><tt>{</tt>&nbsp;<br><tt>int srcPlace = 0, dstPlace = 0; //current read/write positions</tt>&nbsp;<br><tt>u32 validBitCount = 0; //number of valid bits left in "code"
+byte</tt>&nbsp;<br><tt>u8 currCodeByte;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;while(dstPlace &lt; uncompressedSize)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//read new "code" byte if
+the current one is used up</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(validBitCount == 0)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currCodeByte = src[srcPlace];</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;++srcPlace;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validBitCount = 8;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if((currCodeByte &amp; 0x80) != 0)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//straight copy</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dst[dstPlace] = src[srcPlace];</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dstPlace++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcPlace++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//RLE part</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u8 byte1 = src[srcPlace];</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u8 byte2 = src[srcPlace + 1];</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcPlace += 2;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u32 dist = ((byte1 &amp; 0xF) &lt;&nbsp;&lt;
+8)  -  byte2;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u32 copySource = dstPlace - (dist
++ 1);</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;u32 numBytes = byte1 &gt;&nbsp;&gt;
+4;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(numBytes == 0)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numBytes = src[srcPlace]
++ 0x12;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcPlace++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numBytes += 2;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//copy run</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(int i = 0; i &lt; numBytes; ++i)</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dst[dstPlace] = dst[copySource];</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copySource++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dstPlace++;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//use next bit from "code"
+byte</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currCodeByte &lt;&nbsp;&lt;= 1;</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validBitCount-=1; </tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt>&nbsp;<br><tt>}</tt>&nbsp;<br><tt></tt>&nbsp;<br><div class="idx"><a href="index.html#idx17">index</a></div>
+</body></html>

@@ -1,0 +1,472 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body>
+<small><b>last modified: Sat, 23 Dec 2006 22:50:31 </b></small><br><br><h1 align="center">Yet Another Gamecube Documentation<br><font size="-1">(but one that's worth printing)</font> </h1>
+<br><br><center><img src="yagcd_logo.png" alt="images/yagcd_logo.png"></center>&nbsp;<br>
+this is the result of myself pasting together various freely available
+documents aswell as adding some of my own findings. have fun... additions
+and corrections welcome :)<br><br><b>THIS IS WORK IN PROGRESS! INFORMATION CONTAINED IN THIS DOCUMENT
+MAY BE MISSING, INCOMPLETE OR EVEN PLAIN WRONG! NO F****N'
+WARRANTY IMPLIED</b>! <b>IF THE USE OF THE INFORMATION CONTAINED
+HERE RESULTS IN ULTRA REALISTIC SMOKE EFFECTS, BRAIN DAMAGE OR LOSS
+OF PHYSICAL AND/OR MENTAL HEALTH PLEASE DON'T COME BACK AND SAY YOU
+HAVEN'T BEEN WARNED! YOU SHOULDN'T BE USING THIS IN THE FIRST PLACE!</b><br><br>
+groepaz/hitmen (<tt>groepaz@gmx.net)</tt><br>
+Hitmen-Console <a href="http://www.hitmen-console.org"><tt>http://www.hitmen-console.org</tt></a>
+ 
+<h2>
+<a name="sec0">
+Contents</a>
+</h2>
+<!--Table of Contents-->
+<ul class="TofC">
+<li><a name="idx1" href="chap1.html#sec1">1 Introductional Rant</a></li>
+<ul>
+<li><a name="idx1.1" href="chap1.html#sec1.1">1.1 Things that are in this document</a></li>
+<li><a name="idx1.2" href="chap1.html#sec1.2">1.2 Things that are not in this document</a></li>
+<li><a name="idx1.3" href="chap1.html#sec1.3">1.3 Conventions</a></li>
+<li><a name="idx1.4" href="chap1.html#sec1.4">1.4 legal Babble</a></li>
+</ul>
+<br><li><a name="idx2" href="chap2.html#sec2">2 Gamecube Hardware Introduction</a></li>
+<ul>
+<li><a name="idx2.1" href="chap2.html#sec2.1">2.1 enhanced PowerPC 750 Specification</a></li>
+<li><a name="idx2.2" href="chap2.html#sec2.2">2.2 Consumer Units</a></li>
+<ul>
+<li><a name="idx2.2.1" href="chap2.html#sec2.2.1">2.2.1 Nintendo </a></li>
+<li><a name="idx2.2.2" href="chap2.html#sec2.2.2">2.2.2 Panasonic Q</a></li>
+</ul>
+<li><a name="idx2.3" href="chap2.html#sec2.3">2.3 Development Units</a></li>
+<li><a name="idx2.4" href="chap2.html#sec2.4">2.4 Hardware Parts List</a></li>
+<ul>
+<li><a name="idx2.4.1" href="chap2.html#sec2.4.1">2.4.1 Connectors</a></li>
+<li><a name="idx2.4.2" href="chap2.html#sec2.4.2">2.4.2 Semi-Conductors</a></li>
+</ul>
+<li><a name="idx2.5" href="chap2.html#sec2.5">2.5 Details on the motherboard buses</a></li>
+<li><a name="idx2.6" href="chap2.html#sec2.6">2.6 Details on the Macronix (MX) Chips</a></li>
+<li><a name="idx2.7" href="chap2.html#sec2.7">2.7 DVD Protection</a></li>
+<ul>
+<li><a name="idx2.7.1" href="chap2.html#sec2.7.1">2.7.1 Filesystem</a></li>
+<li><a name="idx2.7.2" href="chap2.html#sec2.7.2">2.7.2 Barcode</a></li>
+<li><a name="idx2.7.3" href="chap2.html#sec2.7.3">2.7.3 Encryption</a></li>
+</ul>
+<li><a name="idx2.8" href="chap2.html#sec2.8">2.8 IPL/BIOS Encryption</a></li>
+<ul>
+<li><a name="idx2.8.1" href="chap2.html#sec2.8.1">2.8.1 Flipper decryption logic bug</a></li>
+<li><a name="idx2.8.2" href="chap2.html#sec2.8.2">2.8.2 Cyphertext algorithm</a></li>
+<li><a name="idx2.8.3" href="chap2.html#sec2.8.3">2.8.3 replacing the IPL</a></li>
+</ul>
+</ul>
+<br><li><a name="idx3" href="chap3.html#sec3">3 Gekko CPU Overview</a></li>
+<ul>
+<li><a name="idx3.1" href="chap3.html#sec3.1">3.1 Registers</a></li>
+<li><a name="idx3.2" href="chap3.html#sec3.2">3.2 Calling conventions</a></li>
+<li><a name="idx3.3" href="chap3.html#sec3.3">3.3 PPC Instructions</a></li>
+<ul>
+<li><a name="idx3.3.1" href="chap3.html#sec3.3.1">3.3.1 Integer Instructions</a></li>
+<li><a name="idx3.3.2" href="chap3.html#sec3.3.2">3.3.2 Floating-Point Instructions</a></li>
+<li><a name="idx3.3.3" href="chap3.html#sec3.3.3">3.3.3 Integer Load and Store Instructions</a></li>
+<li><a name="idx3.3.4" href="chap3.html#sec3.3.4">3.3.4 Floating-Point Load and Store Instructions</a></li>
+<li><a name="idx3.3.5" href="chap3.html#sec3.3.5">3.3.5 Branch Instructions</a></li>
+<li><a name="idx3.3.6" href="chap3.html#sec3.3.6">3.3.6 Condition Register Logical Instructions</a></li>
+<li><a name="idx3.3.7" href="chap3.html#sec3.3.7">3.3.7 Misc Instructions</a></li>
+</ul>
+<li><a name="idx3.4" href="chap3.html#sec3.4">3.4 additional Gekko Instructions</a></li>
+<ul>
+<li><a name="idx3.4.1" href="chap3.html#sec3.4.1">3.4.1 FPR format in paired-single mode</a></li>
+<li><a name="idx3.4.2" href="chap3.html#sec3.4.2">3.4.2 Arithmetic Instructions</a></li>
+<li><a name="idx3.4.3" href="chap3.html#sec3.4.3">3.4.3 Load and Store Instructions</a></li>
+<li><a name="idx3.4.4" href="chap3.html#sec3.4.4">3.4.4 modified floating point instructions</a></li>
+</ul>
+<li><a name="idx3.5" href="chap3.html#sec3.5">3.5 Programming Tips and additional information</a></li>
+<ul>
+<li><a name="idx3.5.1" href="chap3.html#sec3.5.1">3.5.1 Machine State Register</a></li>
+<li><a name="idx3.5.2" href="chap3.html#sec3.5.2">3.5.2 Caches</a></li>
+<li><a name="idx3.5.3" href="chap3.html#sec3.5.3">3.5.3 branch unit</a></li>
+</ul>
+</ul>
+<br><li><a name="idx4" href="chap4.html#sec4">4 Memory Map</a></li>
+<ul>
+<li><a name="idx4.1" href="chap4.html#sec4.1">4.1 Overview</a></li>
+<li><a name="idx4.2" href="chap4.html#sec4.2">4.2 RAM usage</a></li>
+<ul>
+<li><a name="idx4.2.1" href="chap4.html#sec4.2.1">4.2.1 Dolphin-OS globals</a></li>
+<li><a name="idx4.2.2" href="chap4.html#sec4.2.2">4.2.2 Exception Handlers</a></li>
+<li><a name="idx4.2.3" href="chap4.html#sec4.2.3">4.2.3 Dolphin-OS globals</a></li>
+<li><a name="idx4.2.4" href="chap4.html#sec4.2.4">4.2.4 User Memory</a></li>
+</ul>
+</ul>
+<br><li><a name="idx5" href="chap5.html#sec5">5 Hardware Registers</a></li>
+<ul>
+<li><a name="idx5.1" href="chap5.html#sec5.1">5.1 CP - Command Processor</a></li>
+<ul>
+<li><a name="idx5.1.1" href="chap5.html#sec5.1.1">5.1.1 Token register</a></li>
+</ul>
+<li><a name="idx5.2" href="chap5.html#sec5.2">5.2 PE - Pixel Engine</a></li>
+<li><a name="idx5.3" href="chap5.html#sec5.3">5.3 VI - Video Interface</a></li>
+<ul>
+<li><a name="idx5.3.1" href="chap5.html#sec5.3.1">5.3.1 Video Modes</a></li>
+</ul>
+<li><a name="idx5.4" href="chap5.html#sec5.4">5.4 PI - Processor Interface</a></li>
+<ul>
+<li><a name="idx5.4.1" href="chap5.html#sec5.4.1">5.4.1 Operation</a></li>
+</ul>
+<li><a name="idx5.5" href="chap5.html#sec5.5">5.5 MI - Memory Interface</a></li>
+<li><a name="idx5.6" href="chap5.html#sec5.6">5.6 DSP - Digital Signal Processor Interface</a></li>
+<ul>
+<li><a name="idx5.6.1" href="chap5.html#sec5.6.1">5.6.1 internal DSP Registers</a></li>
+<li><a name="idx5.6.2" href="chap5.html#sec5.6.2">5.6.2 Operation</a></li>
+</ul>
+<li><a name="idx5.7" href="chap5.html#sec5.7">5.7 DI - DVD Interface</a></li>
+<ul>
+<li><a name="idx5.7.1" href="chap5.html#sec5.7.1">5.7.1 Drive Commands</a></li>
+<li><a name="idx5.7.2" href="chap5.html#sec5.7.2">5.7.2 Drive Debug Commands</a></li>
+<li><a name="idx5.7.3" href="chap5.html#sec5.7.3">5.7.3 Operation</a></li>
+<li><a name="idx5.7.4" href="chap5.html#sec5.7.4">5.7.4 DVD-ROM Subsystem</a></li>
+</ul>
+<li><a name="idx5.8" href="chap5.html#sec5.8">5.8 SI - Serial Interface</a></li>
+<ul>
+<li><a name="idx5.8.1" href="chap5.html#sec5.8.1">5.8.1 Operation</a></li>
+</ul>
+<li><a name="idx5.9" href="chap5.html#sec5.9">5.9 EXI - External Interface</a></li>
+<ul>
+<li><a name="idx5.9.1" href="chap5.html#sec5.9.1">5.9.1 Operation</a></li>
+</ul>
+<li><a name="idx5.10" href="chap5.html#sec5.10">5.10 AI - Audio Streaming Interface</a></li>
+<li><a name="idx5.11" href="chap5.html#sec5.11">5.11 GX FIFO (Graphic display lists)</a></li>
+<ul>
+<li><a name="idx5.11.1" href="chap5.html#sec5.11.1">5.11.1 internal BP registers</a></li>
+<li><a name="idx5.11.2" href="chap5.html#sec5.11.2">5.11.2 internal CP Registers</a></li>
+<li><a name="idx5.11.3" href="chap5.html#sec5.11.3">5.11.3 internal XF Memory</a></li>
+<li><a name="idx5.11.4" href="chap5.html#sec5.11.4">5.11.4 internal XF Registers</a></li>
+<li><a name="idx5.11.5" href="chap5.html#sec5.11.5">5.11.5 GP packet description </a></li>
+</ul>
+</ul>
+<br><li><a name="idx6" href="chap6.html#sec6">6 Exception and Interrupt Processing</a></li>
+<ul>
+<li><a name="idx6.1" href="chap6.html#sec6.1">6.1 Hardware Exception Sources</a></li>
+<ul>
+<li><a name="idx6.1.1" href="chap6.html#sec6.1.1">6.1.1 System Reset Interrupt</a></li>
+<li><a name="idx6.1.2" href="chap6.html#sec6.1.2">6.1.2 Machine Check Interrupt</a></li>
+<li><a name="idx6.1.3" href="chap6.html#sec6.1.3">6.1.3 DSI Interrupt</a></li>
+<li><a name="idx6.1.4" href="chap6.html#sec6.1.4">6.1.4 ISI Interrupt</a></li>
+<li><a name="idx6.1.5" href="chap6.html#sec6.1.5">6.1.5 External Interrupt</a></li>
+<li><a name="idx6.1.6" href="chap6.html#sec6.1.6">6.1.6 Alignment Interrupt</a></li>
+<li><a name="idx6.1.7" href="chap6.html#sec6.1.7">6.1.7 Program Interrupt</a></li>
+<li><a name="idx6.1.8" href="chap6.html#sec6.1.8">6.1.8 FP unavailable Interrupt</a></li>
+<li><a name="idx6.1.9" href="chap6.html#sec6.1.9">6.1.9 Decrementer Interrupt</a></li>
+<li><a name="idx6.1.10" href="chap6.html#sec6.1.10">6.1.10 System Call Interrupt</a></li>
+<li><a name="idx6.1.11" href="chap6.html#sec6.1.11">6.1.11 Trace Interrupt</a></li>
+<li><a name="idx6.1.12" href="chap6.html#sec6.1.12">6.1.12 Performance Monitor Interrupt</a></li>
+<li><a name="idx6.1.13" href="chap6.html#sec6.1.13">6.1.13 IABR Interrupt</a></li>
+<li><a name="idx6.1.14" href="chap6.html#sec6.1.14">6.1.14 Thermal Interrupt</a></li>
+</ul>
+<li><a name="idx6.2" href="chap6.html#sec6.2">6.2 External Interrupt Sources</a></li>
+<ul>
+<li><a name="idx6.2.1" href="chap6.html#sec6.2.1">6.2.1 HSP - High Speed Port</a></li>
+<li><a name="idx6.2.2" href="chap6.html#sec6.2.2">6.2.2 Debug</a></li>
+<li><a name="idx6.2.3" href="chap6.html#sec6.2.3">6.2.3 CP - Command Processor</a></li>
+<li><a name="idx6.2.4" href="chap6.html#sec6.2.4">6.2.4 PE - Pixel Engine Finished</a></li>
+<li><a name="idx6.2.5" href="chap6.html#sec6.2.5">6.2.5 PE - Pixel Engine Token</a></li>
+<li><a name="idx6.2.6" href="chap6.html#sec6.2.6">6.2.6 VI - Video Interface</a></li>
+<li><a name="idx6.2.7" href="chap6.html#sec6.2.7">6.2.7 Memory Interface</a></li>
+<li><a name="idx6.2.8" href="chap6.html#sec6.2.8">6.2.8 DSP Interface</a></li>
+<li><a name="idx6.2.9" href="chap6.html#sec6.2.9">6.2.9 Audio Streaming Interface</a></li>
+<li><a name="idx6.2.10" href="chap6.html#sec6.2.10">6.2.10 EXI</a></li>
+<li><a name="idx6.2.11" href="chap6.html#sec6.2.11">6.2.11 Serial Interface</a></li>
+<li><a name="idx6.2.12" href="chap6.html#sec6.2.12">6.2.12 DVD Interface</a></li>
+<li><a name="idx6.2.13" href="chap6.html#sec6.2.13">6.2.13 Reset Button</a></li>
+<li><a name="idx6.2.14" href="chap6.html#sec6.2.14">6.2.14 Error</a></li>
+</ul>
+</ul>
+<br><li><a name="idx7" href="chap7.html#sec7">7 Video Processing </a></li>
+<ul>
+<li><a name="idx7.1" href="chap7.html#sec7.1">7.1 Used VI terms</a></li>
+<li><a name="idx7.2" href="chap7.html#sec7.2">7.2 init VI</a></li>
+<ul>
+<li><a name="idx7.2.1" href="chap7.html#sec7.2.1">7.2.1 Videomodes</a></li>
+</ul>
+<li><a name="idx7.3" href="chap7.html#sec7.3">7.3 render to XFB</a></li>
+<li><a name="idx7.4" href="chap7.html#sec7.4">7.4 vertical retrace</a></li>
+<li><a name="idx7.5" href="chap7.html#sec7.5">7.5 set XFB Address</a></li>
+</ul>
+<br><li><a name="idx8" href="chap8.html#sec8">8 3D Graphics Processing</a></li>
+<ul>
+<li><a name="idx8.1" href="chap8.html#sec8.1">8.1 basic operations</a></li>
+<ul>
+<li><a name="idx8.1.1" href="chap8.html#sec8.1.1">8.1.1 load BP Register</a></li>
+<li><a name="idx8.1.2" href="chap8.html#sec8.1.2">8.1.2 load CP Register </a></li>
+<li><a name="idx8.1.3" href="chap8.html#sec8.1.3">8.1.3 load XF Register</a></li>
+<li><a name="idx8.1.4" href="chap8.html#sec8.1.4">8.1.4 load XF Register Indexed</a></li>
+</ul>
+<li><a name="idx8.2" href="chap8.html#sec8.2">8.2 example processing loop</a></li>
+<ul>
+<li><a name="idx8.2.1" href="chap8.html#sec8.2.1">8.2.1 init GX</a></li>
+<li><a name="idx8.2.2" href="chap8.html#sec8.2.2">8.2.2 begin frame</a></li>
+<li><a name="idx8.2.3" href="chap8.html#sec8.2.3">8.2.3 draw frame</a></li>
+<li><a name="idx8.2.4" href="chap8.html#sec8.2.4">8.2.4 end frame</a></li>
+<li><a name="idx8.2.5" href="chap8.html#sec8.2.5">8.2.5 close GX</a></li>
+</ul>
+</ul>
+<br><li><a name="idx9" href="chap9.html#sec9">9 Joy-Bus Devices</a></li>
+<ul>
+<li><a name="idx9.1" href="chap9.html#sec9.1">9.1 ID and Device List</a></li>
+<li><a name="idx9.2" href="chap9.html#sec9.2">9.2 standard Controller</a></li>
+<ul>
+<li><a name="idx9.2.1" href="chap9.html#sec9.2.1">9.2.1 Init</a></li>
+<li><a name="idx9.2.2" href="chap9.html#sec9.2.2">9.2.2 Read Controller Status</a></li>
+<li><a name="idx9.2.3" href="chap9.html#sec9.2.3">9.2.3 rumble Motor On</a></li>
+<li><a name="idx9.2.4" href="chap9.html#sec9.2.4">9.2.4 rumble Motor Off</a></li>
+</ul>
+<li><a name="idx9.3" href="chap9.html#sec9.3">9.3 Keyboard</a></li>
+<ul>
+<li><a name="idx9.3.1" href="chap9.html#sec9.3.1">9.3.1 Types</a></li>
+<li><a name="idx9.3.2" href="chap9.html#sec9.3.2">9.3.2 Scancodes</a></li>
+<li><a name="idx9.3.3" href="chap9.html#sec9.3.3">9.3.3 Init</a></li>
+<li><a name="idx9.3.4" href="chap9.html#sec9.3.4">9.3.4 Read Keyboard</a></li>
+</ul>
+<li><a name="idx9.4" href="chap9.html#sec9.4">9.4 GBA</a></li>
+<li><a name="idx9.5" href="chap9.html#sec9.5">9.5 Wavebird</a></li>
+<li><a name="idx9.6" href="chap9.html#sec9.6">9.6 steering wheel</a></li>
+<li><a name="idx9.7" href="chap9.html#sec9.7">9.7 DKongas</a></li>
+<ul>
+<li><a name="idx9.7.1" href="chap9.html#sec9.7.1">9.7.1 Read Controller Status</a></li>
+</ul>
+<li><a name="idx9.8" href="chap9.html#sec9.8">9.8 Resident Evil4 Chainsaw</a></li>
+</ul>
+<br><li><a name="idx10" href="chap10.html#sec10">10 EXI Devices</a></li>
+<ul>
+<li><a name="idx10.1" href="chap10.html#sec10.1">10.1 EXI Channel and Device List</a></li>
+<li><a name="idx10.2" href="chap10.html#sec10.2">10.2 Retrieving the ID of an EXI Device</a></li>
+<li><a name="idx10.3" href="chap10.html#sec10.3">10.3 Mask ROM</a></li>
+<ul>
+<li><a name="idx10.3.1" href="chap10.html#sec10.3.1">10.3.1 Memory Map (Europe/PAL)</a></li>
+<li><a name="idx10.3.2" href="chap10.html#sec10.3.2">10.3.2 Memory Map (USA/NTSC)</a></li>
+<li><a name="idx10.3.3" href="chap10.html#sec10.3.3">10.3.3 Memory Map (Japenese/NTSC)</a></li>
+<li><a name="idx10.3.4" href="chap10.html#sec10.3.4">10.3.4 Memory Map (Japenese/NTSC - Panasonic Q)</a></li>
+<li><a name="idx10.3.5" href="chap10.html#sec10.3.5">10.3.5 Font Encoding</a></li>
+<li><a name="idx10.3.6" href="chap10.html#sec10.3.6">10.3.6 Font Layout</a></li>
+<li><a name="idx10.3.7" href="chap10.html#sec10.3.7">10.3.7 Operation</a></li>
+</ul>
+<li><a name="idx10.4" href="chap10.html#sec10.4">10.4 RTC (Real-Time Clock)</a></li>
+<ul>
+<li><a name="idx10.4.1" href="chap10.html#sec10.4.1">10.4.1 Operation</a></li>
+</ul>
+<li><a name="idx10.5" href="chap10.html#sec10.5">10.5 SRAM</a></li>
+<ul>
+<li><a name="idx10.5.1" href="chap10.html#sec10.5.1">10.5.1 Memory Map</a></li>
+<li><a name="idx10.5.2" href="chap10.html#sec10.5.2">10.5.2 Operation</a></li>
+<li><a name="idx10.5.3" href="chap10.html#sec10.5.3">10.5.3 Checksums</a></li>
+</ul>
+<li><a name="idx10.6" href="chap10.html#sec10.6">10.6 AD16</a></li>
+<ul>
+<li><a name="idx10.6.1" href="chap10.html#sec10.6.1">10.6.1 Operation</a></li>
+<li><a name="idx10.6.2" href="chap10.html#sec10.6.2">10.6.2 Trace-Step Values</a></li>
+</ul>
+<li><a name="idx10.7" href="chap10.html#sec10.7">10.7 Memory Cards</a></li>
+<ul>
+<li><a name="idx10.7.1" href="chap10.html#sec10.7.1">10.7.1 Commands</a></li>
+<li><a name="idx10.7.2" href="chap10.html#sec10.7.2">10.7.2 Operation</a></li>
+</ul>
+<li><a name="idx10.8" href="chap10.html#sec10.8">10.8 Ethernet Adapter</a></li>
+<ul>
+<li><a name="idx10.8.1" href="chap10.html#sec10.8.1">10.8.1 registers</a></li>
+<li><a name="idx10.8.2" href="chap10.html#sec10.8.2">10.8.2 command-registers</a></li>
+<li><a name="idx10.8.3" href="chap10.html#sec10.8.3">10.8.3 Operation</a></li>
+</ul>
+<li><a name="idx10.9" href="chap10.html#sec10.9">10.9 UART</a></li>
+<li><a name="idx10.10" href="chap10.html#sec10.10">10.10 SD Cards</a></li>
+<li><a name="idx10.11" href="chap10.html#sec10.11">10.11 Viper 'Modchip'</a></li>
+<li><a name="idx10.12" href="chap10.html#sec10.12">10.12 Ripper III GC 'Modchip'</a></li>
+<li><a name="idx10.13" href="chap10.html#sec10.13">10.13 Qoob 'Modchip'</a></li>
+<li><a name="idx10.14" href="chap10.html#sec10.14">10.14 NinjaMOD 'Modchip'</a></li>
+<li><a name="idx10.15" href="chap10.html#sec10.15">10.15 Mario Party Microphone</a></li>
+</ul>
+<br><li><a name="idx11" href="chap11.html#sec11">11 HSP Devices</a></li>
+<ul>
+<li><a name="idx11.1" href="chap11.html#sec11.1">11.1 GB Player</a></li>
+</ul>
+<br><li><a name="idx12" href="chap12.html#sec12">12 Memory Card Structure</a></li>
+<ul>
+<li><a name="idx12.1" href="chap12.html#sec12.1">12.1 Overview</a></li>
+<li><a name="idx12.2" href="chap12.html#sec12.2">12.2 Header</a></li>
+<li><a name="idx12.3" href="chap12.html#sec12.3">12.3 Directory</a></li>
+<ul>
+<li><a name="idx12.3.1" href="chap12.html#sec12.3.1">12.3.1 Directory Entries</a></li>
+</ul>
+<li><a name="idx12.4" href="chap12.html#sec12.4">12.4 Block Allocation Map</a></li>
+<li><a name="idx12.5" href="chap12.html#sec12.5">12.5 Checksums</a></li>
+</ul>
+<br><li><a name="idx13" href="chap13.html#sec13">13 DVD Structure</a></li>
+<ul>
+<li><a name="idx13.1" href="chap13.html#sec13.1">13.1 Disk header</a></li>
+<li><a name="idx13.2" href="chap13.html#sec13.2">13.2 Disk header Information</a></li>
+<li><a name="idx13.3" href="chap13.html#sec13.3">13.3 Apploader</a></li>
+<li><a name="idx13.4" href="chap13.html#sec13.4">13.4 Format of the FST</a></li>
+<ul>
+<li><a name="idx13.4.1" href="chap13.html#sec13.4.1">13.4.1 Format of a File Entry</a></li>
+</ul>
+</ul>
+<br><li><a name="idx14" href="chap14.html#sec14">14 general File Formats</a></li>
+<ul>
+<li><a name="idx14.1" href="chap14.html#sec14.1">14.1 BNR (Banner file format)</a></li>
+<li><a name="idx14.2" href="chap14.html#sec14.2">14.2 DOL (Gamecube Executable)</a></li>
+<li><a name="idx14.3" href="chap14.html#sec14.3">14.3 ELF (Executable and linkable Format)</a></li>
+<li><a name="idx14.4" href="chap14.html#sec14.4">14.4 GCB (QOOB Flash Files)</a></li>
+<li><a name="idx14.5" href="chap14.html#sec14.5">14.5 GCM (Gamecube Disc Image)</a></li>
+<li><a name="idx14.6" href="chap14.html#sec14.6">14.6 GCI (Gamecube Game Save)</a></li>
+<li><a name="idx14.7" href="chap14.html#sec14.7">14.7 GCP (Gamecube Memorycard Image)</a></li>
+<li><a name="idx14.8" href="chap14.html#sec14.8">14.8 TGC</a></li>
+<ul>
+<li><a name="idx14.8.1" href="chap14.html#sec14.8.1">14.8.1 Header</a></li>
+<li><a name="idx14.8.2" href="chap14.html#sec14.8.2">14.8.2 embedded GCM</a></li>
+</ul>
+<li><a name="idx14.9" href="chap14.html#sec14.9">14.9 VGC (Viper Flash Files)</a></li>
+</ul>
+<br><li><a name="idx15" href="chap15.html#sec15">15 Game File Formats</a></li>
+<ul>
+<li><a name="idx15.1" href="chap15.html#sec15.1">15.1 AFC (audio stream)</a></li>
+<li><a name="idx15.2" href="chap15.html#sec15.2">15.2 AST (audio stream) </a></li>
+<li><a name="idx15.3" href="chap15.html#sec15.3">15.3 ARC (RARC Archive)</a></li>
+<ul>
+<li><a name="idx15.3.1" href="chap15.html#sec15.3.1">15.3.1 Header</a></li>
+<li><a name="idx15.3.2" href="chap15.html#sec15.3.2">15.3.2 Nodes</a></li>
+<li><a name="idx15.3.3" href="chap15.html#sec15.3.3">15.3.3 File Entries</a></li>
+</ul>
+<li><a name="idx15.4" href="chap15.html#sec15.4">15.4 ARC (audio stuff)</a></li>
+<li><a name="idx15.5" href="chap15.html#sec15.5">15.5 ASN</a></li>
+<li><a name="idx15.6" href="chap15.html#sec15.6">15.6 AW ("audio wave"?)</a></li>
+<li><a name="idx15.7" href="chap15.html#sec15.7">15.7 BAS ("audio script" ?)</a></li>
+<li><a name="idx15.8" href="chap15.html#sec15.8">15.8 BCA</a></li>
+<li><a name="idx15.9" href="chap15.html#sec15.9">15.9 BCK (animation of a .bmd skeleton)</a></li>
+<li><a name="idx15.10" href="chap15.html#sec15.10">15.10 BDL </a></li>
+<li><a name="idx15.11" href="chap15.html#sec15.11">15.11 BFN (font)</a></li>
+<li><a name="idx15.12" href="chap15.html#sec15.12">15.12 BIN (binary file)</a></li>
+<li><a name="idx15.13" href="chap15.html#sec15.13">15.13 BLO (screen layout for dialog screens)</a></li>
+<li><a name="idx15.14" href="chap15.html#sec15.14">15.14 BMD (3d model with texture and skeleton)</a></li>
+<li><a name="idx15.15" href="chap15.html#sec15.15">15.15 BMG </a></li>
+<li><a name="idx15.16" href="chap15.html#sec15.16">15.16 BMP (window bitmap (!))</a></li>
+<li><a name="idx15.17" href="chap15.html#sec15.17">15.17 BMT</a></li>
+<li><a name="idx15.18" href="chap15.html#sec15.18">15.18 BCK ("Pack" file)</a></li>
+<li><a name="idx15.19" href="chap15.html#sec15.19">15.19 BRK </a></li>
+<li><a name="idx15.20" href="chap15.html#sec15.20">15.20 BTI</a></li>
+<ul>
+<li><a name="idx15.20.1" href="chap15.html#sec15.20.1">15.20.1 Texture Header</a></li>
+</ul>
+<li><a name="idx15.21" href="chap15.html#sec15.21">15.21 BTP </a></li>
+<li><a name="idx15.22" href="chap15.html#sec15.22">15.22 BTK</a></li>
+<li><a name="idx15.23" href="chap15.html#sec15.23">15.23 COL (collision triangles)</a></li>
+<li><a name="idx15.24" href="chap15.html#sec15.24">15.24 DZB</a></li>
+<li><a name="idx15.25" href="chap15.html#sec15.25">15.25 H4M</a></li>
+<li><a name="idx15.26" href="chap15.html#sec15.26">15.26 JPA (particle data)</a></li>
+<li><a name="idx15.27" href="chap15.html#sec15.27">15.27 JPC </a></li>
+<li><a name="idx15.28" href="chap15.html#sec15.28">15.28 MTH ('Mute thp?')</a></li>
+<li><a name="idx15.29" href="chap15.html#sec15.29">15.29 PAD</a></li>
+<li><a name="idx15.30" href="chap15.html#sec15.30">15.30 PRM ('Parameters?')</a></li>
+<li><a name="idx15.31" href="chap15.html#sec15.31">15.31 REL (relocatable module)</a></li>
+<li><a name="idx15.32" href="chap15.html#sec15.32">15.32 SB</a></li>
+<li><a name="idx15.33" href="chap15.html#sec15.33">15.33 SZS (packed RARC Archive)</a></li>
+<li><a name="idx15.34" href="chap15.html#sec15.34">15.34 THP (video format)</a></li>
+<ul>
+<li><a name="idx15.34.1" href="chap15.html#sec15.34.1">15.34.1 Header data</a></li>
+<li><a name="idx15.34.2" href="chap15.html#sec15.34.2">15.34.2 Components structure</a></li>
+<li><a name="idx15.34.3" href="chap15.html#sec15.34.3">15.34.3 VideoInfo Structure</a></li>
+<li><a name="idx15.34.4" href="chap15.html#sec15.34.4">15.34.4 AudioInfo Structure</a></li>
+<li><a name="idx15.34.5" href="chap15.html#sec15.34.5">15.34.5 Frame data</a></li>
+<li><a name="idx15.34.6" href="chap15.html#sec15.34.6">15.34.6 Video Frames</a></li>
+<li><a name="idx15.34.7" href="chap15.html#sec15.34.7">15.34.7 Audio Frames</a></li>
+</ul>
+<li><a name="idx15.35" href="chap15.html#sec15.35">15.35 TPL (Texture Palette)</a></li>
+<li><a name="idx15.36" href="chap15.html#sec15.36">15.36 YMP (height map)</a></li>
+</ul>
+<br><li><a name="idx16" href="chap16.html#sec16">16 Compression Formats</a></li>
+<ul>
+<li><a name="idx16.1" href="chap16.html#sec16.1">16.1 Yay0</a></li>
+<ul>
+<li><a name="idx16.1.1" href="chap16.html#sec16.1.1">16.1.1 compression</a></li>
+<li><a name="idx16.1.2" href="chap16.html#sec16.1.2">16.1.2 de-compression Code</a></li>
+<li><a name="idx16.1.3" href="chap16.html#sec16.1.3">16.1.3 Font Data</a></li>
+</ul>
+<li><a name="idx16.2" href="chap16.html#sec16.2">16.2 Yaz0</a></li>
+<ul>
+<li><a name="idx16.2.1" href="chap16.html#sec16.2.1">16.2.1 de-compression Code</a></li>
+</ul>
+</ul>
+<br><li><a name="idx17" href="chap17.html#sec17">17 Graphic Formats</a></li>
+<ul>
+<li><a name="idx17.1" href="chap17.html#sec17.1">17.1 YCbYCr</a></li>
+<li><a name="idx17.2" href="chap17.html#sec17.2">17.2 I4 (4bit indexed)</a></li>
+<li><a name="idx17.3" href="chap17.html#sec17.3">17.3 IA4 (4bit indexed with alpha)</a></li>
+<li><a name="idx17.4" href="chap17.html#sec17.4">17.4 I8 (8bit indexed)</a></li>
+<li><a name="idx17.5" href="chap17.html#sec17.5">17.5 IA8 (8bit indexed with alpha)</a></li>
+<li><a name="idx17.6" href="chap17.html#sec17.6">17.6 CI4 (compressed 4bit indexed)</a></li>
+<li><a name="idx17.7" href="chap17.html#sec17.7">17.7 CIA4 (compressed 4bit indexed with alpha)</a></li>
+<li><a name="idx17.8" href="chap17.html#sec17.8">17.8 CI8 (compressed 8bit indexed)</a></li>
+<li><a name="idx17.9" href="chap17.html#sec17.9">17.9 CIA8 (compressed 8bit indexed with alpha)</a></li>
+<li><a name="idx17.10" href="chap17.html#sec17.10">17.10 RGB4A3</a></li>
+<ul>
+<li><a name="idx17.10.1" href="chap17.html#sec17.10.1">17.10.1 RGB4A3 Pixel Format</a></li>
+</ul>
+<li><a name="idx17.11" href="chap17.html#sec17.11">17.11 RGB5A1</a></li>
+<ul>
+<li><a name="idx17.11.1" href="chap17.html#sec17.11.1">17.11.1 RGB5A1 Pixel Format</a></li>
+</ul>
+<li><a name="idx17.12" href="chap17.html#sec17.12">17.12 RGB565</a></li>
+<ul>
+<li><a name="idx17.12.1" href="chap17.html#sec17.12.1">17.12.1 RGB565 Pixel Format</a></li>
+</ul>
+<li><a name="idx17.13" href="chap17.html#sec17.13">17.13 RGBA8</a></li>
+<ul>
+<li><a name="idx17.13.1" href="chap17.html#sec17.13.1">17.13.1 RGBA8 Pixel Format</a></li>
+</ul>
+<li><a name="idx17.14" href="chap17.html#sec17.14">17.14 S3TC</a></li>
+<ul>
+<li><a name="idx17.14.1" href="chap17.html#sec17.14.1">17.14.1 CMPR</a></li>
+</ul>
+</ul>
+<br><li><a name="idx18" href="chap18.html#sec18">18 Appendix</a></li>
+<ul>
+<li><a name="idx18.1" href="chap18.html#sec18.1">18.1 GCC Quick How To</a></li>
+<ul>
+<li><a name="idx18.1.1" href="chap18.html#sec18.1.1">18.1.1 compile ASM to object:</a></li>
+<li><a name="idx18.1.2" href="chap18.html#sec18.1.2">18.1.2 compile C to object:</a></li>
+<li><a name="idx18.1.3" href="chap18.html#sec18.1.3">18.1.3 compile C++ to object:</a></li>
+<li><a name="idx18.1.4" href="chap18.html#sec18.1.4">18.1.4 link objects</a></li>
+<li><a name="idx18.1.5" href="chap18.html#sec18.1.5">18.1.5 remove unneeded sections (debug info etc) from object</a></li>
+<li><a name="idx18.1.6" href="chap18.html#sec18.1.6">18.1.6 convert object to plain binary</a></li>
+<li><a name="idx18.1.7" href="chap18.html#sec18.1.7">18.1.7 convert absolute address into filename/line number/function</a></li>
+<li><a name="idx18.1.8" href="chap18.html#sec18.1.8">18.1.8 Building a Crosscompiler</a></li>
+<li><a name="idx18.1.9" href="chap18.html#sec18.1.9">18.1.9 Linker Script</a></li>
+<li><a name="idx18.1.10" href="chap18.html#sec18.1.10">18.1.10 Startup Code</a></li>
+</ul>
+<li><a name="idx18.2" href="chap18.html#sec18.2">18.2 Boot Process Details</a></li>
+<ul>
+<li><a name="idx18.2.1" href="chap18.html#sec18.2.1">18.2.1 BS - Bootstrap 1</a></li>
+<li><a name="idx18.2.2" href="chap18.html#sec18.2.2">18.2.2 BS2 - Bootstrap 2</a></li>
+<li><a name="idx18.2.3" href="chap18.html#sec18.2.3">18.2.3 Apploader</a></li>
+<li><a name="idx18.2.4" href="chap18.html#sec18.2.4">18.2.4 Main DOL executable</a></li>
+</ul>
+<li><a name="idx18.3" href="chap18.html#sec18.3">18.3 Game and Maker Codes</a></li>
+<ul>
+<li><a name="idx18.3.1" href="chap18.html#sec18.3.1">18.3.1 Gamecodes</a></li>
+<li><a name="idx18.3.2" href="chap18.html#sec18.3.2">18.3.2 Game Serial ID</a></li>
+<li><a name="idx18.3.3" href="chap18.html#sec18.3.3">18.3.3 Makercodes</a></li>
+</ul>
+<li><a name="idx18.4" href="chap18.html#sec18.4">18.4 Macronix Chip IDs</a></li>
+<li><a name="idx18.5" href="chap18.html#sec18.5">18.5 chip simelarities</a></li>
+<li><a name="idx18.6" href="chap18.html#sec18.6">18.6 Easter Eggs</a></li>
+<li><a name="idx18.7" href="chap18.html#sec18.7">18.7 Terms and Acronyms</a></li>
+</ul>
+<br><li><a name="idx19" href="chap19.html#sec19">19 References</a></li>
+<ul>
+<li><a name="idx19.1" href="chap19.html#sec19.1">19.1 Sources</a></li>
+</ul>
+<br><li><a name="idx20" href="chap20.html#sec20">20 Credits</a></li>
+</ul>
+<div class="p">
+<div class="idx"><a href="#idx1">index</a></div>
+</body></html>

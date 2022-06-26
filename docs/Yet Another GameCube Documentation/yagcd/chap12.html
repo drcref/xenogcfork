@@ -1,0 +1,488 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec12">
+12</a>&nbsp;&nbsp;Memory Card Structure</h2>
+<br><div class="idx"><a href="index.html#idx12.1">index</a></div>
+<h3>
+<a name="sec12.1">
+12.1</a>&nbsp;&nbsp;Overview</h3>
+<br>
+one "block" on memcard equals 0x2000 bytes, the
+first 5 blocks are used for the filesystem (0xa000 bytes).<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Offset</b></td>
+<td nowrap align="center"><b>Size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap>Header</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap>Directory</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x4000</tt></td>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap>Directory backup (*)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x6000</tt></td>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap>Block Allocation Map</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x8000</tt></td>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap>Block Allocation Map backup (*)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xa000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>file(s) data</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*) If a change is to be made that will alter the Master File Table,
+such as moving or deleting a file, copying a file from another memory
+card, or creating a new save game file, the GameCube will first backup
+the Master File Table to this location. Presumably, if the operation
+fails for certain reasons, the GameCube will restore the Backup File
+Table to the Master File Table.
+     <div class="idx"><a href="index.html#idx12.2">index</a></div>
+<h3>
+<a name="sec12.2">
+12.2</a>&nbsp;&nbsp;Header</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Offset</b></td>
+<td nowrap align="right"><b>Size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="right">&nbsp;</td>
+<td nowrap>?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000c</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap>time of format (OSTime value)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0014</tt></td>
+<td nowrap align="right">&nbsp;</td>
+<td nowrap>unique card id (?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap align="right"><tt>2</tt></td>
+<td nowrap>padding zeroes</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0022</tt></td>
+<td nowrap align="right"><tt>2</tt></td>
+<td nowrap>size of memcard in Mbits</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0024</tt></td>
+<td nowrap align="right"><tt>2</tt></td>
+<td nowrap>encoding (ASCII or japanese)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0026</tt></td>
+<td nowrap align="right">&nbsp;</td>
+<td nowrap>unused (0xff)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x01fa</tt></td>
+<td nowrap align="right"><tt>2</tt></td>
+<td nowrap>update Counter (?, probably unused)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x01fc</tt></td>
+<td nowrap align="right"><tt>2</tt></td>
+<td nowrap>Checksum 1 (?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x01fe</tt></td>
+<td nowrap align="right"><tt>2</tt></td>
+<td nowrap>Checksum 2 (?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0200</tt></td>
+<td nowrap align="right"><tt>0x1e00</tt></td>
+<td nowrap>unused (0xff)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx12.3">index</a></div>
+<h3>
+<a name="sec12.3">
+12.3</a>&nbsp;&nbsp;Directory</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Offset</b></td>
+<td nowrap align="center"><b>Size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Directory Entries (max 127)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0ffa</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>update Counter</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0ffc</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Checksum 1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0ffe</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Checksum 2</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx12.3.1">index</a></div>
+<h4>
+<a name="sec12.3.1">
+12.3.1</a>&nbsp;&nbsp;Directory Entries</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>offset</b></td>
+<td nowrap align="center"><b>length</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>Gamecode</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap>Makercode</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x06</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap>reserved/unused (always 0xff, has no effect)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap>banner gfx format and icon animation (Image Key)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Icon Animation 0: forward 1: ping-pong</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>0: No Banner 1: Banner present</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap>Banner Color 0: RGB5A3 1: CI8</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center"><tt>0x20</tt></td>
+<td nowrap>filename</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x28</tt></td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>Time of file's last modification in seconds since 12am, January 1st,
+2000</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x2c</tt></td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>image data offset</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x30</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap>icon gfx format (2bits per icon)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bits</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>00</tt></td>
+<td nowrap>no icon</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>01</tt></td>
+<td nowrap>CI8 with a shared color palette after the last frame</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>10</tt></td>
+<td nowrap>RGB5A3</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>11</tt></td>
+<td nowrap>CI8 with a unique color palette after itself</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x32</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap>animation speed (2bits per icon) (*1)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bits</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>00</tt></td>
+<td nowrap>no icon</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>01</tt></td>
+<td nowrap>Icon lasts for 4 frames</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>10</tt></td>
+<td nowrap>Icon lasts for 8 frames</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>11</tt></td>
+<td nowrap>Icon lasts for 12 frames</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x34</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap>file-permissions</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><b>bit</b></td>
+<td nowrap><b>permission</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>no move</td>
+<td nowrap>File cannot be moved by the IPL</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap>no copy</td>
+<td nowrap>File cannot be copied by the IPL</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>public</td>
+<td nowrap>Can be read by any game</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x35</tt></td>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap>copy counter (*2)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x36</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap>block no of first block of file (0 == offset 0)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x38</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap>file-length (number of blocks in file)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x3a</tt></td>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap>reserved/unused (always 0xffff, has no effect)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x3c</tt></td>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap>Address of the two comments within the file data (*3)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*1) Clearly, the animation rate is unimportant when there is only
+one frame of icon data; nevertheless, a value for that one frame must
+still be set, or that one frame will not be shown. It is illegal to
+specify that a frame does not exist if it does; a value of 00 indicates
+that no frame exists, and should not be mistaken for meaning that
+this frame should not be shown. If you specify blank frames to slow
+the frame rate, these also cannot be 00.<br><br>
+(*2) This byte contains an 8-bit integer that indicates how many
+times the file has been copied from one memory card to another.<br><br>
+(*3) Each file has two 32 character strings which the IPL displays
+at the bottom of the memory card screen, next to the banner. The two
+strings (64 bytes) must fit within one block (8192 bytes), they are
+not allowed to cross sector boundaries.<br><h5>12.3.1.1 <a name="sec12.3.1.1">
+    &nbsp;&nbsp;Image Data</a>
+</h5>
+<br>
+Image data consists of a banner image and an icon. The banner image
+is not required, dependant on the value of the Image Key. If the banner
+image is not present, the icon image is displayed where the banner
+image would be displayed (centered horizontally). The icon image is
+required, and immediately follows the banner if present. Otherwise,
+it is located at the start of the image data.
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec12.3.1.1.1">
+    12.3.1.1.1&nbsp;&nbsp;Banner Image</a>
+&nbsp;</b>
+The banner size is 96*32 pixels, making 3072 pixels in total (=
+0x0c00 bytes in 8bit, 0x1800 bytes in 16bit mode). If the Banner is
+in CI8 mode, the palette follows immediately after the banners pixel
+data.
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec12.3.1.1.2">
+    12.3.1.1.2&nbsp;&nbsp;Icon Image</a>
+&nbsp;</b>
+Immediately following the banner (if present) is the Icon Image. This
+can have a variable number of frames (up to eight), each 32*32 pixels,
+making 1024 pixels per frame in total. (= 0x0400 bytes in 8bit, 0x0800
+byte in 16bit mode). If the Icon is in CI8 mode, its palette either
+follows immediately after its pixel data or after the pixel data of
+all 8 icons, depending on the icon gfx format field.
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec12.3.1.1.3">
+    12.3.1.1.3&nbsp;&nbsp;Palettes</a>
+&nbsp;</b>
+Palettes in the image data are in RGB5A3 pixel format, and are 0x100
+entries large. (= 0x200 bytes)
+     <div class="idx"><a href="index.html#idx12.4">index</a></div>
+<h3>
+<a name="sec12.4">
+12.4</a>&nbsp;&nbsp;Block Allocation Map</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Offset</b></td>
+<td nowrap align="center"><b>Size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Checksum 1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0002</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Checksum 2</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>update Counter</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0006</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>free Blocks</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>last allocated Block</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000a</tt></td>
+<td nowrap align="center"><tt>0x1ff8</tt></td>
+<td nowrap>Map of allocated Blocks</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+This is an array of 0x0ffc 16 bit values, each holding info about
+one allocated block on the memory card. (thus the maximum memcard
+size is limited to 2048 blocks (16 Megabytes, 128Mbit))<br><br>
+each 16 bit value at position X in the array has the following meaning:<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>value</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap>block is not allocated (ie, free)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xffff</tt></td>
+<td nowrap>last allocated block of a file</td>
+</tr>
+<tr>
+<td nowrap align="center">any other</td>
+<td nowrap>allocated block, usually equals (x+1) (==next block of file)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+scan through a file like this:<br><br><tt>thisblock=firstblock;</tt><br><tt>do</tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// process block</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;// next block</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;thisblock=((unsigned short*)0x6000)[thisblock];</tt><br><tt>}</tt><br><tt>while (thisblock!=0xffff);</tt>&nbsp;<br><tt></tt>&nbsp;<br>
+note:<br><br>
+although this scheme could do it, i have never stumbled about a file
+yet that is NOT linear on the memcard anyway. from this point of view
+using this allocation map seems to be a bit stupid...more testing
+needed :)
+     <div class="idx"><a href="index.html#idx12.5">index</a></div>
+<h3>
+<a name="sec12.5">
+12.5</a>&nbsp;&nbsp;Checksums</h3>
+<br>
+The Checksums for the Directory and Block Allocation Map are simple
+16bit additive checksums (ie nothing fancy or particular safe) which
+can be easily calculated like this:<br><br><tt>void checksums(unsigned short *buf, int num, unsigned short
+*c1, unsigned short *c2) </tt><br><tt>{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;int i;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;*c1 = 0;*c2 = 0;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i &lt; num; ++i) </tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*c1 += buf[i];</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*c2 += (buf[i] ^ 0xffff);</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;if (*c1 == 0xffff)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*c1 = 0;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;if (*c2 == 0xffff)</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;{</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*c2 = 0;</tt><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;}</tt><br><tt>}</tt><br><div class="idx"><a href="index.html#idx13">index</a></div>
+</body></html>

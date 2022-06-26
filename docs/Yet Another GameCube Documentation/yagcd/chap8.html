@@ -1,0 +1,153 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec8">
+8</a>&nbsp;&nbsp;3D Graphics Processing</h2>
+<br><img src="gx_overview.png" alt="images/gx_overview.png"><div class="idx"><a href="index.html#idx8.1">index</a></div>
+<h3>
+<a name="sec8.1">
+8.1</a>&nbsp;&nbsp;basic operations</h3>
+<br><div class="idx"><a href="index.html#idx8.1.1">index</a></div>
+<h4>
+<a name="sec8.1.1">
+8.1.1</a>&nbsp;&nbsp;load BP Register</h4>
+<br><ul>
+<li> write byte 0x61 to GXFIFO
+</li>
+<li> write 4 bytes of data to GXFIFO
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx8.1.2">index</a></div>
+<h4>
+<a name="sec8.1.2">
+8.1.2</a>&nbsp;&nbsp;load CP Register </h4>
+<br><ul>
+<li> write byte 0x08 to GXFIFO
+</li>
+<li> write 1 byte address to GXFIFO
+</li>
+<li> write 4 bytes of data to GXFIFO
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx8.1.3">index</a></div>
+<h4>
+<a name="sec8.1.3">
+8.1.3</a>&nbsp;&nbsp;load XF Register</h4>
+<br><ul>
+<li> write byte 0x10 to GXFIFO
+</li>
+<li> write 0x0000 (16 bit) to GXFIFO
+</li>
+<li> write addr (16 bit) to GXFIFO
+</li>
+<li> write 4 bytes of data to GXFIFO
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx8.1.4">index</a></div>
+<h4>
+<a name="sec8.1.4">
+8.1.4</a>&nbsp;&nbsp;load XF Register Indexed</h4>
+<br><ul>
+<li> write byte 0x10 to GXFIFO
+</li>
+<li> write n-1 (16 bit) to GXFIFO
+</li>
+<li> write addr (16 bit) to GXFIFO
+</li>
+<li> write n bytes of data to GXFIFO
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx8.2">index</a></div>
+<h3>
+<a name="sec8.2">
+8.2</a>&nbsp;&nbsp;example processing loop</h3>
+<br><tt>gx_init();</tt>&nbsp;<br><tt>while(running)</tt>&nbsp;<br><tt>{</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;gx_begin();</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;drawframe();</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;gx_end();</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;waitvsync();</tt>&nbsp;<br><tt>}</tt>&nbsp;<br><tt>gx_close();</tt><br><div class="idx"><a href="index.html#idx8.2.1">index</a></div>
+<h4>
+<a name="sec8.2.1">
+8.2.1</a>&nbsp;&nbsp;init GX</h4>
+<br><h5>8.2.1.1 <a name="sec8.2.1.1">
+    &nbsp;&nbsp;setup the fifos</a>
+</h5>
+<br><ul>
+<li> fifo start/end must be 32 byte aligned
+</li>
+<li> minimum fifo size is 64kb
+</li>
+<li> typical size for the hi watermark is fifo size - 16kb
+</li>
+</ul>
+<h5>8.2.1.2 <a name="sec8.2.1.2">
+    &nbsp;&nbsp;enable gx command processing</a>
+</h5>
+<br>
+while (mfwpar () &amp; 1);
+PI[3] = 0x100000;
+PI[4] = 0x110000;
+PI[5] = 0x100000;
+mtwpar(0xC008000); // GXFIFO physical address
+mtspr(920, mfspr(920)  -  0x40000000);
+<h5>8.2.1.3 <a name="sec8.2.1.3">
+    &nbsp;&nbsp;send setup frame</a>
+</h5>
+<br>
+after setting up and enabling gx command processing it is recommended
+to send a first initial 'frame' to setup the various internal registers
+to useful values.
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec8.2.1.3.1">
+    8.2.1.3.1&nbsp;&nbsp;Videomodes </a>
+&nbsp;</b>
+remember that depending on the videomode some things must be setup
+differently (such as the scissor, viewport, ...)
+      <div class="idx"><a href="index.html#idx8.2.2">index</a></div>
+<h4>
+<a name="sec8.2.2">
+8.2.2</a>&nbsp;&nbsp;begin frame</h4>
+<br><div class="idx"><a href="index.html#idx8.2.3">index</a></div>
+<h4>
+<a name="sec8.2.3">
+8.2.3</a>&nbsp;&nbsp;draw frame</h4>
+<br><div class="idx"><a href="index.html#idx8.2.4">index</a></div>
+<h4>
+<a name="sec8.2.4">
+8.2.4</a>&nbsp;&nbsp;end frame</h4>
+<br><ul>
+<li> load draw-done to BP register (0x45000002)
+</li>
+<li> copy EFB to XFB
+</li>
+<li> terminate the list by writing 32 zeroes
+</li>
+</ul>
+<h5>8.2.4.1 <a name="sec8.2.4.1">
+    &nbsp;&nbsp;copy EFB to XFB</a>
+</h5>
+<br>
+#define XY(x, y) (((y) &lt;&nbsp;&lt; 10)  -  (x))<br>
+GX_LOAD_BP_REG(0x4000001f); // set z mode
+GX_LOAD_BP_REG(0x410004bc); // set color mode 0
+GX_LOAD_BP_REG(0x49000000  -  XY(0, 0)); // set source top left
+GX_LOAD_BP_REG(0x4a000000  -  XY(639, 479)); // set source bottom
+right
+GX_LOAD_BP_REG(0x4d000028); // stride? (0x1280&gt;&nbsp;&gt;5<br>
+... 640*2 ; 320*YuYv
+GX_LOAD_BP_REG(0x4b000000  -  (0xC00000 &gt;&nbsp;&gt; 5))<br>
+// xfb target address
+GX_LOAD_BP_REG(PE_COPY_CLEAR_AR  -  0x0000);
+GX_LOAD_BP_REG(PE_COPY_CLEAR_GB  -  0x0000);
+GX_LOAD_BP_REG(PE_COPY_CLEAR_Z  -  0xFFFFFF);
+GX_LOAD_BP_REG(0x52004803); // do it (efb copy execution command?)
+<h5>8.2.4.2 <a name="sec8.2.4.2">
+    &nbsp;&nbsp;copy EFB to Texture</a>
+</h5>
+<br>
+simelar to copying EFB to XFB, setup BP registers 0x4a,0x4a,0x4d,0x4b
+and then <tt>(0x52000003|(format&lt;&nbsp;&lt;4))</tt><br><div class="idx"><a href="index.html#idx8.2.5">index</a></div>
+<h4>
+<a name="sec8.2.5">
+8.2.5</a>&nbsp;&nbsp;close GX</h4>
+<br><div class="idx"><a href="index.html#idx9">index</a></div>
+</body></html>

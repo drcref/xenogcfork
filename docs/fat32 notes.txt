@@ -1,0 +1,54 @@
+1. Read MBR at sector 0
+
+Contains Partition Info
+Check Partition 0
+Contains number of first sector (2048)
+
+2. Go to sector 2048 (as read above)
+
+This is the FAT32 Boot Sector
+
+bytes per sector = 512 (always)
+number of FATs = 2
+sectors per cluster = 16
+reserved sectors = 32
+hidden sectors = 2048 (sectors preceding the start of the partition, if the drive is partitioned)
+sectors per FAT = 15178
+root cluster = 2 (always)
+
+
+to find the start of the File Allocation Table
+ = hidden sectors + reserved sectors
+ = 2048 + 32
+ = 2080
+
+to get the start of the root directory
+root directory start sector = hidden sectors + reserved sectors + (number of FATs * sectors per FAT)
+
+2048 + 32 + (2 * 15178)
+2048 + 32 + 30356
+2048 + 30388
+
+= sector 32436 (cluster 2)
+
+3. Go to root directory, scan for desired file
+
+Look in directory entry for desired file
+
+Find number of cluster
+
+217062
+
+start sector of the file = ((file cluster - 2) * sectors per cluster) + boot sector
+
+((217062 - 2) * 16) + 32436
+(217060 * 16) + 32436
+3472960 + 32436
+
+= sector 3505396
+
+
+
+
+Size optimization
+- Remove support for v1 SD cards

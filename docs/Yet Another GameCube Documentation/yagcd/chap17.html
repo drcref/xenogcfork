@@ -1,0 +1,469 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec17">
+17</a>&nbsp;&nbsp;Graphic Formats</h2>
+<br><div class="idx"><a href="index.html#idx17.1">index</a></div>
+<h3>
+<a name="sec17.1">
+17.1</a>&nbsp;&nbsp;YCbYCr</h3>
+<br>
+This is the Format used for image data in the external framebuffer
+(XFB). It exploits the fact that the resolution of color on a PAL/NTSC
+screen is lower than the resolution of luminance (brightness), and
+thus stores only separate luminance info for each pixel and combines
+the color information of two pixels each, saving 2 bytes versus traditional
+RGB-per-pixel framebuffers. This means that in XFB you cant modify
+the color of a single pixel without affecting its neighbour. (you
+can however, seperatly modify its luminance/brightness). It also means
+that you can not accurately convert one single pixel into XFB framebuffer
+format, you will always have to convert two pixels at once.<br><br>
+To convert two pixels to YCbYCr, first average their RGB values<br><br><tt>R = (R1+R2)/2</tt>&nbsp;<br><tt>G = (G1+G2)/2</tt>&nbsp;<br><tt>B = (B1+B2)/2</tt><br><br>
+now calculate the luminance portion of each pixel<br><br><tt>Y1 = (77/256)R1 + (150/256)G1 + (29/256)B1</tt>&nbsp;<br><tt>Y2 = (77/256)R2 + (150/256)G2 + (29/256)B2</tt><br><br>
+then calculate the combined color portion<br><br><tt>Cb = -(44/256)R - &nbsp;(87/256)G + (131/256)B + 128</tt>&nbsp;<br><tt>Cr = (131/256)R - (110/256)G - &nbsp;(21/256)B + 128</tt>&nbsp;<br><br>
+now a 32 bit value to be written to XFB (to a 32 bit aligned address
+of course) can be made up like this<br><br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>31</tt></td>
+<td nowrap align="right"><tt>24</tt></td>
+<td nowrap><tt>23</tt></td>
+<td nowrap align="right"><tt>16</tt></td>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>1111</tt></td>
+<td nowrap align="right"><tt>1111</tt></td>
+<td nowrap><tt>bbbb</tt></td>
+<td nowrap align="right"><tt>bbbb</tt></td>
+<td nowrap><tt>2222</tt></td>
+<td nowrap align="right"><tt>2222</tt></td>
+<td nowrap><tt>rrrr</tt></td>
+<td nowrap align="right"><tt>rrrr</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">24-31</td>
+<td nowrap align="center">1</td>
+<td nowrap>Y1 - luminance Portion of first Pixel</td>
+</tr>
+<tr>
+<td nowrap align="center">16-23</td>
+<td nowrap align="center">b</td>
+<td nowrap>Cb - combined color</td>
+</tr>
+<tr>
+<td nowrap align="center">8-15</td>
+<td nowrap align="center">2</td>
+<td nowrap>Y2 - luminance Portion of first Pixel</td>
+</tr>
+<tr>
+<td nowrap align="center">0-7</td>
+<td nowrap align="center">r</td>
+<td nowrap>Cr - combined color</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br>
+converting a single pixel back to RGB looks like this<br><br><tt>R = Y + 1.371(Cr - 128)</tt>&nbsp;<br><tt>G = Y - 0.698(Cr - 128) - 0.336(Cb - 128)</tt>&nbsp;<br><tt>B = Y + 1.732(Cb - 128)</tt>&nbsp;<br><div class="idx"><a href="index.html#idx17.2">index</a></div>
+<h3>
+<a name="sec17.2">
+17.2</a>&nbsp;&nbsp;I4 (4bit indexed)</h3>
+<br><div class="idx"><a href="index.html#idx17.3">index</a></div>
+<h3>
+<a name="sec17.3">
+17.3</a>&nbsp;&nbsp;IA4 (4bit indexed with alpha)</h3>
+<br><div class="idx"><a href="index.html#idx17.4">index</a></div>
+<h3>
+<a name="sec17.4">
+17.4</a>&nbsp;&nbsp;I8 (8bit indexed)</h3>
+<br><div class="idx"><a href="index.html#idx17.5">index</a></div>
+<h3>
+<a name="sec17.5">
+17.5</a>&nbsp;&nbsp;IA8 (8bit indexed with alpha)</h3>
+<br><div class="idx"><a href="index.html#idx17.6">index</a></div>
+<h3>
+<a name="sec17.6">
+17.6</a>&nbsp;&nbsp;CI4 (compressed 4bit indexed)</h3>
+<br><div class="idx"><a href="index.html#idx17.7">index</a></div>
+<h3>
+<a name="sec17.7">
+17.7</a>&nbsp;&nbsp;CIA4 (compressed 4bit indexed with alpha)</h3>
+<br><div class="idx"><a href="index.html#idx17.8">index</a></div>
+<h3>
+<a name="sec17.8">
+17.8</a>&nbsp;&nbsp;CI8 (compressed 8bit indexed)</h3>
+<br>
+Used for Icons and Banners on Memory Card. This Format uses a palette
+in RGB5A1 Format, the Pixel data is stored in 8x4 pixel tiles.
+     <div class="idx"><a href="index.html#idx17.9">index</a></div>
+<h3>
+<a name="sec17.9">
+17.9</a>&nbsp;&nbsp;CIA8 (compressed 8bit indexed with alpha)</h3>
+<br><div class="idx"><a href="index.html#idx17.10">index</a></div>
+<h3>
+<a name="sec17.10">
+17.10</a>&nbsp;&nbsp;RGB4A3</h3>
+<br>
+Used for Icons and Banners on Memory Card. This Format uses no palette
+and is stored in 4x4 pixel tiles.
+      <div class="idx"><a href="index.html#idx17.10.1">index</a></div>
+<h4>
+<a name="sec17.10.1">
+17.10.1</a>&nbsp;&nbsp;RGB4A3 Pixel Format</h4>
+<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>.ttt</tt></td>
+<td nowrap align="right"><tt>rrrr</tt></td>
+<td nowrap><tt>gggg</tt></td>
+<td nowrap align="right"><tt>bbbb</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unused (?)</td>
+</tr>
+<tr>
+<td nowrap align="center">12-14</td>
+<td nowrap align="center">t</td>
+<td nowrap>transparency</td>
+</tr>
+<tr>
+<td nowrap align="center">8-11</td>
+<td nowrap align="center">r</td>
+<td nowrap>red channel</td>
+</tr>
+<tr>
+<td nowrap align="center">4-7</td>
+<td nowrap align="center">g</td>
+<td nowrap>green channel</td>
+</tr>
+<tr>
+<td nowrap align="center">0-3</td>
+<td nowrap align="center">b</td>
+<td nowrap>blue channel</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><div class="idx"><a href="index.html#idx17.11">index</a></div>
+<h3>
+<a name="sec17.11">
+17.11</a>&nbsp;&nbsp;RGB5A1</h3>
+<br>
+Used for Icons and Banners on Memory Card. This Format uses no palette
+and is stored in 4x4 pixel tiles.
+      <div class="idx"><a href="index.html#idx17.11.1">index</a></div>
+<h4>
+<a name="sec17.11.1">
+17.11.1</a>&nbsp;&nbsp;RGB5A1 Pixel Format</h4>
+<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>trrr</tt></td>
+<td nowrap align="right"><tt>rrgg</tt></td>
+<td nowrap><tt>gggb</tt></td>
+<td nowrap align="right"><tt>bbbb</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">15</td>
+<td nowrap align="center">t</td>
+<td nowrap>transparency</td>
+</tr>
+<tr>
+<td nowrap align="center">10-14</td>
+<td nowrap align="center">r</td>
+<td nowrap>red channel</td>
+</tr>
+<tr>
+<td nowrap align="center">5-9</td>
+<td nowrap align="center">g</td>
+<td nowrap>green channel</td>
+</tr>
+<tr>
+<td nowrap align="center">0-4</td>
+<td nowrap align="center">b</td>
+<td nowrap>blue channel</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><div class="idx"><a href="index.html#idx17.12">index</a></div>
+<h3>
+<a name="sec17.12">
+17.12</a>&nbsp;&nbsp;RGB565</h3>
+<br><div class="idx"><a href="index.html#idx17.12.1">index</a></div>
+<h4>
+<a name="sec17.12.1">
+17.12.1</a>&nbsp;&nbsp;RGB565 Pixel Format</h4>
+<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>rrrr</tt></td>
+<td nowrap align="right"><tt>rggg</tt></td>
+<td nowrap><tt>gggb</tt></td>
+<td nowrap align="right"><tt>bbbb</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">11-15</td>
+<td nowrap align="center">r</td>
+<td nowrap>red channel</td>
+</tr>
+<tr>
+<td nowrap align="center">5-10</td>
+<td nowrap align="center">g</td>
+<td nowrap>green channel</td>
+</tr>
+<tr>
+<td nowrap align="center">0-4</td>
+<td nowrap align="center">b</td>
+<td nowrap>blue channel</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><div class="idx"><a href="index.html#idx17.13">index</a></div>
+<h3>
+<a name="sec17.13">
+17.13</a>&nbsp;&nbsp;RGBA8</h3>
+<br><div class="idx"><a href="index.html#idx17.13.1">index</a></div>
+<h4>
+<a name="sec17.13.1">
+17.13.1</a>&nbsp;&nbsp;RGBA8 Pixel Format</h4>
+<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>31</tt></td>
+<td nowrap align="right"><tt>24</tt></td>
+<td nowrap><tt>23</tt></td>
+<td nowrap align="right"><tt>16</tt></td>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>rrrr</tt></td>
+<td nowrap align="right"><tt>rrrr</tt></td>
+<td nowrap><tt>gggg</tt></td>
+<td nowrap align="right"><tt>gggg</tt></td>
+<td nowrap><tt>bbbb</tt></td>
+<td nowrap align="right"><tt>bbbb</tt></td>
+<td nowrap><tt>aaaa</tt></td>
+<td nowrap align="right"><tt>aaaa</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>24-31</tt></td>
+<td nowrap align="center"><tt>r</tt></td>
+<td nowrap>red channel</td>
+</tr>
+<tr>
+<td nowrap><tt>16-23</tt></td>
+<td nowrap align="center"><tt>g</tt></td>
+<td nowrap>green channel</td>
+</tr>
+<tr>
+<td nowrap><tt>8-15</tt></td>
+<td nowrap align="center"><tt>b</tt></td>
+<td nowrap>blue channel</td>
+</tr>
+<tr>
+<td nowrap><tt>0-7</tt></td>
+<td nowrap align="center"><tt>a</tt></td>
+<td nowrap>alpha channel</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><br><div class="idx"><a href="index.html#idx17.14">index</a></div>
+<h3>
+<a name="sec17.14">
+17.14</a>&nbsp;&nbsp;S3TC</h3>
+<br>
+WARNING: this section is screwed! any advice/corrections/help/etcblabla
+welcomed! (thanx to <b>Aaron Kaluszka</b> for pointing this out)
+<br><br>
+S3TC is a compression method for textures, developed by S3 and licenced
+by Nintendo for the Gamecube (and also by Microsoft for DirectX 6.0).
+It basically gives you one more MIP level for free, with relatively
+small quality loss and a simple implementation in hardware. You basically
+store 2 colour values and then you have a few bits per pixel to interpolate
+between them. It works in blocks of 4x4 pixel.<br><br>
+There are 5 variants:<br><br>
+DXT1 allows one bit of alpha<br>
+DXT2/3 allows 4 bits of alpha<br>
+DXT4/5 stores 2 alpha values and has 3 bits to interpolate between
+them<br><br>
+The difference between DXT2/3 and 4/5 is, if colour values are pre-multiplied
+with alpha. The blending equation is normally (c*(1-a))+(t*a)),
+so with pre-multiplied alpha the texture contains (t*a) in each
+colour channel and the blending becomes (c*(1-a) + t).<br><br>
+Each image is made up of tiles placed linearly from left to right
+then top to bottom.<br><br>
+Each tile is made up of 4 blocks<br><br>
+0 1 <br>
+2 3<br><br>
+Each block is made up of 8 words. &nbsp;These 8 words represent 16 pixels
+using S3TC compression.<br><br>
+RRRRRGGG - GGGBBBBB - rrrrrggg - gggbbbbb - 00112233 - 44556677 -
+8899UUVV- WWXXYYZZ<br><br>
+R = Color 0 Red<br>
+G = Color 0 Green<br>
+B = Color 0 Blue<br>
+r = Color 3 Red<br>
+g = Color 3 Green<br>
+b = Color 3 Blue<br>
+0 - 9, U - Z = Pixel color (2-bits each)<br>
+Colors 1 and 2 are interpolated from colors 0 and 3<br><br>
+The tiles are 32 bytes each. Depending on the image format the width
+and height of the tiles will differ. A 16bit format (ie RGB5 or RGB4A3)
+will have a 4x4 pixel tile since 4 * 4 * 2 bytes = 32. An 8bit
+format (ie Color Indexed) will have a 8x4 pixel tile since 8 * 4
+* 1 byte = 32. <br><br>
+So a 32x32 image (like a memory card icon) that is in RGB5 format
+would be 8 tiles across and 8 tiles down.<br><br><div class="idx"><a href="index.html#idx17.14.1">index</a></div>
+<h4>
+<a name="sec17.14.1">
+17.14.1</a>&nbsp;&nbsp;CMPR</h4>
+<br>
+Like a usual texture, a CMPR-texture is divided on tiles, each 32-bytes
+to fit a texture cache line. Every tile is sub-tiled into four parts,
+in zigzag order :
+<table>
+<tr>
+<td nowrap align="center"><tt>0</tt></td>
+<td nowrap align="center"><tt>1</tt></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap align="center"><tt>3</tt></td>
+</tr>
+</table>
+<br>
+The format of the sub-tiles is pretty simple, and looks like DXT1.
+First two base colors in RGB565, followed by 16 sub-tile texels. Every
+texel is 2-bit wide, to lookup from four colors : 00, 01, 10 and 11.
+First two are given already, and last two are interpolated from first
+ones, by the following rule :
+<ul>
+<li> COLOR0 and COLOR1 are base colors.
+</li>
+<li> RGB0 &lt;- unpack RGB565 COLOR0
+</li>
+<li> A0 = 255
+</li>
+<li> RGB1 &lt;- unpack RGB565 COLOR1
+</li>
+<li> A1 = 255
+if COLOR0 &gt; COLOR1
+<ul>
+<li> RGB2 = (2 * RGB0 + RGB1) / 3
+</li>
+<li> A2 = 255
+</li>
+<li> RGB3 = (2 * RGB1 + RGB0) / 3
+</li>
+<li> A3 = 255
+</li>
+</ul>
+else
+<ul>
+<li> RGB2 = (RGB0 + RGB1) / 2
+</li>
+<li> A2 = 255
+</li>
+<li> RGB3 = (2 * RGB1 + RGB0) / 3
+</li>
+<li> A3 = 0
+</li>
+</ul>
+</li>
+</ul>
+<br><div class="idx"><a href="index.html#idx18">index</a></div>
+</body></html>

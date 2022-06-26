@@ -1,0 +1,387 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec13">
+13</a>&nbsp;&nbsp;DVD Structure</h2>
+<br>
+total capacity of disc data is 1,459,978,240 bytes (1.5 GB approx.).
+that's exactly 712880 DVD raw sectors (each 2048 bytes).<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center">start</td>
+<td nowrap align="center">end</td>
+<td nowrap align="center">size</td>
+<td nowrap>Description</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x0440</tt></td>
+<td nowrap>Disk header ("boot.bin")</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00000440</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x2000</tt></td>
+<td nowrap>Disk header Information ("bi2.bin")</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00002440</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>(0x2000 ?)</tt></td>
+<td nowrap>Apploader ("appldr.bin")</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>FST ('fst.bin')</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx13.1">index</a></div>
+<h3>
+<a name="sec13.1">
+13.1</a>&nbsp;&nbsp;Disk header</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x0003</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>Game Code</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>Console ID</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>2</tt></td>
+<td nowrap>Gamecode</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>Country Code</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center"><tt>0x0005</tt></td>
+<td nowrap align="center"><tt>0x0002</tt></td>
+<td nowrap>Maker Code</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0006</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x0001</tt></td>
+<td nowrap>Disk ID</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0007</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x0001</tt></td>
+<td nowrap>Version</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x0001</tt></td>
+<td nowrap>Audio Streaming</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0009</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>0x0001</tt></td>
+<td nowrap>Stream Buffer Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000a</tt></td>
+<td nowrap align="center"><tt>0x001b</tt></td>
+<td nowrap align="center"><tt>0x0012</tt></td>
+<td nowrap>unused (zeros)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001c</tt></td>
+<td nowrap align="center"><tt>0x001f</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>DVD Magic Word (<tt>0xc2339f3d</tt>)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap align="center"><tt>0x03ff</tt></td>
+<td nowrap align="center"><tt>0x03e0</tt></td>
+<td nowrap>Game Name</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0400</tt></td>
+<td nowrap align="center"><tt>0x0403</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>offset of debug monitor (dh.bin) ?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0404</tt></td>
+<td nowrap align="center"><tt>0x0407</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>addr (?) to load debug monitor ?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0408</tt></td>
+<td nowrap align="center"><tt>0x041f</tt></td>
+<td nowrap align="center"><tt>0x0018</tt></td>
+<td nowrap>unused (zeros)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0420</tt></td>
+<td nowrap align="center"><tt>0x0423</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>offset of main executable DOL (bootfile)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0424</tt></td>
+<td nowrap align="center"><tt>0x0427</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>offset of the FST ("fst.bin")</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0428</tt></td>
+<td nowrap align="center"><tt>0x042B</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>size of FST</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x042C</tt></td>
+<td nowrap align="center"><tt>0x042F</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>maximum size of FST (usually its same as FST size) (*)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0430</tt></td>
+<td nowrap align="center"><tt>0x0433</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>user position (?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0434</tt></td>
+<td nowrap align="center"><tt>0x0437</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>user length (?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0438</tt></td>
+<td nowrap align="center"><tt>0x043b</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>(?)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x043c</tt></td>
+<td nowrap align="center"><tt>0x043f</tt></td>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap>unused (zeros)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+(*) multiple DVDs must use it, to properly reside all FSTs.<br><div class="idx"><a href="index.html#idx13.2">index</a></div>
+<h3>
+<a name="sec13.2">
+13.2</a>&nbsp;&nbsp;Disk header Information</h3>
+<br>
+this is loaded to the Address in <tt>0x800000f4</tt> when a disc is
+initialized by the IPL<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>offset</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Debug-monitor Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Simulated Memory Size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Argument offset</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Debug flag</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0010</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Track Location</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0014</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Track size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0018</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Countrycode</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x001c</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>?</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx13.3">index</a></div>
+<h3>
+<a name="sec13.3">
+13.3</a>&nbsp;&nbsp;Apploader</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>offset</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x0009</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Date (version) of the apploader in ASCII</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x000A</tt></td>
+<td nowrap align="center"><tt>0x000F</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>padding (0)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0010</tt></td>
+<td nowrap align="center"><tt>0x0013</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>Apploader entrypoint</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0014</tt></td>
+<td nowrap align="center"><tt>0x0017</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>size of the apploader (32 bit) (usually 0x2000)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0018</tt></td>
+<td nowrap align="center"><tt>0x001b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>trailer size</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0020</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>Apploader code (loaded to 0x81200000 in RAM)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx13.4">index</a></div>
+<h3>
+<a name="sec13.4">
+13.4</a>&nbsp;&nbsp;Format of the FST</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap>Root Directory Entry</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center"><tt>...</tt></td>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap>more File- or Directory Entries</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>...</tt></td>
+<td nowrap align="center"><tt>...</tt></td>
+<td nowrap align="center"><tt>...</tt></td>
+<td nowrap>String table</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx13.4.1">index</a></div>
+<h4>
+<a name="sec13.4.1">
+13.4.1</a>&nbsp;&nbsp;Format of a File Entry</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>1</tt></td>
+<td nowrap>flags; 0: file 1: directory</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>3</tt></td>
+<td nowrap>filename, offset into string table</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>file_offset or parent_offset (dir)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>file_length or num_entries (root) or next_offset (dir)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx14">index</a></div>
+</body></html>

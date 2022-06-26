@@ -1,0 +1,1899 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec3">
+3</a>&nbsp;&nbsp;Gekko CPU Overview</h2>
+<br><div class="idx"><a href="index.html#idx3.1">index</a></div>
+<h3>
+<a name="sec3.1">
+3.1</a>&nbsp;&nbsp;Registers</h3>
+<br><ul>
+<li> General purpose registers (r0-r31)
+<ul>
+<li> r1 sp stackpointer
+</li>
+<li> r2 rtoc global pointer to _SDA2_BASE_
+</li>
+<li> r13 global pointer to _SDA_BASE_
+</li>
+</ul>
+</li>
+<li> Floating point registers (fp0-fp31)
+</li>
+<li> Segment registers (sr0-sr15) - unused in regular (SDK/DolphinOS) applications
+</li>
+<li> Special purpose registers (spr0-spr1023)
+<ul>
+<li> spr8 (lr) - link register
+</li>
+<li> spr920 - HID2
+</li>
+<li> spr1010 - instruction breakpoint address
+</li>
+<li> spr1013 - data breakpoint address
+</li>
+</ul>
+</li>
+</ul>
+<table>
+<tr><td nowrap>
+<table><tr>
+<td nowrap align="center">spr920</td>
+<td nowrap align="center">4</td>
+<td nowrap align="center">r/w</td>
+<td nowrap align="center">HID2</td>
+</tr></table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>31</tt></td>
+<td nowrap align="right"><tt>24</tt></td>
+<td nowrap><tt>23</tt></td>
+<td nowrap align="right"><tt>16</tt></td>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap>&nbsp;</td>
+<td nowrap align="right">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+<td nowrap align="right">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+<td nowrap align="right">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+<td nowrap align="right">&nbsp;</td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>PSE - Paired-Single load and store instructions enabled</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>LSQE - Paired-Single mode enabled</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><div class="idx"><a href="index.html#idx3.2">index</a></div>
+<h3>
+<a name="sec3.2">
+3.2</a>&nbsp;&nbsp;Calling conventions</h3>
+<br>
+parameters are passed in r3 (1st) r4 (2nd) and r5 (third) up to r12
+(9th), further parameters are passed through the stack.
+     <div class="idx"><a href="index.html#idx3.3">index</a></div>
+<h3>
+<a name="sec3.3">
+3.3</a>&nbsp;&nbsp;PPC Instructions</h3>
+<br><div class="idx"><a href="index.html#idx3.3.1">index</a></div>
+<h4>
+<a name="sec3.3.1">
+3.3.1</a>&nbsp;&nbsp;Integer Instructions</h4>
+<br><table><tr><td nowrap>
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>addi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addis</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>add</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subf</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addic</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfic</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addco</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfco</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>adde</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addeo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfe</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfeo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addme</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addmeo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfme</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfmeo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addze</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>addzeo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfze</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>subfzeo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>neg</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>nego</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mulli</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mullw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mullwo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mulhw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mulhwu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>divw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>divwo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>divwu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>divwuo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>cmpi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>cmp</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>cmpli</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>cmpl</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>andi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>andis</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>ori</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>oris</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>xori</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>xoris</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>and</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>or</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>xor</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>nand</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>nor</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>eqv</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>andc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>orc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><table><tr><td nowrap>
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>extsb</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>extsh</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>cntlzw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>rlwinm</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>rlwnm</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>rlwimi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>slw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>srw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>srawi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sraw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx3.3.2">index</a></div>
+<h4>
+<a name="sec3.3.2">
+3.3.2</a>&nbsp;&nbsp;Floating-Point Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap align="center"><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>fadd</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fadds (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fsub</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fsubs (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmul</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmuls (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fdiv</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fdivs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fres (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>frsqrte</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fsel (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmadd</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmadds (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmsub</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmsubs (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnmadd</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnmadds (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnmsub</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnmsubs (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>frsp (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fctiw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fctiwz</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fcmpu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fcmpo</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mffs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mcrfs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtfsfi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtfsf</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtfsb0</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtfsb1</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmr (*)</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fneg</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fabs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnabs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+(*) - modified for paired singles
+      <div class="idx"><a href="index.html#idx3.3.3">index</a></div>
+<h4>
+<a name="sec3.3.3">
+3.3.3</a>&nbsp;&nbsp;Integer Load and Store Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>lbz</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lbzx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lbzu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lbzux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhz</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhzx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhzu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhzux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lha</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhax</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhau</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhaux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lwz</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lwzx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lwzu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lwzux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stb</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stbx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stbu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stbux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sth</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sthx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sthu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sthux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stwx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stwu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stwux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lhbrx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lwbrx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sthbrx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stwbrx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lmw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stmw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lswi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lswx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stswi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stswx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx3.3.4">index</a></div>
+<h4>
+<a name="sec3.3.4">
+3.3.4</a>&nbsp;&nbsp;Floating-Point Load and Store Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap align="center"><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>lfs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfsx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfsu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfsux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfd</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfdx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfdu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lfdux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfs</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfsx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfsu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfsux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfd</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfdx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfdu</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfdux</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stfiwx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx3.3.5">index</a></div>
+<h4>
+<a name="sec3.3.5">
+3.3.5</a>&nbsp;&nbsp;Branch Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>b</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>unconditional Jump</td>
+</tr>
+<tr>
+<td nowrap><tt>ba</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bl</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>branch and link</td>
+</tr>
+<tr>
+<td nowrap><tt>bla</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bca</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bcl</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bcla</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bclr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bclrl</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bcctr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>bcctrl</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx3.3.6">index</a></div>
+<h4>
+<a name="sec3.3.6">
+3.3.6</a>&nbsp;&nbsp;Condition Register Logical Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>crand</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>cror</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>crxor</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>crnand</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>crnor</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>creqv</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>crandc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>crorc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mcrf</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx3.3.7">index</a></div>
+<h4>
+<a name="sec3.3.7">
+3.3.7</a>&nbsp;&nbsp;Misc Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap align="center"><b>Opcode</b></td>
+<td nowrap align="center"><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>twi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>tw</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sc</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>rfi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtcrf</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mcrxr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mfcr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtmsr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mfmsr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtspr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mfspr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>lwarx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>stwcx.</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>sync</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mftb</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>eieio</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>isync</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbt</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbtst</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbz</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbz_l</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbst</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbf</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>dcbi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>icbi</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>eciwx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>ecowx</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtsr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mtsrin</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mfsr</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>mfsrin</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>tlbie</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>tlbsync</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx3.4">index</a></div>
+<h3>
+<a name="sec3.4">
+3.4</a>&nbsp;&nbsp;additional Gekko Instructions</h3>
+<br>
+The Gekko has some additional (and some modified respectivly) instructions
+in its Paired-single mode which are useful for fast vector and matrix
+calculations and which are analog to Intel (and other x86 series)
+processors "streamed instructions", known as SSE.
+This extension is unique for the Gekko processor and used to calculate
+two single-precision numbers ("floats" in C) in
+one clock cycle. The floating-Point Registers of the Gekko (FPRs)
+are modified in the following way : one half is used for the first
+single number, and other for the second. These parts are named as
+"PS0" and "PS1". PS instructionset
+is divided into two parts : Load and Store Quantization and Paired-Single
+Arithmetic instructions. Load and Store Quantization instructions
+are used for fast integer-float type casting and some specific memory
+operations, using PS0 and PS1 parts of FPR. If you try to execute
+any PS instruction without HID2[PSE] and HID2[LSQE] bit set, an
+illegal instruction exception will be generated.
+      <div class="idx"><a href="index.html#idx3.4.1">index</a></div>
+<h4>
+<a name="sec3.4.1">
+3.4.1</a>&nbsp;&nbsp;FPR format in paired-single mode</h4>
+<br><table>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>63</tt></td>
+<td nowrap align="right"><tt>56</tt></td>
+<td nowrap><tt>55</tt></td>
+<td nowrap align="right"><tt>48</tt></td>
+<td nowrap><tt>57</tt></td>
+<td nowrap align="right"><tt>40</tt></td>
+<td nowrap><tt>39</tt></td>
+<td nowrap align="right"><tt>32</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>1111</tt></td>
+<td nowrap align="right"><tt>1111</tt></td>
+<td nowrap><tt>1111</tt></td>
+<td nowrap align="right"><tt>1111</tt></td>
+<td nowrap><tt>1111</tt></td>
+<td nowrap align="right"><tt>1111</tt></td>
+<td nowrap><tt>1111</tt></td>
+<td nowrap align="right"><tt>1111</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap><tt>31</tt></td>
+<td nowrap align="right"><tt>24</tt></td>
+<td nowrap><tt>23</tt></td>
+<td nowrap align="right"><tt>16</tt></td>
+<td nowrap><tt>15</tt></td>
+<td nowrap align="right"><tt>8</tt></td>
+<td nowrap><tt>7</tt></td>
+<td nowrap align="right"><tt>0</tt></td>
+</tr>
+<tr>
+<td nowrap><tt>0000</tt></td>
+<td nowrap align="right"><tt>0000</tt></td>
+<td nowrap><tt>0000</tt></td>
+<td nowrap align="right"><tt>0000</tt></td>
+<td nowrap><tt>0000</tt></td>
+<td nowrap align="right"><tt>0000</tt></td>
+<td nowrap><tt>0000</tt></td>
+<td nowrap align="right"><tt>0000</tt></td>
+</tr>
+</table>
+</td></tr>
+<tr><td nowrap>
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>bit(s)</b></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">32-63</td>
+<td nowrap align="center">1</td>
+<td nowrap>PS1</td>
+</tr>
+<tr>
+<td nowrap align="center">0-31</td>
+<td nowrap align="center">0</td>
+<td nowrap>PS0</td>
+</tr>
+</table>
+</td></tr>
+</table>
+<br><div class="idx"><a href="index.html#idx3.4.2">index</a></div>
+<h4>
+<a name="sec3.4.2">
+3.4.2</a>&nbsp;&nbsp;Arithmetic Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>ps_abs</tt></td>
+<td nowrap><tt>000100 DDDDD 00000 BBBBB 01000 01000 R</tt></td>
+<td nowrap>absolute value</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_add</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 00000 10101 R</tt></td>
+<td nowrap>add</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_cmpo0</tt></td>
+<td nowrap><tt>000100 DDD00 AAAAA BBBBB 00001 00000 0</tt></td>
+<td nowrap>compare ordered high</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_cmpo1</tt></td>
+<td nowrap><tt>000100 DDD00 AAAAA BBBBB 00011 00000 0</tt></td>
+<td nowrap>compare ordered low</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_cmpu0</tt></td>
+<td nowrap><tt>000100 DDD00 AAAAA BBBBB 00000 00000 0</tt></td>
+<td nowrap>compare unordered high</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_cmpu1</tt></td>
+<td nowrap><tt>000100 DDD00 AAAAA BBBBB 00010 00000 0</tt></td>
+<td nowrap>compare unordered low</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_div</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 00000 10010 R</tt></td>
+<td nowrap>divide</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_merge00</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 10000 10000 R</tt></td>
+<td nowrap>merge high</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_merge01</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 10001 10000 R</tt></td>
+<td nowrap>merge direct</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_merge10</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 10010 10000 R</tt></td>
+<td nowrap>merge swapped</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_merge11</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 10011 10000 R</tt></td>
+<td nowrap>merge low</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_mr</tt></td>
+<td nowrap><tt>000100 DDDDD 00000 BBBBB 00010 01000 R</tt></td>
+<td nowrap>move register</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_nabs</tt></td>
+<td nowrap><tt>000100 DDDDD 00000 BBBBB 00100 01000 R</tt></td>
+<td nowrap>negate absolute value</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_neg</tt></td>
+<td nowrap><tt>000100 DDDDD 00000 BBBBB 00001 01000 R</tt></td>
+<td nowrap>negate</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_res</tt></td>
+<td nowrap><tt>000100 DDDDD 00000 BBBBB 00000 11000 R</tt></td>
+<td nowrap>reciprocal estimate</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_rsqrte</tt></td>
+<td nowrap><tt>000100 DDDDD 00000 BBBBB 00000 11010 R</tt></td>
+<td nowrap>reciprocal square root estimate</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_sub</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB 00000 10100 R </tt></td>
+<td nowrap>substract</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_madd</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 11101 R </tt></td>
+<td nowrap>multiply and add</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_madds0</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 01110 R</tt></td>
+<td nowrap>multiply and add scalar high</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_madds1</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 01111 R</tt></td>
+<td nowrap>multiply and add scalar low</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_msub</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 11100 R</tt></td>
+<td nowrap>multiply and substract</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_mul</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA 00000 CCCCC 11001 R</tt></td>
+<td nowrap>multiply</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_muls0</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA 00000 CCCCC 01100 R</tt></td>
+<td nowrap>multiply scalar high</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_muls1</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA 00000 CCCCC 01101 R</tt></td>
+<td nowrap>multiply scalar low</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_nmadd</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 11111 R</tt></td>
+<td nowrap>negative multiply and add</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_nmsub</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 11110 R</tt></td>
+<td nowrap>negative multiply and substract</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_sel</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 10111 R</tt></td>
+<td nowrap>select</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_sum0</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 01010 R</tt></td>
+<td nowrap>vector sum high</td>
+</tr>
+<tr>
+<td nowrap><tt>ps_sum1</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB CCCCC 01011 R</tt></td>
+<td nowrap>vector sum low</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+Note : R opcode field (comparsion of result with zero) is unused.
+(=0)
+<h5>3.4.2.1 <a name="sec3.4.2.1">
+    &nbsp;&nbsp;PS_ABS</a>
+</h5>
+<br>
+absolute value
+<tt>Clear bit 0 of PS0[B] and copy result to PS0[D]</tt><br><tt>Clear bit 0 of PS1[B] and copy result to PS1[D]</tt><br><h5>3.4.2.2 <a name="sec3.4.2.2">
+    &nbsp;&nbsp;PS_ADD</a>
+</h5>
+<br>
+add
+<tt>PS0[D] = PS0[A] + PS0[B]</tt><br><tt>PS1[D] = PS1[A] + PS1[B]</tt><br><h5>3.4.2.3 <a name="sec3.4.2.3">
+    &nbsp;&nbsp;PS_CMPO0</a>
+</h5>
+<br>
+compare ordered high
+<tt>"c" holds result of comparsion</tt><br><tt>If (PS0[A] is NaN or PS0[B] is NaN) then c = 0001b</tt><br><tt>Else if (PS0[A] &lt; PS0[B]) then c = 1000b</tt><br><tt>Else if (PS0[A] &gt; PS0[B]) then c = 0100b</tt><br><tt>Else c = 0010b</tt><br><tt>Save result in D field of condition register (CR[D] = c).</tt><br><h5>3.4.2.4 <a name="sec3.4.2.4">
+    &nbsp;&nbsp;PS_CMPO1</a>
+</h5>
+<br>
+compare ordered low
+<tt>"c" holds result of comparsion</tt><br><tt>If (PS1[A] is NaN or PS1[B] is NaN) then c = 0001b</tt><br><tt>Else if (PS1[A] &lt; PS1[B]) then c = 1000b</tt><br><tt>Else if (PS1[A] &gt; PS1[B]) then c = 0100b</tt><br><tt>Else c = 0010b</tt><br><tt>Save result in D field of condition register (CR[D] = c).</tt><br><h5>3.4.2.5 <a name="sec3.4.2.5">
+    &nbsp;&nbsp;PS_CMPU0</a>
+</h5>
+<br>
+compare unordered high
+<tt>"c" holds result of comparsion</tt><br><tt>If (PS0[A] is NaN or PS0[B] is NaN) then c = 0001b</tt><br><tt>Else if (PS0[A] &lt; PS0[B]) then c = 1000b</tt><br><tt>Else if (PS0[A] &gt; PS0[B]) then c = 0100b</tt><br><tt>Else c = 0010b</tt><br><tt>Save result in D field of condition register (CR[D] = c).</tt><br><h5>3.4.2.6 <a name="sec3.4.2.6">
+    &nbsp;&nbsp;PS_CMPU1</a>
+</h5>
+<br>
+compare unordered low
+<tt>"c" holds result of comparsion</tt><br><tt>If (PS1[A] is NaN or PS1[B] is NaN) then c = 0001b</tt><br><tt>Else if (PS1[A] &lt; PS1[B]) then c = 1000b</tt><br><tt>Else if (PS1[A] &gt; PS1[B]) then c = 0100b</tt><br><tt>Else c = 0010b</tt><br><tt>Save result in D field of condition register (CR[D] = c).</tt><br><tt>These four compare instructions looks same, because I omitted
+some</tt><br><tt>unecessary FPSCR stuff.</tt><br><h5>3.4.2.7 <a name="sec3.4.2.7">
+    &nbsp;&nbsp;PS_DIV</a>
+</h5>
+<br>
+divide
+<tt>PS0[D] = PS0[A] / PS0[B]</tt><br><tt>PS1[D] = PS1[A] / PS1[B]</tt><br><h5>3.4.2.8 <a name="sec3.4.2.8">
+    &nbsp;&nbsp;PS_MERGE00</a>
+</h5>
+<br>
+merge high
+<tt>PS0[D] = PS0[A]</tt><br><tt>PS1[D] = PS0[B]</tt><br><h5>3.4.2.9 <a name="sec3.4.2.9">
+    &nbsp;&nbsp;PS_MERGE01</a>
+</h5>
+<br>
+merge direct
+<tt>PS0[D] = PS0[A]</tt><br><tt>PS1[D] = PS1[B]</tt><br><h5>3.4.2.10 <a name="sec3.4.2.10">
+    &nbsp;&nbsp;PS_MERGE10</a>
+</h5>
+<br>
+merge swapped
+<tt>PS0[D] = PS1[A]</tt><br><tt>PS1[D] = PS0[B]</tt><br><h5>3.4.2.11 <a name="sec3.4.2.11">
+    &nbsp;&nbsp;PS_MERGE11</a>
+</h5>
+<br>
+merge low
+<tt>PS0[D] = PS1[A]</tt><br><tt>PS1[D] = PS1[B]</tt><br><h5>3.4.2.12 <a name="sec3.4.2.12">
+    &nbsp;&nbsp;PS_MR</a>
+</h5>
+<br>
+move register
+<tt>PS0[D] = PS0[B]</tt><br><tt>PS1[D] = PS1[B]</tt><br><h5>3.4.2.13 <a name="sec3.4.2.13">
+    &nbsp;&nbsp;PS_NABS</a>
+</h5>
+<br>
+negate absolute value
+<tt>Set bit 0 of PS0[B] and copy result to PS0[D]</tt><br><tt>Set bit 0 of PS1[B] and copy result to PS1[D]</tt><br><h5>3.4.2.14 <a name="sec3.4.2.14">
+    &nbsp;&nbsp;PS_NEG</a>
+</h5>
+<br>
+negate
+<tt>Invert bit 0 of PS0[B] and copy result to PS0[D]</tt><br><tt>Invert bit 0 of PS1[B] and copy result to PS1[D]</tt><br><h5>3.4.2.15 <a name="sec3.4.2.15">
+    &nbsp;&nbsp;PS_RES</a>
+</h5>
+<br>
+reciprocal estimate
+<tt>PS0[D] = 1 / PS0[B]</tt><br><tt>PS1[D] = 1 / PS1[B]</tt><br><h5>3.4.2.16 <a name="sec3.4.2.16">
+    &nbsp;&nbsp;PS_RSQRTE</a>
+</h5>
+<br>
+reciprocal square root estimate
+<tt>PS0[D] = 1 / SQRT(PS0[B])</tt><br><tt>PS1[D] = 1 / SQRT(PS1[B])</tt><br><h5>3.4.2.17 <a name="sec3.4.2.17">
+    &nbsp;&nbsp;PS_SUB</a>
+</h5>
+<br>
+subtract
+<tt>PS0[D] = PS0[A] - PS0[B]</tt><br><tt>PS1[D] = PS1[A] - PS1[B]</tt><br><h5>3.4.2.18 <a name="sec3.4.2.18">
+    &nbsp;&nbsp;PS_MADD</a>
+</h5>
+<br>
+multiply-add
+<tt>PS0[D] = PS0[A] * PS0[C] + PS0[B]</tt><br><tt>PS1[D] = PS1[A] * PS1[C] + PS1[B]</tt><br><h5>3.4.2.19 <a name="sec3.4.2.19">
+    &nbsp;&nbsp;PS_MADDS0</a>
+</h5>
+<br>
+multiply-add scalar high
+<tt>PS0[D] = PS0[A] * PS0[C] + PS0[B]</tt><br><tt>PS1[D] = PS1[A] * PS0[C] + PS1[B]</tt><br><h5>3.4.2.20 <a name="sec3.4.2.20">
+    &nbsp;&nbsp;PS_MADDS1</a>
+</h5>
+<br>
+multiply-add scalar low
+<tt>PS0[D] = PS0[A] * PS1[C] + PS0[B]</tt><br><tt>PS1[D] = PS1[A] * PS1[C] + PS1[B]</tt><br><h5>3.4.2.21 <a name="sec3.4.2.21">
+    &nbsp;&nbsp;PS_MSUB</a>
+</h5>
+<br>
+multiply-subtract
+<tt>PS0[D] = PS0[A] * PS0[C] - PS0[B]</tt><br><tt>PS1[D] = PS1[A] * PS1[C] - PS1[B]</tt><br><h5>3.4.2.22 <a name="sec3.4.2.22">
+    &nbsp;&nbsp;PS_MUL</a>
+</h5>
+<br>
+multiply
+<tt>PS0[D] = PS0[A] + PS0[C]</tt><br><tt>PS1[D] = PS1[A] + PS1[C]</tt><br><h5>3.4.2.23 <a name="sec3.4.2.23">
+    &nbsp;&nbsp;PS_MULS0</a>
+</h5>
+<br>
+multiply scalar high
+<tt>PS0[D] = PS0[A] + PS0[C]</tt><br><tt>PS1[D] = PS1[A] + PS0[C]</tt><br><h5>3.4.2.24 <a name="sec3.4.2.24">
+    &nbsp;&nbsp;PS_MULS1</a>
+</h5>
+<br>
+multiply scalar low
+<tt>PS0[D] = PS0[A] + PS1[C]</tt><br><tt>PS1[D] = PS1[A] + PS1[C]</tt><br><h5>3.4.2.25 <a name="sec3.4.2.25">
+    &nbsp;&nbsp;PS_NMADD</a>
+</h5>
+<br>
+negative multiply-add
+<tt>PS0[D] = - (PS0[A] * PS0[C] + PS0[B])</tt><br><tt>PS1[D] = - (PS1[A] * PS1[C] + PS1[B])</tt><br><h5>3.4.2.26 <a name="sec3.4.2.26">
+    &nbsp;&nbsp;PS_NMSUB</a>
+</h5>
+<br>
+negative multiply-subtract
+<tt>PS0[D] = - (PS0[A] * PS0[C] - PS0[B])</tt><br><tt>PS1[D] = - (PS1[A] * PS1[C] - PS1[B])</tt><br><h5>3.4.2.27 <a name="sec3.4.2.27">
+    &nbsp;&nbsp;PS_SEL</a>
+</h5>
+<br>
+select
+<tt>If (PS0[A] &gt;= 0) then PS0[D] = PS0[C] else PS0[D]
+= PS0[B]</tt><br><tt>If (PS1[A] &gt;= 0) then PS1[D] = PS1[C] else PS1[D]
+= PS1[B]</tt><br><h5>3.4.2.28 <a name="sec3.4.2.28">
+    &nbsp;&nbsp;PS_SUM0</a>
+</h5>
+<br>
+vector sum high
+<tt>PS0[D] = PS0[A] + PS1[B]</tt><br><tt>PS1[D] = PS1[C]</tt><br><h5>3.4.2.29 <a name="sec3.4.2.29">
+    &nbsp;&nbsp;PS_SUM1 </a>
+</h5>
+<br>
+vector sum low
+<tt>PS0[D] = PS0[C]</tt><br><tt>PS1[D] = PS0[A] + PS1[B]</tt><br><div class="idx"><a href="index.html#idx3.4.3">index</a></div>
+<h4>
+<a name="sec3.4.3">
+3.4.3</a>&nbsp;&nbsp;Load and Store Instructions</h4>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>psq_lx</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB WIII 000110 0</tt></td>
+<td nowrap>Paired Singles Quantized Load indexed</td>
+</tr>
+<tr>
+<td nowrap><tt>psq_lux</tt></td>
+<td nowrap><tt>000100 DDDDD AAAAA BBBBB WIII 100110 0</tt></td>
+<td nowrap>Paired Singles Quantized Load with Update indexed</td>
+</tr>
+<tr>
+<td nowrap><tt>psq_stx</tt></td>
+<td nowrap><tt>000100 SSSSS AAAAA BBBBB WIII 000111 0</tt></td>
+<td nowrap>Paired Singles Quantized Store indexed</td>
+</tr>
+<tr>
+<td nowrap><tt>psq_stux</tt></td>
+<td nowrap><tt>000100 SSSSS AAAAA BBBBB WIII 100111 0</tt></td>
+<td nowrap>Paired Singles Quantized Store with Update indexed</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>psq_l</tt></td>
+<td nowrap><tt>111000 DDDDD AAAAA WIII dddddddddddd</tt></td>
+<td nowrap>Paired Singles Quantized Load</td>
+</tr>
+<tr>
+<td nowrap><tt>psq_lu</tt></td>
+<td nowrap><tt>111001 DDDDD AAAAA WIII dddddddddddd</tt></td>
+<td nowrap>Paired Singles Quantized Load with Update</td>
+</tr>
+<tr>
+<td nowrap><tt>psq_st</tt></td>
+<td nowrap><tt>111100 SSSSS AAAAA WIII dddddddddddd</tt></td>
+<td nowrap>Paired Singles Quantized Store</td>
+</tr>
+<tr>
+<td nowrap><tt>psq_stu</tt></td>
+<td nowrap><tt>111101 SSSSS AAAAA WIII dddddddddddd</tt></td>
+<td nowrap>Paired Singles Quantized Store with Update</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>3.4.3.1 <a name="sec3.4.3.1">
+    &nbsp;&nbsp;psq_lx</a>
+</h5>
+<br>
+Paired Singles Quantized Load indexed
+<h5>3.4.3.2 <a name="sec3.4.3.2">
+    &nbsp;&nbsp;psq_lux</a>
+</h5>
+<br>
+Paired Singles Quantized Load with Update indexed
+<h5>3.4.3.3 <a name="sec3.4.3.3">
+    &nbsp;&nbsp;psq_stx</a>
+</h5>
+<br>
+Paired Singles Quantized Store indexed
+<h5>3.4.3.4 <a name="sec3.4.3.4">
+    &nbsp;&nbsp;psq_stux</a>
+</h5>
+<br>
+Paired Singles Quantized Store with Update indexed
+<h5>3.4.3.5 <a name="sec3.4.3.5">
+    &nbsp;&nbsp;psq_l</a>
+</h5>
+<br>
+Paired Singles Quantized Load
+<h5>3.4.3.6 <a name="sec3.4.3.6">
+    &nbsp;&nbsp;psq_lu</a>
+</h5>
+<br>
+Paired Singles Quantized Load with Update
+<h5>3.4.3.7 <a name="sec3.4.3.7">
+    &nbsp;&nbsp;psq_st</a>
+</h5>
+<br>
+Paired Singles Quantized Store
+<h5>3.4.3.8 <a name="sec3.4.3.8">
+    &nbsp;&nbsp;psq_stu</a>
+</h5>
+<br>
+Paired Singles Quantized Store with Update
+      <div class="idx"><a href="index.html#idx3.4.4">index</a></div>
+<h4>
+<a name="sec3.4.4">
+3.4.4</a>&nbsp;&nbsp;modified floating point instructions</h4>
+<br>
+In paired single mode (HID2[PSE] = 1), all the double-precision
+floating point instructions are still valid, and execute as in non-paired
+single mode. All single-precision floating-point instructions (fadds,
+fsubs, fmuls, fdivs, fmadds, fmsubs, fnmadds, fnmsubs, fres, frsp)
+switch their meaning and operate on the ps0 operand.<br><br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap><b>Mnemonic</b></td>
+<td nowrap><b>Opcode</b></td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap><tt>fadds</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fsubs</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmuls</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fdivs</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmadds</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmsubs</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnmadds</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fnmsubs</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fres</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>frsp</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fsel</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+<tr>
+<td nowrap><tt>fmr</tt></td>
+<td nowrap>&nbsp;</td>
+<td nowrap>&nbsp;</td>
+</tr>
+</table>
+</td></tr></table>
+<br><h5>3.4.4.1 <a name="sec3.4.4.1">
+    &nbsp;&nbsp;fadds</a>
+</h5>
+<br><h5>3.4.4.2 <a name="sec3.4.4.2">
+    &nbsp;&nbsp;fsubs</a>
+</h5>
+<br><h5>3.4.4.3 <a name="sec3.4.4.3">
+    &nbsp;&nbsp;fmuls</a>
+</h5>
+<br><h5>3.4.4.4 <a name="sec3.4.4.4">
+    &nbsp;&nbsp;fdivs</a>
+</h5>
+<br><h5>3.4.4.5 <a name="sec3.4.4.5">
+    &nbsp;&nbsp;fmadds</a>
+</h5>
+<br><h5>3.4.4.6 <a name="sec3.4.4.6">
+    &nbsp;&nbsp;fmsubs</a>
+</h5>
+<br><h5>3.4.4.7 <a name="sec3.4.4.7">
+    &nbsp;&nbsp;fnmadds</a>
+</h5>
+<br><h5>3.4.4.8 <a name="sec3.4.4.8">
+    &nbsp;&nbsp;fnmsubs</a>
+</h5>
+<br><h5>3.4.4.9 <a name="sec3.4.4.9">
+    &nbsp;&nbsp;fres</a>
+</h5>
+<br><h5>3.4.4.10 <a name="sec3.4.4.10">
+    &nbsp;&nbsp;frsp</a>
+</h5>
+<br><h5>3.4.4.11 <a name="sec3.4.4.11">
+    &nbsp;&nbsp;fsel</a>
+</h5>
+<br><h5>3.4.4.12 <a name="sec3.4.4.12">
+    &nbsp;&nbsp;fmr</a>
+</h5>
+<br><div class="idx"><a href="index.html#idx3.5">index</a></div>
+<h3>
+<a name="sec3.5">
+3.5</a>&nbsp;&nbsp;Programming Tips and additional information</h3>
+<br><div class="idx"><a href="index.html#idx3.5.1">index</a></div>
+<h4>
+<a name="sec3.5.1">
+3.5.1</a>&nbsp;&nbsp;Machine State Register</h4>
+<br>
+to do
+      <div class="idx"><a href="index.html#idx3.5.2">index</a></div>
+<h4>
+<a name="sec3.5.2">
+3.5.2</a>&nbsp;&nbsp;Caches</h4>
+<br>
+to do
+      <div class="idx"><a href="index.html#idx3.5.3">index</a></div>
+<h4>
+<a name="sec3.5.3">
+3.5.3</a>&nbsp;&nbsp;branch unit</h4>
+<br>
+to flush branch unit's dynamic prediction logic, you must sequentially
+execute 3 branches<br><br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;....</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b label1</tt>&nbsp;<br><tt>label1: b label2</tt>&nbsp;<br><tt>label2: b label3</tt>&nbsp;<br><tt>label3:</tt>&nbsp;<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;....</tt>&nbsp;<br><tt></tt>&nbsp;<br><div class="idx"><a href="index.html#idx4">index</a></div>
+</body></html>

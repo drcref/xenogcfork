@@ -1,0 +1,567 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec6">
+6</a>&nbsp;&nbsp;Exception and Interrupt Processing</h2>
+<br><div class="idx"><a href="index.html#idx6.1">index</a></div>
+<h3>
+<a name="sec6.1">
+6.1</a>&nbsp;&nbsp;Hardware Exception Sources</h3>
+<br><table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>Handler Start</b></td>
+<td nowrap><b>Exception</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000100</tt></td>
+<td nowrap>System Reset Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000200</tt></td>
+<td nowrap>Machine Check Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000300</tt></td>
+<td nowrap>DSI Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000400</tt></td>
+<td nowrap>ISI Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000500</tt></td>
+<td nowrap>External Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000600</tt></td>
+<td nowrap>Alignment Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000700</tt></td>
+<td nowrap>Program Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000800</tt></td>
+<td nowrap>FP unavailable Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000900</tt></td>
+<td nowrap>Decrementer Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000C00</tt></td>
+<td nowrap>System Call Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000d00</tt></td>
+<td nowrap>Trace Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80000f00</tt></td>
+<td nowrap>Performance Monitor Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80001300</tt></td>
+<td nowrap>IABR Interrupt</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x80001700</tt></td>
+<td nowrap>Thermal Interrupt</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx6.1.1">index</a></div>
+<h4>
+<a name="sec6.1.1">
+6.1.1</a>&nbsp;&nbsp;System Reset Interrupt</h4>
+<br>
+Triggered at a system reset
+      <div class="idx"><a href="index.html#idx6.1.2">index</a></div>
+<h4>
+<a name="sec6.1.2">
+6.1.2</a>&nbsp;&nbsp;Machine Check Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.1.3">index</a></div>
+<h4>
+<a name="sec6.1.3">
+6.1.3</a>&nbsp;&nbsp;DSI Interrupt</h4>
+<br>
+Triggered if an attempt to store or read data from/to an illegal address
+was made
+      <div class="idx"><a href="index.html#idx6.1.4">index</a></div>
+<h4>
+<a name="sec6.1.4">
+6.1.4</a>&nbsp;&nbsp;ISI Interrupt</h4>
+<br>
+Triggered if an attempt to fetch an instruction from an illegal address
+was made.
+      <div class="idx"><a href="index.html#idx6.1.5">index</a></div>
+<h4>
+<a name="sec6.1.5">
+6.1.5</a>&nbsp;&nbsp;External Interrupt</h4>
+<br>
+14 sources, triggered by external chips (you may look at it as the
+traditional IRQ). 
+<h5>6.1.5.1 <a name="sec6.1.5.1">
+    &nbsp;&nbsp;Setup</a>
+</h5>
+<br><ul>
+<li> set corresponding bit(s) in PI Interrupt Mask Register (<tt>0xcc003004</tt>)
+</li>
+<li> enable external Interrupts in the Machine State Register
+</li>
+</ul>
+<h5>6.1.5.2 <a name="sec6.1.5.2">
+    &nbsp;&nbsp;Handling</a>
+</h5>
+<br><ul>
+<li> check PI Interrupt Cause Register (<tt>0xcc003000</tt>) for flags
+</li>
+<li> acknowledge by setting corresponding bits in PI Interrupt Cause Register
+(<tt>0xcc003000</tt>)
+</li>
+<li> handle different interrupt sources
+</li>
+</ul>
+<table><tr><td nowrap align="center">
+<table>
+<tr>
+<td nowrap align="center"><b>bit</b></td>
+<td nowrap>&nbsp;</td>
+<td nowrap><b>Description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">13</td>
+<td nowrap>HSP</td>
+<td nowrap>High Speed Port</td>
+</tr>
+<tr>
+<td nowrap align="center">12</td>
+<td nowrap>DEBUG</td>
+<td nowrap>External Debugger</td>
+</tr>
+<tr>
+<td nowrap align="center">11</td>
+<td nowrap>CP</td>
+<td nowrap>Command FIFO</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>PE FINISH</td>
+<td nowrap>Frame is Ready</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>PE TOKEN</td>
+<td nowrap>Token Assertion in Command List</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>VI </td>
+<td nowrap>Video Interface</td>
+</tr>
+<tr>
+<td nowrap align="center">7</td>
+<td nowrap>MEM</td>
+<td nowrap>Memory Interface</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>DSP</td>
+<td nowrap>DSP</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>AI</td>
+<td nowrap>Audio Streaming</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>EXI</td>
+<td nowrap>EXI</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>SI</td>
+<td nowrap>Serial</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>DI</td>
+<td nowrap>DVD</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>RSW</td>
+<td nowrap>Reset Switch</td>
+</tr>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>ERROR</td>
+<td nowrap>GP runtime error</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx6.1.6">index</a></div>
+<h4>
+<a name="sec6.1.6">
+6.1.6</a>&nbsp;&nbsp;Alignment Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.1.7">index</a></div>
+<h4>
+<a name="sec6.1.7">
+6.1.7</a>&nbsp;&nbsp;Program Interrupt</h4>
+<br>
+Triggered if the instruction that was about to execute is invalid.
+      <div class="idx"><a href="index.html#idx6.1.8">index</a></div>
+<h4>
+<a name="sec6.1.8">
+6.1.8</a>&nbsp;&nbsp;FP unavailable Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.1.9">index</a></div>
+<h4>
+<a name="sec6.1.9">
+6.1.9</a>&nbsp;&nbsp;Decrementer Interrupt</h4>
+<br>
+Triggered by an underflow of the decrementer register.
+      <div class="idx"><a href="index.html#idx6.1.10">index</a></div>
+<h4>
+<a name="sec6.1.10">
+6.1.10</a>&nbsp;&nbsp;System Call Interrupt</h4>
+<br>
+Triggered when the PowerPC instruction 'sc' is executed.
+      <div class="idx"><a href="index.html#idx6.1.11">index</a></div>
+<h4>
+<a name="sec6.1.11">
+6.1.11</a>&nbsp;&nbsp;Trace Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.1.12">index</a></div>
+<h4>
+<a name="sec6.1.12">
+6.1.12</a>&nbsp;&nbsp;Performance Monitor Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.1.13">index</a></div>
+<h4>
+<a name="sec6.1.13">
+6.1.13</a>&nbsp;&nbsp;IABR Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.1.14">index</a></div>
+<h4>
+<a name="sec6.1.14">
+6.1.14</a>&nbsp;&nbsp;Thermal Interrupt</h4>
+<br><div class="idx"><a href="index.html#idx6.2">index</a></div>
+<h3>
+<a name="sec6.2">
+6.2</a>&nbsp;&nbsp;External Interrupt Sources</h3>
+<br><div class="idx"><a href="index.html#idx6.2.1">index</a></div>
+<h4>
+<a name="sec6.2.1">
+6.2.1</a>&nbsp;&nbsp;HSP - High Speed Port</h4>
+<br>
+3 Sources
+<h5>6.2.1.1 <a name="sec6.2.1.1">
+    &nbsp;&nbsp;TX Mailbox Interrupt</a>
+</h5>
+<br><h5>6.2.1.2 <a name="sec6.2.1.2">
+    &nbsp;&nbsp;RX Mailbox Interrupt</a>
+</h5>
+<br><h5>6.2.1.3 <a name="sec6.2.1.3">
+    &nbsp;&nbsp;ID Interrupt</a>
+</h5>
+<br><div class="idx"><a href="index.html#idx6.2.2">index</a></div>
+<h4>
+<a name="sec6.2.2">
+6.2.2</a>&nbsp;&nbsp;Debug</h4>
+<br>
+1 Source
+      <div class="idx"><a href="index.html#idx6.2.3">index</a></div>
+<h4>
+<a name="sec6.2.3">
+6.2.3</a>&nbsp;&nbsp;CP - Command Processor</h4>
+<br>
+2 Sources (read/write pointer watermark over- and underflow) check
+bit 0 and bit 1 of <tt>0xcc000000</tt><br><h5>6.2.3.1 <a name="sec6.2.3.1">
+    &nbsp;&nbsp;FIFO underflow</a>
+</h5>
+<br><br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.3.1.1">
+    6.2.3.1.1&nbsp;&nbsp;setup</a>
+&nbsp;</b>
+<ul>
+<li> setup CP FIFO low watermark
+</li>
+<li> set bit 1 of CP interrupt status register (<tt>0xcc000002</tt>) to
+enable
+</li>
+</ul>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.3.1.2">
+    6.2.3.1.2&nbsp;&nbsp;handling</a>
+&nbsp;</b>
+<ul>
+<li> clear bit 3 of CP interrupt status register (<tt>0xcc000002</tt>)
+to acknowledge
+</li>
+</ul>
+<h5>6.2.3.2 <a name="sec6.2.3.2">
+    &nbsp;&nbsp;FIFO overflow</a>
+</h5>
+<br><br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.3.2.1">
+    6.2.3.2.1&nbsp;&nbsp;setup</a>
+&nbsp;</b>
+<ul>
+<li> setup CP FIFO high watermark
+</li>
+<li> set bit 0 of CP interrupt status register (<tt>0xcc000002</tt>) to
+enable
+</li>
+</ul>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.3.2.2">
+    6.2.3.2.2&nbsp;&nbsp;handling</a>
+&nbsp;</b>
+<ul>
+<li> clear bit 2 of CP interrupt status register (<tt>0xcc000002</tt>)
+to acknowledge
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.4">index</a></div>
+<h4>
+<a name="sec6.2.4">
+6.2.4</a>&nbsp;&nbsp;PE - Pixel Engine Finished</h4>
+<br>
+1 Source (Frame finished)
+<h5>6.2.4.1 <a name="sec6.2.4.1">
+    &nbsp;&nbsp;setup</a>
+</h5>
+<br><ul>
+<li> set bit 1 in PE Interrupt status register (<tt>0xcc001000a</tt>)
+</li>
+</ul>
+<h5>6.2.4.2 <a name="sec6.2.4.2">
+    &nbsp;&nbsp;handling</a>
+</h5>
+<br><ul>
+<li> set bit 3 in PE Interrupt status register (<tt>0xcc001000a</tt>) to
+acknowledge the interrupt
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.5">index</a></div>
+<h4>
+<a name="sec6.2.5">
+6.2.5</a>&nbsp;&nbsp;PE - Pixel Engine Token</h4>
+<br>
+1 Source (Token in GP Command List)
+<h5>6.2.5.1 <a name="sec6.2.5.1">
+    &nbsp;&nbsp;setup</a>
+</h5>
+<br><ul>
+<li> set bit 0 in PE Interrupt status register (<tt>0xcc001000a</tt>)
+</li>
+</ul>
+<h5>6.2.5.2 <a name="sec6.2.5.2">
+    &nbsp;&nbsp;handling</a>
+</h5>
+<br><ul>
+<li> check PE Token Register (<tt>0xCC00000E</tt>) for the token that triggered
+the interrupt.
+</li>
+<li> set bit 2 in PE Interrupt status register (<tt>0xcc001000a</tt>) to
+acknowledge the interrupt
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.6">index</a></div>
+<h4>
+<a name="sec6.2.6">
+6.2.6</a>&nbsp;&nbsp;VI - Video Interface</h4>
+<br>
+4 Sources, check (<tt>0xcc002030</tt>) (<tt>0xcc002034</tt>) (<tt>0xcc002038</tt>)
+(<tt>0xcc00203c</tt>) for flags
+<h5>6.2.6.1 <a name="sec6.2.6.1">
+    &nbsp;&nbsp;Setup</a>
+</h5>
+<br><ul>
+<li> setup desired position of the interrupt
+</li>
+<li> set enable bit in Display Interrupt Register (<tt>0xcc002030</tt>)
+(<tt>0xcc002034</tt>) (<tt>0xcc002038</tt>) (<tt>0xcc00203c</tt>)
+</li>
+</ul>
+<h5>6.2.6.2 <a name="sec6.2.6.2">
+    &nbsp;&nbsp;Handling</a>
+</h5>
+<br><ul>
+<li> clear Status bit in Display Interrupt Register (<tt>0xcc002030</tt>)
+(<tt>0xcc002034</tt>) (<tt>0xcc002038</tt>) (<tt>0xcc00203c</tt>)
+to acknowledge the interrupt.
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.7">index</a></div>
+<h4>
+<a name="sec6.2.7">
+6.2.7</a>&nbsp;&nbsp;Memory Interface</h4>
+<br>
+4 sources (4 regions of memory can be protected independently)
+<h5>6.2.7.1 <a name="sec6.2.7.1">
+    &nbsp;&nbsp;protection fault</a>
+</h5>
+<br><br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.7.1.1">
+    6.2.7.1.1&nbsp;&nbsp;Setup</a>
+&nbsp;</b>
+<ul>
+<li> clear (<tt>0xCC004020</tt>)
+</li>
+<li> setup the regions in (<tt>0xCC004000</tt>)(<tt>0xCC004004</tt>)(<tt>0xCC004008</tt>)
+(<tt>0xCC00400c</tt>)
+</li>
+<li> setup type of protection in (<tt>0xCC004010</tt>)
+</li>
+<li> enable protecting of regions in irq mask (<tt>0xCC00401c</tt>)
+</li>
+</ul>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.7.1.2">
+    6.2.7.1.2&nbsp;&nbsp;Handling</a>
+&nbsp;</b>
+<ul>
+<li> clear (<tt>0xCC004020</tt>)
+</li>
+<li> read status bits from (<tt>0xCC00401e</tt>) to check what region triggered
+the protection fault
+</li>
+<li> set status bits in (<tt>0xCC00401e</tt>) to acknowledge the interrupt
+</li>
+<li> read the address that triggered the protection fault from (<tt>0xCC004022</tt>)
+and (<tt>0xCC004024</tt>)
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.8">index</a></div>
+<h4>
+<a name="sec6.2.8">
+6.2.8</a>&nbsp;&nbsp;DSP Interface</h4>
+<br>
+3 Sources, check (<tt>0xcc00500a</tt>) for flags
+<h5>6.2.8.1 <a name="sec6.2.8.1">
+    &nbsp;&nbsp;Audio DMA finished</a>
+</h5>
+<br>
+asserted when audio DMA transfer has been completed.
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.8.1.1">
+    6.2.8.1.1&nbsp;&nbsp;Setup</a>
+&nbsp;</b>
+<ul>
+<li> set bit 4 of DSP Control Register (<tt>0xcc00500a</tt>)
+</li>
+</ul>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.8.1.2">
+    6.2.8.1.2&nbsp;&nbsp;Handling</a>
+&nbsp;</b>
+<ul>
+<li> set bit 3 of DSP Control Register (<tt>0xcc00500a</tt>) to acknowledge
+the interrupt.
+</li>
+</ul>
+<h5>6.2.8.2 <a name="sec6.2.8.2">
+    &nbsp;&nbsp;ARAM transfer complete</a>
+</h5>
+<br>
+asserted when a transfer from/to auxiliary ram has been completed.
+<h5>6.2.8.3 <a name="sec6.2.8.3">
+    &nbsp;&nbsp;DSP</a>
+</h5>
+<br><div class="idx"><a href="index.html#idx6.2.9">index</a></div>
+<h4>
+<a name="sec6.2.9">
+6.2.9</a>&nbsp;&nbsp;Audio Streaming Interface</h4>
+<br>
+1 Source, check (<tt>0xcc006c00</tt>) for flag. asserted based on
+the disk streaming sample counter.
+      <div class="idx"><a href="index.html#idx6.2.10">index</a></div>
+<h4>
+<a name="sec6.2.10">
+6.2.10</a>&nbsp;&nbsp;EXI</h4>
+<br>
+3 Sources each EXI Channel (TCINT,EXTINT,EXIIRQ), making 9 total,
+check (<tt>0xcc006800</tt>) (<tt>0xcc006814</tt>) (<tt>0xcc006828</tt>)
+for flags.
+<b>6.2.10.1<a name="sec6.2.10.1">
+    &nbsp;&nbsp;DMA Transfer finished (TCINT channel 0, channel 1)</a>
+&nbsp;</b>
+<h5>6.2.10.2 <a name="sec6.2.10.2">
+    &nbsp;&nbsp;Ethernet Adapter (EXIIRQ channel 2)</a>
+</h5>
+<br><br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.10.2.1">
+    6.2.10.2.1&nbsp;&nbsp;setup</a>
+&nbsp;</b>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.10.2.2">
+    6.2.10.2.2&nbsp;&nbsp;handling</a>
+&nbsp;</b>
+<ul>
+<li> check command register 3 (irq status) for the exact source (MX chip,
+killing irq,cmd error, challenge/response request, challange/response
+status)
+</li>
+<li> if from MX chip, check register 8 and 9 for the exact cause
+</li>
+</ul>
+<b>6.2.10.3<a name="sec6.2.10.3">
+    &nbsp;&nbsp;Memory Card removed (EXTINT channel 0, channel 1)</a>
+&nbsp;</b>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.10.3.1">
+    6.2.10.3.1&nbsp;&nbsp;setup</a>
+&nbsp;</b>
+<br>    &nbsp;&nbsp;&nbsp;<b><a name="sec6.2.10.3.2">
+    6.2.10.3.2&nbsp;&nbsp;handling</a>
+&nbsp;</b>
+<ul>
+<li> To check whether the device has been inserted or removed, check the
+EXICPR[EXT] bit.
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.11">index</a></div>
+<h4>
+<a name="sec6.2.11">
+6.2.11</a>&nbsp;&nbsp;Serial Interface</h4>
+<br><div class="idx"><a href="index.html#idx6.2.12">index</a></div>
+<h4>
+<a name="sec6.2.12">
+6.2.12</a>&nbsp;&nbsp;DVD Interface</h4>
+<br>
+4 Sources (Break Complete, DMA finished, Device Error, Cover state
+changed), check (<tt>0xcc006000</tt>)(<tt>0xcc006004</tt>) for flags.
+<h5>6.2.12.1 <a name="sec6.2.12.1">
+    &nbsp;&nbsp;Break Complete</a>
+</h5>
+<br><h5>6.2.12.2 <a name="sec6.2.12.2">
+    &nbsp;&nbsp;DMA finished</a>
+</h5>
+<br><h5>6.2.12.3 <a name="sec6.2.12.3">
+    &nbsp;&nbsp;Device Error</a>
+</h5>
+<br><h5>6.2.12.4 <a name="sec6.2.12.4">
+    &nbsp;&nbsp;Cover State changed</a>
+</h5>
+<br><div class="idx"><a href="index.html#idx6.2.13">index</a></div>
+<h4>
+<a name="sec6.2.13">
+6.2.13</a>&nbsp;&nbsp;Reset Button</h4>
+<br>
+1 Source (Reset Button pressed)
+<h5>6.2.13.1 <a name="sec6.2.13.1">
+    &nbsp;&nbsp;setup</a>
+</h5>
+<br><ul>
+<li> no further setup required
+</li>
+</ul>
+<h5>6.2.13.2 <a name="sec6.2.13.2">
+    &nbsp;&nbsp;handling</a>
+</h5>
+<br><ul>
+<li> nothing special required, its however recommended to clear the PI
+Interrupt Mask to avoid multiple interrupts.
+</li>
+</ul>
+<div class="idx"><a href="index.html#idx6.2.14">index</a></div>
+<h4>
+<a name="sec6.2.14">
+6.2.14</a>&nbsp;&nbsp;Error</h4>
+<br>
+1 Source (GP runtime error)
+ <div class="idx"><a href="index.html#idx7">index</a></div>
+</body></html>

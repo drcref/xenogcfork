@@ -1,0 +1,1312 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="techdoc v0.0.1">
+<link rel="stylesheet" type="text/css" href="techdoc.css">
+<br><title> Yet Another Gamecube Documentation</title>
+</head>
+<body><h2><a name="sec15">
+15</a>&nbsp;&nbsp;Game File Formats</h2>
+<br>
+This Section contains information about files used in, or produced
+by the official SDK, and thus is primarily useful for those who are
+hacking retail games.
+     <div class="idx"><a href="index.html#idx15.1">index</a></div>
+<h3>
+<a name="sec15.1">
+15.1</a>&nbsp;&nbsp;AFC (audio stream)</h3>
+<br><div class="idx"><a href="index.html#idx15.2">index</a></div>
+<h3>
+<a name="sec15.2">
+15.2</a>&nbsp;&nbsp;AST (audio stream) </h3>
+<br>
+like afc but with tags?
+     <div class="idx"><a href="index.html#idx15.3">index</a></div>
+<h3>
+<a name="sec15.3">
+15.3</a>&nbsp;&nbsp;ARC (RARC Archive)</h3>
+<br>
+This file is an archive file and contains several other files.
+      <div class="idx"><a href="index.html#idx15.3.1">index</a></div>
+<h4>
+<a name="sec15.3.1">
+15.3.1</a>&nbsp;&nbsp;Header</h4>
+<br>
+The file starts with an Rarc-Header:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>type - 'RARC'</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>size, size of the file</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>dataStartOffset, where does the actual data start? You have to add
+0x20 to this value.</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">16</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>numNodes</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">8</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>fileEntriesOffset</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>stringTableOffset, where is the string table stored? You have to add
+0x20 to this value.</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">8</td>
+<td nowrap>unknown</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx15.3.2">index</a></div>
+<h4>
+<a name="sec15.3.2">
+15.3.2</a>&nbsp;&nbsp;Nodes</h4>
+<br>
+Next are RarcHeader.numNodes Node structures:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>type</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>filenameOffset, directory name, offset into string table</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>numFileEntries, how many files belong to this node?</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>firstFileEntryOffset</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+Each RARC file contains at least one Node, the 'ROOT' node. For each
+subdirectory in the archive, there's another Node (so each Node represents
+a directory). Each Node contains files and directories, represented
+by FileEntry structures:
+      <div class="idx"><a href="index.html#idx15.3.3">index</a></div>
+<h4>
+<a name="sec15.3.3">
+15.3.3</a>&nbsp;&nbsp;File Entries</h4>
+<br><tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>id, file id. If this is 0xFFFF, then this entry is a subdirectory
+link</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>filenameOffset, file/subdir name, offset into string table</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>dataOffset, offset to file data (for subdirs: index of Node representing
+the subdir)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>dataSize, size of data</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>zero, seems to be always '0'</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+To read the archive, you read the root node and its file entries.
+For each subdir in the root node's fileentries, you read the corresponding
+node and its file entries. For each file in the fileentries, you dump
+its data.
+     <div class="idx"><a href="index.html#idx15.4">index</a></div>
+<h3>
+<a name="sec15.4">
+15.4</a>&nbsp;&nbsp;ARC (audio stuff)</h3>
+<br>
+if a .arc file doesnt start with 'RARC' it may contain audio data
+     <div class="idx"><a href="index.html#idx15.5">index</a></div>
+<h3>
+<a name="sec15.5">
+15.5</a>&nbsp;&nbsp;ASN</h3>
+<br>
+audio related, contains strings
+     <div class="idx"><a href="index.html#idx15.6">index</a></div>
+<h3>
+<a name="sec15.6">
+15.6</a>&nbsp;&nbsp;AW ("audio wave"?)</h3>
+<br><div class="idx"><a href="index.html#idx15.7">index</a></div>
+<h3>
+<a name="sec15.7">
+15.7</a>&nbsp;&nbsp;BAS ("audio script" ?)</h3>
+<br>
+seems to have to do with audio (check mkdd file names...)
+     <div class="idx"><a href="index.html#idx15.8">index</a></div>
+<h3>
+<a name="sec15.8">
+15.8</a>&nbsp;&nbsp;BCA</h3>
+<br>
+looks very similar to a .col file, only with some tags in it
+     <div class="idx"><a href="index.html#idx15.9">index</a></div>
+<h3>
+<a name="sec15.9">
+15.9</a>&nbsp;&nbsp;BCK (animation of a .bmd skeleton)</h3>
+<br><div class="idx"><a href="index.html#idx15.10">index</a></div>
+<h3>
+<a name="sec15.10">
+15.10</a>&nbsp;&nbsp;BDL </h3>
+<br>
+same as .bmd
+     <div class="idx"><a href="index.html#idx15.11">index</a></div>
+<h3>
+<a name="sec15.11">
+15.11</a>&nbsp;&nbsp;BFN (font)</h3>
+<br>
+images of characters + mapping from character code to corresponding
+image part
+     <div class="idx"><a href="index.html#idx15.12">index</a></div>
+<h3>
+<a name="sec15.12">
+15.12</a>&nbsp;&nbsp;BIN (binary file)</h3>
+<br>
+scene.bin in sms contains scene layout
+     <div class="idx"><a href="index.html#idx15.13">index</a></div>
+<h3>
+<a name="sec15.13">
+15.13</a>&nbsp;&nbsp;BLO (screen layout for dialog screens)</h3>
+<br><div class="idx"><a href="index.html#idx15.14">index</a></div>
+<h3>
+<a name="sec15.14">
+15.14</a>&nbsp;&nbsp;BMD (3d model with texture and skeleton)</h3>
+<br><div class="idx"><a href="index.html#idx15.15">index</a></div>
+<h3>
+<a name="sec15.15">
+15.15</a>&nbsp;&nbsp;BMG </h3>
+<br>
+messages, subtitles, ... (text)
+     <div class="idx"><a href="index.html#idx15.16">index</a></div>
+<h3>
+<a name="sec15.16">
+15.16</a>&nbsp;&nbsp;BMP (window bitmap (!))</h3>
+<br><div class="idx"><a href="index.html#idx15.17">index</a></div>
+<h3>
+<a name="sec15.17">
+15.17</a>&nbsp;&nbsp;BMT</h3>
+<br>
+seems to contain a MAT3 block of a .bmd file
+     <div class="idx"><a href="index.html#idx15.18">index</a></div>
+<h3>
+<a name="sec15.18">
+15.18</a>&nbsp;&nbsp;BCK ("Pack" file)</h3>
+<br><div class="idx"><a href="index.html#idx15.19">index</a></div>
+<h3>
+<a name="sec15.19">
+15.19</a>&nbsp;&nbsp;BRK </h3>
+<br>
+animation stuff? rotation keys?
+     <div class="idx"><a href="index.html#idx15.20">index</a></div>
+<h3>
+<a name="sec15.20">
+15.20</a>&nbsp;&nbsp;BTI</h3>
+<br>
+Note: some .bti files are Yaz0-compressed (if the first 4 bytes are
+'Yaz0'), if this is the case you have to uncompress them first.
+A .bti file stores a single image, but can store several mipmaps.
+The file starts with a texture-header (which is used in the TEX! section
+of bmd/bdl and jpa files to store textures aswell):
+      <div class="idx"><a href="index.html#idx15.20.1">index</a></div>
+<h4>
+<a name="sec15.20.1">
+15.20.1</a>&nbsp;&nbsp;Texture Header</h4>
+<br><tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>format</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>I4 (4 bit intensity, 8x8 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>I8 (8 bit intensity, 8x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>IA4 (4 bit intensity with 4 bit alpha, 8x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>IA8 (8 bit intensity with 8 bit alpha, 4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>RGB565 (4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>RGB5A3 (*) (4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>RGBA8 (4x4 tiles in two cache lines - first is AR and second is GB)</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>CI4 (4 bit color index, 8x8 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>CI8 (8 bit color index, 8x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>CI14X2 (14 bit color index, 4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">14</td>
+<td nowrap>CMP (S3TC compressed, 2x2 blocks of 4x4 tiles)</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x02</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>width</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x05</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>height</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x06</tt></td>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x09</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>Palette Format</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>IA8</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>RGB565</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>RGB5A3 (*)</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0a</tt></td>
+<td nowrap align="center"><tt>0x0b</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>Palette Entries - number of entries in the Palette</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>Palette Offset - offset to Palette Data</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10</tt></td>
+<td nowrap align="center"><tt>0x13</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x14</tt></td>
+<td nowrap align="center"><tt>0x15</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x16</tt></td>
+<td nowrap align="center"><tt>0x17</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x18</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>mipmap count</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x19</tt></td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1a</tt></td>
+<td nowrap align="center"><tt>0x1b</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>unknown</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1c</tt></td>
+<td nowrap align="center"><tt>0x1f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>Data Offset - offset to image Data</td>
+</tr>
+</table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br>
+(*) RGB5A3 is RGB5 if color value is negative and RGB4A3 otherwise.
+Offsets are relative to the Texture Header (this is important in bmd/bdl
+files).
+     <div class="idx"><a href="index.html#idx15.21">index</a></div>
+<h3>
+<a name="sec15.21">
+15.21</a>&nbsp;&nbsp;BTP </h3>
+<br>
+99% sure that this contains texture animation (NOT texture coordinate
+animation)
+     <div class="idx"><a href="index.html#idx15.22">index</a></div>
+<h3>
+<a name="sec15.22">
+15.22</a>&nbsp;&nbsp;BTK</h3>
+<br>
+(curves??? kinematics??) translation keys? probably some material
+animation as well (texture coord anim?)
+     <div class="idx"><a href="index.html#idx15.23">index</a></div>
+<h3>
+<a name="sec15.23">
+15.23</a>&nbsp;&nbsp;COL (collision triangles)</h3>
+<br><div class="idx"><a href="index.html#idx15.24">index</a></div>
+<h3>
+<a name="sec15.24">
+15.24</a>&nbsp;&nbsp;DZB</h3>
+<br>
+collision data ?
+     <div class="idx"><a href="index.html#idx15.25">index</a></div>
+<h3>
+<a name="sec15.25">
+15.25</a>&nbsp;&nbsp;H4M</h3>
+<br>
+a proprietary Movie Format found on some Gamecube Game DVDs. Probably
+related to the HVQ (Hirarchical Vector Quantization) format developed
+by Hudson.
+     <div class="idx"><a href="index.html#idx15.26">index</a></div>
+<h3>
+<a name="sec15.26">
+15.26</a>&nbsp;&nbsp;JPA (particle data)</h3>
+<br>
+(TEX1 section contains .bti images)
+     <div class="idx"><a href="index.html#idx15.27">index</a></div>
+<h3>
+<a name="sec15.27">
+15.27</a>&nbsp;&nbsp;JPC </h3>
+<br>
+collection of .jpa files ("Particle paCk"?)
+     <div class="idx"><a href="index.html#idx15.28">index</a></div>
+<h3>
+<a name="sec15.28">
+15.28</a>&nbsp;&nbsp;MTH ('Mute thp?')</h3>
+<br>
+video format, has the same video frame format as thp, but headers
+are a bit different
+     <div class="idx"><a href="index.html#idx15.29">index</a></div>
+<h3>
+<a name="sec15.29">
+15.29</a>&nbsp;&nbsp;PAD</h3>
+<br>
+recorded controller data?
+     <div class="idx"><a href="index.html#idx15.30">index</a></div>
+<h3>
+<a name="sec15.30">
+15.30</a>&nbsp;&nbsp;PRM ('Parameters?')</h3>
+<br><div class="idx"><a href="index.html#idx15.31">index</a></div>
+<h3>
+<a name="sec15.31">
+15.31</a>&nbsp;&nbsp;REL (relocatable module)</h3>
+<br>
+some kind of .dll or similar, contains text and data sections and
+relocation info
+     <div class="idx"><a href="index.html#idx15.32">index</a></div>
+<h3>
+<a name="sec15.32">
+15.32</a>&nbsp;&nbsp;SB</h3>
+<br>
+?, contains a stringtable
+     <div class="idx"><a href="index.html#idx15.33">index</a></div>
+<h3>
+<a name="sec15.33">
+15.33</a>&nbsp;&nbsp;SZS (packed RARC Archive)</h3>
+<br>
+This is a Yaz0-compressed RARC archive
+     <div class="idx"><a href="index.html#idx15.34">index</a></div>
+<h3>
+<a name="sec15.34">
+15.34</a>&nbsp;&nbsp;THP (video format)</h3>
+<br>
+.thp is a video format on the gamecube. The video frames are independent
+"quasi-jpegs", and if audio frames are present,
+they are in an adpcm format (described below).
+      <div class="idx"><a href="index.html#idx15.34.1">index</a></div>
+<h4>
+<a name="sec15.34.1">
+15.34.1</a>&nbsp;&nbsp;Header data</h4>
+<br>
+The file starts with a thp header:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>Magic Bytes, <tt>0x54485000</tt> ('THP0')</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>Version</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><tt>0x00010000</tt></td>
+<td nowrap align="center">v1.0</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00011000</tt></td>
+<td nowrap align="center">v1.1</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center"><tt>0x0b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>maxBufferSize - maximal buffer size needed for one complete frame
+(header + video + audio)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>maxAudioSamples - != 0 if sound is stored in file, maximal number
+of samples in one frame.</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x10</tt></td>
+<td nowrap align="center"><tt>0x13</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>FPS (float value)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><tt>0x41efc28f</tt></td>
+<td nowrap align="center">~29; NTSC</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x14</tt></td>
+<td nowrap align="center"><tt>0x17</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>numFrames - number of frames in the thp file</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x18</tt></td>
+<td nowrap align="center"><tt>0x1b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>firstFrameSize - size of first frame (header + video + audio)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x1c</tt></td>
+<td nowrap align="center"><tt>0x1f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>dataSize - size of all frames (not counting the thp header structures)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x20</tt></td>
+<td nowrap align="center"><tt>0x23</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>componentDataOffset - ThpComponents stored here (see below)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x24</tt></td>
+<td nowrap align="center"><tt>0x27</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>offsetsDataOffset - if != 0, offset to table with offsets of all frames?</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x28</tt></td>
+<td nowrap align="center"><tt>0x2b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>firstFrameOffset - offset to first frame's data</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x2c</tt></td>
+<td nowrap align="center"><tt>0x2f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>lastFrameOffset - offset to last frame's data</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx15.34.2">index</a></div>
+<h4>
+<a name="sec15.34.2">
+15.34.2</a>&nbsp;&nbsp;Components structure</h4>
+<br>
+At ThpHeader.componentDataOffset, a ThpComponents structure is stored:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>numComponents - usually 1 or 2 (video or video + audio)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x13</tt></td>
+<td nowrap align="center">16</td>
+<td nowrap>componentTypes - each byte specifies the type of one component as
+follows:</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap>video</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x01</tt></td>
+<td nowrap>audio</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0xff</tt></td>
+<td nowrap>no component</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+The first ThpComponents.numComponents entries of ThpComponents.componentTypes
+are valid. For each component, an information structure is stored
+after the ThpComponents struct.
+      <div class="idx"><a href="index.html#idx15.34.3">index</a></div>
+<h4>
+<a name="sec15.34.3">
+15.34.3</a>&nbsp;&nbsp;VideoInfo Structure</h4>
+<br>
+Component type 0 is video, a ThpVideoInfo struct looks like this:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>width</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>height</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center"><tt>0x0b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>unknown (only v1.1 files)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx15.34.4">index</a></div>
+<h4>
+<a name="sec15.34.4">
+15.34.4</a>&nbsp;&nbsp;AudioInfo Structure</h4>
+<br>
+Component type 1 is audio (not always included), a ThpAudioInfo struct
+looks like this:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>numChannels</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>frequency</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center"><tt>0x0b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>numSamples</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>numData (only for v1.1 files) - amount of audio blocks stored after
+each video block</td>
+</tr>
+</table>
+</td></tr></table>
+<br><div class="idx"><a href="index.html#idx15.34.5">index</a></div>
+<h4>
+<a name="sec15.34.5">
+15.34.5</a>&nbsp;&nbsp;Frame data</h4>
+<br>
+A frame is made up of a frame header followed by a video frame followed
+by ThpAudioInfo.numData audio frames (only if the video contains sound).
+The frame header consists of 3 (or 4, if the video contains sound)
+32bit values:
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>nextTotalSize - total size of NEXT frame (frame header, video and
+audio)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>prevTotalSize - total size of PREVIOUS frame</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center"><tt>0x0b</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>imageSize - size of image frame of THIS frame</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0c</tt></td>
+<td nowrap align="center"><tt>0x0f</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>audioSize - size of one audio frame of THIS frame (only if the file
+contains audio)</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+Directly after the frame header FrameHeader.imageSize bytes video
+information follow. Directly after the video information, ThpAudioInfo.numData
+audio frames follow, each Frameheader.audioSize bytes large (only
+if the file contains audio).
+      <div class="idx"><a href="index.html#idx15.34.6">index</a></div>
+<h4>
+<a name="sec15.34.6">
+15.34.6</a>&nbsp;&nbsp;Video Frames</h4>
+<br>
+A video frame is more or less a jpeg image. A jpeg file is structured
+by several markers. A marker is a two-byte code, the first of the
+two bytes is <tt>0xff</tt>. The jpeg standard states that if you want
+to store the value <tt>0xff</tt>, you have to store it as <tt>0xff
+0x00</tt> (else it would be confused with a marker). This is NOT the case
+in .thp files, the value <tt>0xff</tt> is stored simply as <tt>0xff</tt>
+in the image data. So if you want to use jpeglib to read the frame,
+you have to convert the thp "quasi-jpeg" to a real
+jpeg by converting <tt>0xff</tt> values to <tt>0xff 0x00</tt> in the
+image data. You have to be careful that you don't convert the terminating
+End-Of-Image marker, though.
+- search for Start-Of-Image marker (<tt>0xff 0xda</tt>)
+- search for End-Of-Image marker (<tt>0xff 0xd9</tt>) (start search
+at end of buffer and search backwards!)
+- convert each <tt>0xff</tt> between image data start and image data
+end to <tt>0xff 0x00</tt><br>
+- the resulting buffer can be passed to jpeglib to let it decode the
+image for you
+      <div class="idx"><a href="index.html#idx15.34.7">index</a></div>
+<h4>
+<a name="sec15.34.7">
+15.34.7</a>&nbsp;&nbsp;Audio Frames</h4>
+<br>
+An audio frame starts with a ThpAudioFrameHeader (total size is 80
+bytes)
+<tt></tt>
+<table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x00</tt></td>
+<td nowrap align="center"><tt>0x03</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>channelSize - size of one channel in bytes (*1)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x04</tt></td>
+<td nowrap align="center"><tt>0x07</tt></td>
+<td nowrap align="center">4</td>
+<td nowrap>numSamples - number of samples/channel</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x08</tt></td>
+<td nowrap align="center"><tt>0x27</tt></td>
+<td nowrap align="center">32</td>
+<td nowrap>table for first channel (*2)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x28</tt></td>
+<td nowrap align="center"><tt>0x47</tt></td>
+<td nowrap align="center">32</td>
+<td nowrap>table for second channel (stored for one channel videos as well) (*2)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x48</tt></td>
+<td nowrap align="center"><tt>0x49</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>signed value, channel1Prev1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x4a</tt></td>
+<td nowrap align="center"><tt>0x4b</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>signed value, channel1Prev2</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x4c</tt></td>
+<td nowrap align="center"><tt>0x4d</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>signed value, channel2Prev1</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x4e</tt></td>
+<td nowrap align="center"><tt>0x4f</tt></td>
+<td nowrap align="center">2</td>
+<td nowrap>signed value, channel2Prev2</td>
+</tr>
+</table>
+</td></tr></table>
+<br>
+(*1) <tt>audio frame size = sizeof(ThpAudioFrameHeader) + ThpAudioInfo.numChannels
+* ThpAudioFrameHeader.channelSize</tt><br>
+(*2) tables stored as 16bit signed 5.11 fixed point numbers
+Directly after the ThpAudioFrameHeader ThpAudioFrameHeader.channelSize
+bytes follow for the first channel, and if the video is stereo (ThpAudioInfo.numChannels
+= 2), that many bytes follow for the second channel.
+The audio data is made up of small packets of 8 byte, each packet
+contains 14 samples. Some kind of adpcm coding is used. A sample is
+calculated like this:
+<tt>newSample = previousSample*factor1 + sampleBeforePreviousSample*factor2
++ (sampleData * 2^exponent);</tt><br>
+For each packet, the first byte stores factor1, factor2 and exponent:
+<tt>u8 index = (firstByte &gt;&nbsp;&gt; 4) &amp; 0x7; //highest
+bit of byte is ignored</tt><br><tt>u8 exponent = firstByte &amp; 0xf;</tt><br><tt>float factor1 = ThpAudioFrameHeader.table[2*index]/pow(2.f,
+11);</tt><br><tt>float factor2 = ThpAudioFrameHeader.table[2*index + 1]/pow(2.f,
+11);</tt><br>
+The following 7 bytes store 14 sampleData (each 4 bit, interpreted
+as a signed two's complement number).
+     <div class="idx"><a href="index.html#idx15.35">index</a></div>
+<h3>
+<a name="sec15.35">
+15.35</a>&nbsp;&nbsp;TPL (Texture Palette)</h3>
+<br>
+Another custom GameCube file format that holds texture and texture
+palette data. Many textures can be stored in one TPL file format,
+and it is commonly used by the SDK to hold texture data for GameCube
+games.<br><br>
+note: appearently there are different formats of .TPL files, the following
+applies only to those with the magic <tt>0x00,0x20,0xaf,0x30</tt>.<br><br>
+TPL Header<br><br><table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0000</tt></td>
+<td nowrap align="center"><tt>0x0003</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>Magic (<tt>0x00, 0x20, 0xAF, 0x30</tt>)</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0004</tt></td>
+<td nowrap align="center"><tt>0x0007</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>ntextures - Number of Textures in File</td>
+</tr>
+<tr>
+<td nowrap align="center"><tt>0x0008</tt></td>
+<td nowrap align="center"><tt>0x000b</tt></td>
+<td nowrap align="center"><tt>4</tt></td>
+<td nowrap>size of Header (always <tt>0x0c</tt> in files with this structure)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+TPL Texture<br><br>
+After the header goes 'ntextures' times the TPLTexture structure:<br><br><table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Texture Header Offset</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>Texture Palette Offset (0 if no palette)</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+TPL Texture Header<br><br>
+For every texture at position 'Texture Header Offset' there is the
+TPL Texture Header:<br><br><table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>height</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>width</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>format</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>I4 (4 bit intensity, 8x8 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>I8 (8 bit intensity, 8x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>IA4 (4 bit intensity with 4 bit alpha, 8x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">3</td>
+<td nowrap>IA8 (8 bit intensity with 8 bit alpha, 4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">4</td>
+<td nowrap>RGB565 (4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">5</td>
+<td nowrap>RGB5A3 (*) (4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">6</td>
+<td nowrap>RGBA8 (4x4 tiles in two cache lines - first is AR and second is GB)</td>
+</tr>
+<tr>
+<td nowrap align="center">8</td>
+<td nowrap>CI4 (4 bit color index, 8x8 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">9</td>
+<td nowrap>CI8 (8 bit color index, 8x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">10</td>
+<td nowrap>CI14X2 (14 bit color index, 4x4 tiles)</td>
+</tr>
+<tr>
+<td nowrap align="center">14</td>
+<td nowrap>CMP (S3TC compressed, 2x2 blocks of 4x4 tiles)</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>offset to Texture Data</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>wrap s</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>wrap t</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>min filter</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>mag filter</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>lod bias (float value)</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>edge lod</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>min lod</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>max lod</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>unpacked</td>
+</tr>
+</table>
+</td></tr></table>
+<br><br>
+TPL Palette Header<br><br>
+For every palette (not every texture has one) there is the TPL Palette
+Header:<br><br><table><tr><td nowrap align="center">
+<tt></tt>
+<table>
+<tr>
+<td nowrap align="center"><b>start</b></td>
+<td nowrap align="center"><b>end</b></td>
+<td nowrap align="center"><b>size</b></td>
+<td nowrap><b>description</b></td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">2</td>
+<td nowrap>nitems</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>unpacked</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">1</td>
+<td nowrap>pad</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>format</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap>
+<table>
+<tr>
+<td nowrap align="center">0</td>
+<td nowrap>IA8</td>
+</tr>
+<tr>
+<td nowrap align="center">1</td>
+<td nowrap>RGB565</td>
+</tr>
+<tr>
+<td nowrap align="center">2</td>
+<td nowrap>RGB5A3 (*)</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">&nbsp;</td>
+<td nowrap align="center">4</td>
+<td nowrap>offset to Palette Data</td>
+</tr>
+</table>
+</td></tr></table>
+<tt></tt>&nbsp;<br><tt></tt>&nbsp;<br>
+(*) RGB5A3 is RGB5 if color value is negative and RGB4A3 otherwise.
+     <div class="idx"><a href="index.html#idx15.36">index</a></div>
+<h3>
+<a name="sec15.36">
+15.36</a>&nbsp;&nbsp;YMP (height map)</h3>
+<br><div class="idx"><a href="index.html#idx16">index</a></div>
+</body></html>
