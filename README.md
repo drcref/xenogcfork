@@ -41,7 +41,9 @@ You can also flash the chip directly using the ISP protocol to talk to the atmeg
 
 You will need to download [avrdude](https://www.nongnu.org/avrdude/) and place both files at the root of the repo.
 
-Now is solder time, I like using DuPont head style cables so I can tightly connect each pin of the programmer. Once you have soldered all the wires to the PCB and connected each pin to the programmer (![picture of ISP solder points](xenogc_ISP_solder_points.png)).
+Now is solder time, I like using DuPont head style cables so I can tightly connect each pin of the programmer. Once you have soldered all the wires to the PCB and connected each pin to the programmer.
+
+![picture of ISP solder points](xenogc_ISP_solder_points.png)
 
 Just enter ``make flash`` in a command line in the repo, (you may need to install make on Windows). This will flash xenoAT.hex that is located in XenoAT/. You can now put the optical drive back on its socket and give it a spin.
 
