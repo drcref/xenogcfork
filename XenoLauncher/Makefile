@@ -1,21 +1,17 @@
 ###########################################################################################
 ###########################################################################################
-# Makefile - XenoLauncher WINDOWS
-############################################################################################
-###########################################################################################
-# USER DEFINE VARIABLES
-# DEVKITPPC = Path to \devkitPro\devkitPPC
-#
-#
-DEVKITPPC = 'C:\devkitPro\devkitPPC'
+# Makefile - XenoLauncher
 ###########################################################################################
 ###########################################################################################
 
+ifeq ($(strip $(DEVKITPPC)),)
+$(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>DEVKITPPC")
+endif
+
+include $(DEVKITPPC)/base_tools
+
 TARGET  = XenoLauncher
 SOURCES = $(TARGET)/source
-DIR     = $(DEVKITPPC)/bin
-CC      = $(DIR)/powerpc-eabi-gcc
-OBJCOPY = $(DIR)/powerpc-eabi-objcopy
 FLAGS   = -nostdlib -fno-builtin -Wall -Os -pipe -Wl,-s,-x,--gc-sections -Wa,-mregnames -fno-exceptions\
 		  -mhard-float -Wl,-T,$(SOURCES)/first.lds -Wl,-Map=$(SOURCES)/$(TARGET).map
 REMOVE  = rm -f

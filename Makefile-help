@@ -6,15 +6,12 @@
 
 LINE     = echo --------------------------------------------
 INTRO    = @echo;$(LINE);echo XenoGC Makefile Help;$(LINE);echo
-USE      = @echo Compile Usage: make [ platform ][ options ]
-PLATFORM = @echo PLATFORM:;$(LIN);$(WIN)
+USE      = @echo Compile Usage: make [ options ]
 OPTIONS  = @echo OPTIONS:;$(XALL);$(XTRA);$(XSHELL);$(XHEX)
-LIN      = echo '     linux           Linux operating system' 
-WIN      = echo '     windows         Windows operating system'
-XALL     = echo '     -all            Make entire source'
-XTRA     = echo '     -extra          Make ALL plus Extra files'
-XSHELL   = echo '     -shell          Make XenoLauncher only'
-XHEX     = echo '     -hex            Make XenoAT Hex only'
+XALL     = echo '     all 	         Make entire source'
+XTRA     = echo '     extra          Make ALL plus Extra files'
+XSHELL   = echo '     shell          Make XenoLauncher only'
+XHEX     = echo '     hex            Make XenoAT Hex only'
 
 
 
@@ -24,14 +21,13 @@ FLASH    = echo '     flash           Write Hex to Flash'
 READ     = echo '     readfuse        Read Fuse Settings'
 WRITE    = echo '     writefuse       Write Fuse Settings'
 
-EX       = @echo;echo;echo;$(ELIN);$(EWIN);$(EAVR);echo;echo;echo;
-ELIN     = echo Example: make linux-all
-EWIN     = echo Example: make windows-hex
-EAVR     = echo Example: make flash
+EX       = @echo;echo;echo;$(LMAK);$(LMAL);$(EHEX);$(EFLS);echo;echo;echo;
+LMAK     = echo Example: make
+LMAL     = echo Example: make all
+EHEX     = echo Example: make hex
+EFLS     = echo Example: make flash
 
-all: main
-
-main:
+.help: 
 	$(INTRO)
 	$(USE)
 	$(PLATFORM)

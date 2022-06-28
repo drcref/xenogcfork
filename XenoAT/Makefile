@@ -1,6 +1,6 @@
 ###########################################################################################
 ###########################################################################################
-# Makefile - XenoAT WINDOWS
+# Makefile - XenoAT
 ###########################################################################################
 ###########################################################################################
 # USER DEFINE VARIABLES
@@ -9,10 +9,15 @@
 # MCU    =  Target AVR < atmega8 >
 #
 #
+
+ifeq ($(strip $(DEVKITPPC)),)
+$(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>DEVKITPPC")
+endif
+
 MCU    = atmega8
 ###########################################################################################
 ###########################################################################################
-MNDIR  = 'C:\devkitPro\devkitPPC\mn10200\bin'
+MNPREFIX= $(DEVKITPPC)/bin/mn10200-
 
 TARGET  = XenoAT
 CC      = avr-gcc
@@ -89,9 +94,9 @@ extra: all
 
 
 $(SOURCES)/uploader.bin: $(SOURCES)/uploader.S
-	@$(MNDIR)/as -L $(SOURCES)/uploader.S -o $(SOURCES)/uploader.o
-	@$(MNDIR)/ld -Ttext 0x40d000 -O mn10200-elf $(SOURCES)/uploader.o -o $(SOURCES)/uploader.elf
-	@$(MNDIR)/objcopy -O $(SOURCES)/binary $(SOURCES)/uploader.elf $(SOURCES)/uploader.bin
+	@$(MNPREFIX)as -L $(SOURCES)/uploader.S -o $(SOURCES)/uploader.o
+	@$(MNPREFIX)ld -Ttext 0x40d000 -O mn10200-elf $(SOURCES)/uploader.o -o $(SOURCES)/uploader.elf
+	@$(MNPREFIX)objcopy -O $(SOURCES)/binary $(SOURCES)/uploader.elf $(SOURCES)/uploader.bin
 $(SOURCES)/qcode.o: $(SOURCES)/uploader.bin
 
 ###########################################################################################
